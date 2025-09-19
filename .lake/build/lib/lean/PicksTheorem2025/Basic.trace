@@ -1,0 +1,32 @@
+{"synthetic": false,
+ "outputs":
+ {"o": ["5886601247297567602"],
+  "i": "6408688046164673212",
+  "c": "127928279778267392"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\packages\\Cli\\.lake\\build\\lib\\lean;D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\packages\\batteries\\.lake\\build\\lib\\lean;D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\packages\\Qq\\.lake\\build\\lib\\lean;D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\packages\\aesop\\.lake\\build\\lib\\lean;D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\packages\\proofwidgets\\.lake\\build\\lib\\lean;D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\packages\\importGraph\\.lake\\build\\lib\\lean;D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\packages\\LeanSearchClient\\.lake\\build\\lib\\lean;D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\packages\\plausible\\.lake\\build\\lib\\lean;D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\packages\\mathlib\\.lake\\build\\lib\\lean;D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\build\\lib\\lean c:\\Users\\jonat\\.elan\\toolchains\\leanprover--lean4---v4.24.0-rc1\\bin\\lean.exe D:\\JONATHAN\\Lean\\PicksTheorem2025\\PicksTheorem2025\\Basic.lean -o D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\build\\lib\\lean\\PicksTheorem2025\\Basic.olean -i D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\build\\lib\\lean\\PicksTheorem2025\\Basic.ilean -c D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\build\\ir\\PicksTheorem2025\\Basic.c --setup D:\\JONATHAN\\Lean\\PicksTheorem2025\\.lake\\build\\ir\\PicksTheorem2025\\Basic.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["PicksTheorem2025.Basic:deps",
+   [["deps",
+     [["PicksTheorem2025/PicksTheorem2025:extraDep",
+       [["@PicksTheorem2025:extraDep", "1723"]]],
+      ["imports", "1723"]]],
+    ["libs",
+     [["import dynlibs", "1723"],
+      ["package external libraries", "1723"],
+      ["module dynlibs", "1723"],
+      ["module plugins", "1723"]]]]],
+  ["Lean 4.24.0, commit 919e297292280cdb27598edd4e03437be5850221",
+   "16820442660988836695"],
+  ["D:\\JONATHAN\\Lean\\PicksTheorem2025\\PicksTheorem2025\\Basic.lean",
+   "18126205365334327008"],
+  ["options",
+   [["-DmaxSynthPendingDepth=3", "14379489197236848084"],
+    ["-Dweak.linter.mathlibStandardSet=true", "9949955268809796418"],
+    ["-DrelaxedAutoImplicit=false", "8404479228809428608"],
+    ["-Dpp.unicode.fun=true", "11210593074386665387"],
+    ["-DautoImplicit=false", "5369888039164004816"]]],
+  ["Module.leanArgs: #[]", "1723"]],
+ "depHash": "5962700087679805392"}
