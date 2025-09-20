@@ -1,6 +1,7 @@
---macro polygon:term "[" index:term "]" : term => `(($polygon).vertex ($index))
 import PicksTheorem2025.Definitions.polygon
+import PicksTheorem2025.Definitions.winding
 
+--macro polygon:term "[" index:term "]" : term => `(($polygon).vertex ($index))
 
 instance toPolygon {R : Type} (l : List (Point R)) (h : l.length > 0 := by decide)
     : Polygon R (l.length-1) where
@@ -15,7 +16,8 @@ instance toPolygon {R : Type} (l : List (Point R)) (h : l.length > 0 := by decid
 def p1 : Point Int := ⟨1, 1⟩
 def p2 : Point Int := ⟨1, 2⟩
 def p3 : Point Int := ⟨2, 1⟩
+def p4 := p1
 
-def l := [p1,p2,p3]
+def l := [p1,p2,p3,p4]
 def h : l.length > 0 := by decide
 def P := toPolygon l h
