@@ -21,3 +21,20 @@ def p4 := p1
 def l := [p1,p2,p3,p4]
 def h : l.length > 0 := by decide
 def P := toPolygon l h
+
+#check p1 + p2
+
+
+#eval (Box2d 5).card
+
+def q0 : Int × Int := ⟨ 1, 2⟩
+def q1 : Int × Int := ⟨-1, 1⟩
+def q2 : Int × Int := ⟨ 2, 1⟩
+def q3 : Int × Int := ⟨ 0, 1⟩
+
+#eval q2-q3
+#eval (welp q0 q1 3 : Rat)
+
+
+#eval q0
+#eval (dang q1 q0 : Rat)
