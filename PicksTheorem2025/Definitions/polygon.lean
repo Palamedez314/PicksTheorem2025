@@ -37,4 +37,4 @@ def trapezoidArea (ι : R → K) (u v : Point R) : K :=
   (ι u.1 - ι v.1) * (ι u.2 + ι v.2) / Int.cast 2
 
 
-#eval trapezoidArea (Int.cast : Int → Rat) p2 p3
+--#eval trapezoidArea (Int.cast : Int → Rat) p2 p3
