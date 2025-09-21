@@ -6,6 +6,8 @@ variable {R : Type} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
 def Point (R : Type) := R × R
 instance Point_AddCommGroup [inst : AddCommGroup (R × R)] : AddCommGroup (Point R) := inst
 
+def point_Cast : (R × R) → (Point R) := fun ⟨r , s⟩ ↦ ⟨r , s⟩
+
 --definition of a polygon with len sides as a tuple of its corner points
 class Polygon (R : Type) (len : Nat) where
   vertex : Fin (len + 1) → Point R
