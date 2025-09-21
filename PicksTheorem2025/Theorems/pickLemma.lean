@@ -1,7 +1,7 @@
 import PicksTheorem2025.Definitions.polygon
 import PicksTheorem2025.Definitions.area
 import PicksTheorem2025.Definitions.winding
-import Mathlib.tactic.Ring
+import Mathlib.Tactic
 
 variable {K : Type} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
 variable {R : Type} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
@@ -35,22 +35,33 @@ theorem case3 (r : Nat) (u v : Point ℤ) (hu : u ∈ (Box2d r)) (hv : v ∈ (Bo
 
   let f : Point ℤ → K := fun p ↦ (dang (u-p) (v-p) : K)
   let g : (p : Point ℤ) → (p ∈ bluebox r u v) → Point ℤ := fun p _ ↦ u + v - p
-  have hg₁ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), f p + f (g p hp) = 0 := sorry
+  have hg₁ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), f p + f (g p hp) = 0 := by
+    intro p hp
+    unfold f g
+    have h1 : u - (u + v - p) = - (v - p) := by rw[add_sub_assoc, sub_add_cancel_left]
+    have h2 : v - (u + v - p) = - (u - p) := by rw[add_comm, add_sub_assoc, sub_add_cancel_left]
+    rw[h1, h2, dang_change_sign, dang_switch_order, neg_add_cancel]
   have hg₃ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), f p ≠ 0 → g p hp ≠ p := by
-    intro p hp h1 h2
-    have h3 : f p + f (g p hp) = 0 := hg₁ p hp
-    rw [h2] at h3
-    have h4 : 2 * f p = 0 := sorry
-    sorry
+    have h1 : (2 : K) ≠ 0 := by
+      rw[ne_comm]
+      apply LT.lt.ne
+      rw [← one_add_one_eq_two]
+      apply lt_add_of_pos_of_lt zero_lt_one
+      exact zero_lt_one
+    intro p hp h2 h3
+    have h4 : f p + f (g p hp) = 0 := hg₁ p hp
+    rw [h3] at h4
+    have h5 : f p + f p = 2 * f p := by ring
+    have h6 : 2 * f p = 2 * 0 := by rw [h5, ← mul_zero (2 : K)] at h4; assumption
+    have h7 : f p = 0 := by apply mul_left_cancel₀ h1 h6
+    exact h2 h7
 
+  -- schwieriger Teil des Beweises, bei dem die
+  --(gerade relativ schlechte) Definition von bluebox_x bzw _y aufgegriffen wird
   have g_mem : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), g p hp ∈ bluebox r u v := sorry
+
   have hg₄ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), g (g p hp) (g_mem p hp) = p := by
     intro p hp
     unfold g
     simp
-  sorry
-  --apply Finset.sum_involution
-
-def u : Point ℤ := sorry
-def p : Point ℤ := sorry
-#check u-p
+  apply Finset.sum_involution g hg₁ hg₃ g_mem hg₄
