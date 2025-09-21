@@ -15,4 +15,4 @@ theorem Point_in_Box_le_r (r : Nat) (p : Point ℤ) (h1 : p ∈ Box2d r) : supNo
 theorem dang_switch_order (u v : Point R) : (dang u v : K) = - dang v u := by sorry
 
 
-theorem dang_
+theorem dang_change_sign (u v : Point R) : (dang u v : K) = dang (-u) (-v) := by sorry
