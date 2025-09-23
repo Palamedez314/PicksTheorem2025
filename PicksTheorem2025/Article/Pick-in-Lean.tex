@@ -231,7 +231,7 @@ $J := \abs{ \Z^2 \cap C }$ on the boundary $C = \partial B = \partial A$.
 
 Here the magic of Pick's theorem happens:
 
-\begin{theorem}[Georg Pick 1899] \label{thm:PickCombinatorial}
+\begin{theorem}[Georg Pick 1899 \cite{Pick:1899}] \label{thm:PickCombinatorial}
   Let $P = (p_0,p_1,\ldots,p_n=p_0)$
   be a simply closed polygon with integer vertices $p_i \in \Z^2$.
   Then $\vol_2(B) = I + J/2 - 1$.
@@ -974,16 +974,17 @@ and proven using any angle measure $\mu$.
 
 Together with Jordan's theorem, we obtain the desired
 point count $\sum_{q \in \Z^2 \cap C} \mu(P-q) = J/2 - 1$.
-%
+
 A pen-and-paper proof of these two theorems
-can be established as in the classical setting.
-With sufficient patience this can be formalized algebraically
-and implemented in a proof assistant, for example Lean.
-This certainly merits further exploration beyond the scope of the article.
+can be established as in the classical setting,
+% With sufficient patience this can be formalized algebraically
+and then implemented in a proof assistant. % for example Lean,
+This requires ``augmenting the existing geometry libraries'' \cite{Binder:Kosaian:2024}
+and merits further exploration beyond the scope of the article.
 
 We have used the theorems of Jordan and Hopf in order
-to motivate our \emph{formulation} of Pick's lemma.
-Our \emph{proof}, however, is self-contained and
+to motivate our \emph{formulation} of Pick's lemma;
+our \emph{proof}, however, is self-contained and
 does not logically require them.
 
 
@@ -1222,10 +1223,81 @@ At the other end we look at the limit for $t \searrow 0$:
 % more rigorous proof?  Proofs from the book!
 % We will not pursue this line of thought, but only give references.
 
+
+\setcounter{section}{16}
+\section{Quotes}
+
+Pick's theorem has been formally implemented, with considerable effort,
+% in HOL Light \cite{Harrison:2011} and Isabelle \cite{Binder:Kosaian:2024}.
+first in 2011 by John Harrison in \texttt{HOL Light} \cite{Harrison:2011}
+then in 2024 by Sage Binder and Katherine Kosaian in \texttt{Isabelle} \cite{Binder:Kosaian:2024}.
+
+\begin{quote}
+  The proof turned out to be somewhat harder work than expected. [\dots]
+  % Using the crude metric of ‘lines of proof script’, it seems to be almost
+  % as challenging as the Prime Number Theorem and considerably harder
+  % than Dirichlet’s theorem on primes in arithmetic progression.
+  Charming and surprising as Pick's theorem is, one would normally consider it
+  a very straight-forward result [\dots].
+  % in comparison with those two jewels of 19th century mathematics.
+  What accounts for the difficulty of formalizing Pick?
+  Of course, it could be just a reflection of our own ineptitude.
+  However we prefer to believe that there is an intrinsic difficulty
+  in formalizing many geometric proofs in stating and proving
+  in a formal way various properties that seem intuitively obvious ‘by eye’.
+  (John Harrison \cite{Harrison:2011})
+\end{quote}
+
+We close with a wonderful anecdote concerning practical applicability: 
+
+\begin{quote}
+  Some years ago, the Northwest Mathematics Conference was held in Eugene,
+  Oregon. To add a bit of local flavor, a forester was included on the program,
+  and those who attended his session were introduced to a variety of nice
+  examples which illustrated the important role that mathematics plays in the
+  forest industry. One of his problems was concerned with the calculation of
+  the area inside a polygonal region drawn to scale from field data obtained for
+  a stand of timber by a timber cruiser. The standard method is to overlay a
+  scale drawing with a transparency on which a square dot pattern is printed.
+  Except for a factor dependent on the relative sizes of the drawing and the
+  square grid, the area inside the polygon is computed by counting all of the
+  dots fully inside the polygon, and then adding half of the number of dots
+  which fall on the bounding edges of the polygon. Although the speaker was
+  not aware that he was essentially using Pick's formula, I was delighted to see
+  that one of my favorite mathematical results was not only beautiful, but even
+  useful. (Duane DeTemple, cited in \cite{Gruenbaum:Shepard:1993})
+\end{quote}
+
+
 \section*{Remerciements}
 
 Elli zu Neblberg expresses her heartfelt gratitude to all of her collaborators.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{thebibliography}{8}
+
+\bibitem{Pick:1899}
+  \textsc{Georg Pick:} \textit{Geometrisches zur Zahlenlehre.}
+  Sitzungsberichte des deutschen naturwissenschaftlich-medicinischen Vereines für Böhmen
+  „Lotos“ in Prag 19 (1899) 311--319. % (neue Folge) 
+
+\bibitem{Gruenbaum:Shepard:1993}
+  \textsc{B.\,Grünbaum, G.C.\,Shephard:} \textit{Pick's Theorem.}
+  The American Mathematical Monthly 100 (1993) 150--161.
+  \\ \url{https://doi.org/10.2307/2323771}
+
+\bibitem{Harrison:2011}
+  \textsc{J.\,Harrison:} \textit{A formal proof of Pick’s Theorem.}
+  Mathematical Structures in Computer Science 21 (2011) 715--729.
+  \url{doi:10.1017/S0960129511000089}
+  
+\bibitem{Binder:Kosaian:2024}
+  \textsc{S.\,Binder, K.\,Kosaian:} \textit{Pick's Theorem.}
+  Archive of Formal Proofs (2024).
+  \\ \url{https://isa-afp.org/entries/Picks_Theorem.html}
+  
+\end{thebibliography}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
