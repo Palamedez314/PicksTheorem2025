@@ -707,11 +707,11 @@ We can restrict it to a sufficiently large
 square box $Q = \{-r,\ldots,r\}^2 \subset \Z^2$
 containing all vertices $p_1,\ldots,p_n$.
 Each point $q \in \Z^2 \minus Q$ yields $\Dang(P-q) = 0$.
-Using this, we swap the double sum defining the right hand side:
+Using this restriction, we can swap the double sum: % defining the right hand side:
 \begin{alignat}{3}
   & \Welp(P)
-  % && := \sum_{q \in \Z^2} \Dang(P-q)
-  && = \sum_{q \in Q} \Dang(P-q)
+  && := \sum_{q \in \Z^2} \Dang(P-q)
+  % && = \sum_{q \in Q} \Dang(P-q)
   && = \sum_{q \in Q} \sum_{i=1}^n \dang(p_{i-1}-q, p_i-q) 
   \\ \notag & && && = \sum_{i=1}^n
   \underbracket{ \sum_{q \in Q} \dang(p_{i-1}-q, p_i-q) }_{\normalsize =: \welp(p_{i-1},p_i)}
@@ -737,6 +737,10 @@ we show that
 
 \begin{figure}[ht]
   \begin{tikzpicture}[x=4mm, y=4mm, font=\mathstrut]
+    \draw[draw=none] (-16,-8) rectangle (+16,+8);
+    \draw[draw=none, fill=yellow!50, fill opacity=0.3]
+    (-1.0,-8.0) rectangle (+5.0,+2.0);
+
     \draw[draw=black, densely dotted, rounded corners=1mm, fill=black!10]
     (-1.2,+1.8) rectangle (+5.2,+8.2);
     % \draw[draw=black, rounded corners=1mm, fill=black!10]
@@ -752,7 +756,7 @@ we show that
     (+5,+4) circle node[right] {$u$}
     (-1,+6) circle node[left] {$v$}
     (+2,+5) circle;
-    \draw (9,7.5) node[right] {$q \mapsto \dang(u-q,v-q)$};
+    % \draw (9,7.5) node[right] {$q \mapsto \dang(u-q,v-q)$};
     
     \foreach \x in {-8,-7,...,-2,6,7,...,8}{
       \foreach \y in {-8,...,8}{
@@ -762,7 +766,6 @@ we show that
     
     \draw[draw=black, fill=white] (10,5) circle[radius=2.0pt];
     \draw (10,5) node[right] {$\mapsto 0$};
-    
     
     \begin{scope}
       \foreach \y in {7,...,8}{
@@ -805,15 +808,16 @@ we show that
     \draw[draw=black, fill=teal] (10,4) circle[radius=2.0pt];
     \draw (10,4) node[right] {$\mapsto +1/2$};
   \end{tikzpicture}
-  \caption{Proving $\area(u,v) = \welp(u,v)$}
+  \caption{Proving $\welp(u,v) = \area(u,v)$ by inspecting $q \mapsto \dang(u-q,v-q)$}
   \label{fig:AreaEqualsWelp}
 \end{figure}
 
 % We consider the edge between two integer points $u,v \in Q$.
 
-The proof is illustrated in \autoref{fig:AreaEqualsWelp}.
+The proof is illustrated in \autoref{fig:AreaEqualsWelp}
+by plotting $q \mapsto \dang(u-q,v-q)$.
 The algebraic calculation proceeds as follows.
-We can assume $v_1 < u_1$ and $u_2 + v_2 \ge 2$;
+We assume $v_1 < u_1$ and $u_2 + v_2 \ge 2$;
 the other cases are symmetric.
 \begin{enumerate}
 \item
