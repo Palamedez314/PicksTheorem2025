@@ -96,8 +96,10 @@
 \newcommand{\minus}{\smallsetminus}
 \newcommand{\abs}[1]{\lvert #1 \rvert}
 \newcommand{\bigabs}[1]{\bigl\lvert #1 \bigr\rvert{}}
+
 \DeclareMathOperator{\sign}{sign}
 \DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\supp}{supp}
 
 \newcommand{\area}{\mathrm{area}}
 \newcommand{\Area}{\mathrm{Area}}
@@ -147,7 +149,7 @@ a finite sequence of points $p_i = (x_i,y_i) \in \R^2$.
 It defines the corresponding path $\gamma \colon [0,1] \to \R^2$
 by piecewise linear interpolation of the given vertices
 $\gamma(i/n) = p_i$ for $i=0,1,\dots,n$.
-We call $P$ \emph{closed} if $p_0 = p_n$ and
+We call $P$ \emph{closed} if $p_0 = p_n$, and
 \emph{simply closed} if $\gamma(s) = \gamma(t)$
 only holds for $s = t$ or $\{s,t\} = \{0,1\}$.
 In this case Jordan's theorem applies:
@@ -155,6 +157,8 @@ The polygonal curve $C = \gamma([0,1]) \subset \R^2$
 separates the plane in two connected open sets $A$ and $B$,
 so $\R^2 = A \sqcup B \sqcup C$, where the \emph{exterior region} $A$
 is unbounded and the \emph{interior region} $B$ is bounded.
+Their common boundary is the curve $C$, so their closures
+are $\bar{A} = A \cup C$ and $\bar{B} = B \cup C$.
 
 \begin{figure}[ht]
   \begin{tikzpicture}[x=5mm, y=5mm, font=\footnotesize,
@@ -343,26 +347,87 @@ and moreover is more convenient for computer implementations.
 By abstracting both these primary examples
 to ordered fields we cover all cases simultaneously.
 
+\begin{figure}[ht]
+  \begin{tikzpicture}[x=10mm, y=10mm, font=\mathstrut]
+    \draw[style= help lines, very thin, color=lightgray, step=0.2] (-1,-1) grid (4,4);
+    \draw[style= help lines, very thin, color=gray, step=1] (-1,-1) grid (4,4);
+    \draw[->] (-1,0) -- (4,0); % node[below left] {$x$};
+    \draw[->] (0,-1) -- (0,4); % node[below left] {$y$};
+    \filldraw[draw=blue, thick, fill=orange!40, fill opacity=0.5]
+    (3.0,1.2) -- (1.0,1.8) -- (1.0,0.0) -- (3.0,0.0) -- cycle;
+    \draw[draw=none, fill=blue, radius=1.5pt]
+    (3.0,1.2) circle node[right] {$u$}
+    (1.0,1.8) circle node[left] {$v$}
+    (1.0,0.0) circle node[below left] {$\underline{v}$}
+    (3.0,0.0) circle node[below right] {$\underline{u}$};
+    \filldraw[draw=blue, thick, fill=teal!30, fill opacity=0.5]
+    (3.0,1.2) -- (3.0,3.0) -- (1.0,3.0) -- (1.0,1.8) -- cycle;
+    \draw[draw=none, fill=blue, radius=1.5pt]
+    (1.0,3.0) circle node[above left] {$\overline{v}$}
+    (3.0,3.0) circle node[above right] {$\overline{u}$};
+  \end{tikzpicture}
+  \quad
+  \begin{tikzpicture}[x=10mm, y=10mm, rounded corners=0.2pt]
+    \draw[style= help lines, very thin, color=lightgray, step=0.2] (-0.4,-0.6) grid (7.4,4.4);
+    \draw[style= help lines, very thin, color=gray, step=1.0] (-0.4,-0.6) grid (7.4,4.4);
+    \draw[->] (-0.4,0.0) -- (7.4,0.0);
+    \draw[->] (0.0,-0.6) -- (0.0,4.4);
+
+    \coordinate (P0) at (6.4,2.2);
+    \coordinate (P1) at (3.4,3.6);
+    \coordinate (P2) at (0.6,2.0);
+    \coordinate (P3) at (1.4,0.8);
+    \coordinate (P4) at (3.0,1.4);
+    \coordinate (P5) at (3.8,1.0);
+    
+    \coordinate (Q0) at (6.4,0.0);
+    \coordinate (Q1) at (3.4,0.0);
+    \coordinate (Q2) at (0.6,0.0);
+    \coordinate (Q3) at (1.4,0.0);
+    \coordinate (Q4) at (3.0,0.0);
+    \coordinate (Q5) at (3.8,0.0);
+    
+    \draw[blue, fill=yellow!40, fill opacity=0.5]
+    (Q0) -- (P0) -- (P1) -- (Q1) -- cycle;
+    \draw[blue, fill=yellow!40, fill opacity=0.5]
+    (Q1) -- (P1) -- (P2) -- (Q2) -- cycle;
+    \draw[blue, fill=orange!40, fill opacity=0.5]
+    (Q2) -- (P2) -- (P3) -- (Q3) -- cycle;
+    \draw[blue, fill=orange!40, fill opacity=0.5]
+    (Q3) -- (P3) -- (P4) -- (Q4) -- cycle;
+    \draw[blue, fill=orange!40, fill opacity=0.5]
+    (Q4) -- (P4) -- (P5) -- (Q5) -- cycle;
+    \draw[blue, fill=orange!40, fill opacity=0.5]
+    (Q5) -- (P5) -- (P0) -- (Q0) -- cycle;
+    \draw[blue, line width=1pt]
+    (P0) -- (P1) -- (P2) -- (P3) -- (P4) -- (P5) -- cycle;
+    \draw[draw=none, fill=blue, radius=1.5pt]
+    (P0) circle node[right, align=left] {$p_0$ \\ $p_6$}
+    (P1) circle node[above] {$p_1$}
+    (P2) circle node[left]  {$p_2$}
+    (P3) circle node[left]  {$p_3$}
+    (P4) circle node[above] {$p_4$}
+    (P5) circle node[right, yshift=-3pt] {$p_{5}$};
+  \end{tikzpicture}
+  \caption{Area of a polygon}
+\end{figure}
+
 \begin{definition}
-  Given two points $u,v \in \K^2$ we have the area under the trapezoid:
+  Given two points $u,v \in \K^2$ we have the (oriented) area under the trapezoid,
   \[
-  \area(u,v) := \frac{1}{2} (u_1 - v_1) (u_2 + v_2)
+  \area(u,v) := \frac{1}{2} (u_1 - v_1) (u_2 + v_2) .
   \]
   
-  For every polygon $P = (p_0,p_1,\ldots,p_n)$ in $\K^2$ we define
-  % given by a finite sequence of points $p_i = (x_i,y_i) \in \K^2$.
-  % We define the enclosed area by the trapezoid rule:
+  For every polygon $P = (p_0,p_1,\ldots,p_n)$ in $\K^2$
+  we thus define its area to be 
   \[
-  \Area(P) := \sum_{i=1}^{n} \area(p_{i-1},p_i)
-  % \sum_{i=1}^{n} \frac{1}{2} (x_{i-1} - x_i) (y_{i-1} + y_i)
+  \Area(P) := \sum_{i=1}^{n} \area(p_{i-1},p_i) .
   \]
 \end{definition}
 
 \begin{remark}
   For a simply closed polygon in $\R^2$, this yields $\abs{\Area(P)} = \vol_2(B) > 0$.
-\end{remark}
 
-\begin{remark}
   If $\Area(P) > 0$, we call our polygon $P$ \emph{positively oriented}.
   Otherwiese, if $\Area(P) < 0$, we reverse $P = (p_0,p_1,\ldots,p_n)$
   to $P' = (p_n,\ldots,p_1,p_0)$.  This does not change the curve $C$,
@@ -375,7 +440,7 @@ the left hand side of Pick's equation.
 For the right hand side $I + J/2 - 1$
 we have to define --- and then count! ---
 the enclosed lattice points.
-To this end we define the winding number
+To this end we use the winding number
 of our polygon $P$ around some point $q \in \K^2$.
 
 
@@ -410,9 +475,10 @@ such that rotation by $\theta$ aligns $u$ with $v$:
 \end{tikzpicture}
 \]
 
-For $v \in u \, \R_{<0}$, both solutions $\theta = \pm\pi$ are equally possible.
+In the controversial case $v \in u \, \R_{<0}$,
+both solutions $\theta = \pm\pi$ are equally possible.
 Usually this case is ignored, forbidden, or abitrated.
-We democratically set $\sphericalangle(u,v) = 0$ in this controversial case.
+We democratically set $\sphericalangle(u,v) = 0$. % in this controversial case.
 This choice may seem strange at first, but turns out to be advantageous.
 It allows us to cover all cases uniformly,
 and miraculously leads to the correct point count on the boundary.
@@ -427,7 +493,7 @@ and miraculously leads to the correct point count on the boundary.
   \end{cases}
   \]
   
-  By summing over all edges of $P$,
+  By summing the angles of all edges of $P$,
   we obtain the (euclidean) \emph{winding number} % of $P$ around $0$
   \[
   \Ang(P) := \sum_{i=1}^n \ang(p_{i-1},p_i) .
@@ -435,13 +501,14 @@ and miraculously leads to the correct point count on the boundary.
 \end{definition}
 
 \begin{remark}
-  If our polygon $P$ is closed, then $\Ang(P) \in \Z$
-  measures how often $P$ winds around the origin $0$.
+  If our polygon $P$ is closed and $0 \notin C$, then $\Ang(P) \in \Z$
+  measures how often $P$ winds around the origin.
   Likewise $\Ang(P-q) \in \Z$ measures the winding number
-  around the point $q \in \R^2$.
+  around the point $q \in \R^2 \minus C$,
+  where $P-q = (p_0-q,p_1-q,\ldots,p_n-q)$.
 
   Moreover, if $P$ is simply closed and positively oriented,
-  then the Jordan decomposition $\R^2 = A \sqcup B \sqcup C$
+  then its Jordan decomposition $\R^2 = A \sqcup B \sqcup C$
   is characterized by the winding number:
   We have $\Ang(P-q) = 0$ for each exterior point $q \in A$
   and $\Ang(P-q) = 1$ for each interior point $q \in B$.
@@ -458,7 +525,7 @@ and miraculously leads to the correct point count on the boundary.
   measures the enclosed angle. 
   By adding the turning angle $\beta_i = \ang(p_i-p_{i-1}, p_{i+1}-p_i)$
   each vertex point is counted by $\sfrac{1}{2}$ as well.
-  The sum of all turning angles is $1$ by Hopf's theorem.
+  The sum of all turning angles is $1$ by Hopf's umlaufsatz. % theorem.
 
   If $P$ is a lattice polygon, with integer vertices $v_0,\ldots,v_n \in \Z^2$, then
   \[
@@ -478,7 +545,7 @@ I + J/2 - 1  = \sum_{q \in \Z^2} \Ang(P-q) .
 
 This reduces Pick's theorem to the following algebraic statement:
 
-\begin{lemma}[Pick's lemma, using the euclidean angle measure]
+\begin{lemma}[Pick's lemma, using the euclidean angle measure] \label{lem:PickEuclidean}
   Let $p_1,\ldots,p_n=p_0 \in \Z^2$ be any sequence of integer points.
   Then the closed polygon $P = (p_0,p_1,\ldots,p_n)$ satisfies Pick's equation 
   \[
@@ -496,8 +563,13 @@ by Jordan and Hopf.
 \subsection{The discrete angle measure}
 
 The euclidean angle measure requires the real numbers and transcendental functions.
+For computer implementation this is a burden:
+\texttt{Real} is good for proofs but bad for calculation,
+whereas \texttt{Float} ist good for approximations but bad for proofs.
+
 For our purposes we prefer to work with the following \emph{discrete angle measure}.
-This allows us to work over any ordered field $\K$, for example $\Q \subseteq \K \subseteq \R$.
+This allows us to work over any ordered field $\K$,
+for example $\Q \subseteq \K \subseteq \R$.
 
 \begin{figure}[ht]
   \begin{tikzpicture}[x=10mm, y=10mm, inner sep=1pt, font=\footnotesize]
@@ -545,22 +617,33 @@ This allows us to work over any ordered field $\K$, for example $\Q \subseteq \K
     \cdot \sign \det \begin{bmatrix} u_1 & v_1 \\ u_2 & v_2 \end{bmatrix} .
   \]
 
-  By summing over all edges $P$, we obtain the (discrete) \emph{winding number} % of $P$ around $0$
+  By summing the angles of all edges of $P$,
+  we obtain the (discrete) \emph{winding number} % of $P$ around $0$
   \[
   \Dang(P) := \sum_{i=1}^n \dang(p_{i-1},p_i) .
   \]
 \end{definition}
 
+If our polygon $P$ is closed and $0 \notin C$,
+then we obtain $\Dang(P-q) = \Ang(P-q)$.
+The summands change, but the end result is the same.
+The difference is only noticable for open polygons
+or boundary points $q \in C$.
+
+% As before, if our polygon $P$ is closed,
+% $\Dang(P-q) = \Ang(P-q)$ measures the winding number
+% around any point $q \in \R^2 \minus C$.
+
 The theorems of Jordan and Hopf, as stated above, continue
 to hold with $\Dang(P)$ in place of $\Ang(P)$, see the Appendix.
-This generalizes and simplifies calculations!
+This generalizes and simplifies! % calculations!
 We can thus define the elusive right hand side $I + J/2 - 1$ of Pick's equation
 by the \emph{weighted sum of enclosed lattice points}
 \[
 \Welp(P) := \sum_{q \in \Z^2} \Dang(P-q) .
 \]
 
-\begin{lemma}[Pick's lemma, using the discrete angle measure]
+\begin{lemma}[Pick's lemma, using the discrete angle measure] \label{lem:PickDiscrete}
   Let $p_1,\ldots,p_n=p_0 \in \Z^2$ be any sequence of integer points.
   Then the closed polygon $P = (p_0,p_1,\ldots,p_n)$ satisfies Pick's equation 
   \[
@@ -578,297 +661,333 @@ by the \emph{weighted sum of enclosed lattice points}
   
   We cautiously call the above statement \emph{Pick's lemma}.
   In order to arrive at \emph{Pick's theorem},
-  we have to invoke Jordan's theorem and Hopf's theorem
+  we have to invoke Jordan's decomposition and Hopf's umlaufsatz
   for simply closed polygonal curves.
   This bridges the gap between the algebraic lemma
-  and the classical geometric theorem.
+  and the geometric theorem.
+
+  Since Jordan's and Hopf's are classical theorems in their own right,
+  we do not consider them as part of the \emph{proof},
+  but rather use them as the foundation
+  for \emph{formulating} Pick's equation. % lemma. theorem.
+  This translation being achieved, we can now focus on Pick's lemma.
 \end{remark}
 
-\begin{proof}[Proof of Pick's lemma]
-  The sum over $q \in \Z^2$ has finite support:
-  We can restrict it to a sufficiently large
-  square box $Q = \{-r,\ldots,r\}^2 \subset \Z^2$
-  containing all vertices $p_1,\ldots,p_n$.
-  Each point $q \in \Z^2 \minus Q$ yields $\Dang(P-q) = 0$.
-  Using this, we rearrange the sum defining the right hand side:
-  \begin{alignat*}{3}
-    & \Welp(P)
-    % && := \sum_{q \in \Z^2} \Dang(P-q)
-    && = \sum_{q \in Q} \Dang(P-q)
-    && = \sum_{q \in \Z^2} \sum_{i=1}^n \dang(p_{i-1}-q, p_i-q) 
-    \\ & && && = \sum_{i=1}^n
-    \underbracket{ \sum_{q \in \Z^2} \dang(q_{i-1}-v, q_i-v) }_{\normalsize =: \welp(p_{i-1},p_i)}
-    % \\ & && = \sum_{i=1}^n \welp(p_{i-1},p_i)
-  \end{alignat*}
 
-  Now both sides of Pick's equation look formally very similar:
-  \begin{alignat*}{3}
-    & \Area(P) && = \sum_{i=1}^{n} \area(p_{i-1},p_i) ,
-    \\
-    & \Welp(P) && = \sum_{i=1}^n \welp(p_{i-1},p_i) .
-  \end{alignat*}
+\section{Proving Pick's lemma}
 
-  Here another miracle happens:  Both sums are termwise equal!
+% \begin{proof}[Proof of Pick's lemma]
+The sum over $q \in \Z^2$ has finite support:
+We can restrict it to a sufficiently large
+square box $Q = \{-r,\ldots,r\}^2 \subset \Z^2$
+containing all vertices $p_1,\ldots,p_n$.
+Each point $q \in \Z^2 \minus Q$ yields $\Dang(P-q) = 0$.
+Using this, we rearrange the sum defining the right hand side:
+\begin{alignat*}{3}
+  & \Welp(P)
+  % && := \sum_{q \in \Z^2} \Dang(P-q)
+  && = \sum_{q \in Q} \Dang(P-q)
+  && = \sum_{q \in \Z^2} \sum_{i=1}^n \dang(p_{i-1}-q, p_i-q) 
+  \\ & && && = \sum_{i=1}^n
+  \underbracket{ \sum_{q \in \Z^2} \dang(q_{i-1}-v, q_i-v) }_{\normalsize =: \welp(p_{i-1},p_i)}
+  % \\ & && = \sum_{i=1}^n \welp(p_{i-1},p_i)
+\end{alignat*}
 
-  For any to lattice points $u,v \in Q$
-  in the square box $Q = \{-r,\ldots,r\}^2 \subset \Z^2$
-  we show that
-  \[
-  \area(u,v) = \welp(u,v)
-  \]
-  
-  \begin{figure}[ht]
-    \begin{tikzpicture}[x=4mm, y=4mm, font=\mathstrut]
-      \draw[draw=black, densely dotted, rounded corners=1mm, fill=black!10]
-      (-1.2,+1.8) rectangle (+5.2,+8.2);
-      % \draw[draw=black, rounded corners=1mm, fill=black!10]
-      % (+5,+4) -- (-1,+6) -- (-1,+8) -- (+5,+8) -- cycle;
-      % \draw[draw=black, rounded corners=1mm, fill=black!10]
-      % (+5,-4) -- (-1,-6) -- (-1,-8) -- (+5,-8) -- cycle;
-      \draw[color=black!50, step=1] (-8,-8) grid (+8,+8);
-      \draw[line width=1pt, ->] (-8,0) -- (+8,0); % node[below left] {$x$};
-      \draw[line width=1pt, ->] (0,-8) -- (0,+8); % node[below left] {$y$};
-      
-      \filldraw[draw=blue, thick, -latex'] (+5,+4) -- (-1,+6);
-      \draw[draw=black, fill=white, radius=2.0pt]
-      (+5,+4) circle node[right] {$u$}
-      (-1,+6) circle node[left] {$v$}
-      (+2,+5) circle;
-      \draw (9,7.5) node[right] {$q \mapsto \dang(u-q,v-q)$};
-      
-      \foreach \x in {-8,-7,...,-2,6,7,...,8}{
+Now both sides of Pick's equation look formally very similar:
+\begin{alignat*}{3}
+  & \Area(P) && = \sum_{i=1}^{n} \area(p_{i-1},p_i) ,
+  \\
+  & \Welp(P) && = \sum_{i=1}^n \welp(p_{i-1},p_i) .
+\end{alignat*}
+
+Here another miracle happens:
+Both sums are not only equal, but termwise equal!
+
+For any to lattice points $u,v \in Q$
+in our square box $Q = \{-r,\ldots,r\}^2 \subset \Z^2$
+we show that
+\[
+\area(u,v) = \welp(u,v) .
+\]
+
+\begin{figure}[ht]
+  \begin{tikzpicture}[x=4mm, y=4mm, font=\mathstrut]
+    \draw[draw=black, densely dotted, rounded corners=1mm, fill=black!10]
+    (-1.2,+1.8) rectangle (+5.2,+8.2);
+    % \draw[draw=black, rounded corners=1mm, fill=black!10]
+    % (+5,+4) -- (-1,+6) -- (-1,+8) -- (+5,+8) -- cycle;
+    % \draw[draw=black, rounded corners=1mm, fill=black!10]
+    % (+5,-4) -- (-1,-6) -- (-1,-8) -- (+5,-8) -- cycle;
+    \draw[color=black!50, step=1] (-8,-8) grid (+8,+8);
+    \draw[line width=1pt, ->] (-8,0) -- (+8,0); % node[below left] {$x$};
+    \draw[line width=1pt, ->] (0,-8) -- (0,+8); % node[below left] {$y$};
+    
+    \filldraw[draw=blue, thick, -latex'] (+5,+4) -- (-1,+6);
+    \draw[draw=black, fill=white, radius=2.0pt]
+    (+5,+4) circle node[right] {$u$}
+    (-1,+6) circle node[left] {$v$}
+    (+2,+5) circle;
+    \draw (9,7.5) node[right] {$q \mapsto \dang(u-q,v-q)$};
+    
+    \foreach \x in {-8,-7,...,-2,6,7,...,8}{
+      \foreach \y in {-8,...,8}{
+        \draw[draw=black, fill=white] (\x,\y) circle[radius=2.0pt];
+      }
+    }
+    
+    \draw[draw=black, fill=white] (10,5) circle[radius=2.0pt];
+    \draw (10,5) node[right] {$\mapsto 0$};
+    
+    
+    \begin{scope}
+      \foreach \y in {7,...,8}{
+        \draw[draw=black, fill=white] (-1,\y) circle[radius=2.0pt];
+      }
+      \foreach \y in {5,...,8}{
+        \draw[draw=black, fill=white] (+5,\y) circle[radius=2.0pt];
+      }
+      \clip (+5,+4.0) -- (+5,+8.2) -- (-1,+8.2) -- (-1,+6.0) -- cycle;
+      \foreach \x in {-1,...,5}{
         \foreach \y in {-8,...,8}{
-          \draw[draw=black, fill=white] (\x,\y) circle[radius=2.0pt];
+          \draw[draw=black, fill=purple] (\x,\y) circle[radius=2.0pt];
         }
       }
-
-      \draw[draw=black, fill=white] (10,5) circle[radius=2.0pt];
-      \draw (10,5) node[right] {$\mapsto 0$};
-
-      
-      \begin{scope}
-        \foreach \y in {7,...,8}{
-          \draw[draw=black, fill=white] (-1,\y) circle[radius=2.0pt];
+    \end{scope}
+    
+    \draw[draw=black, fill=purple] (10,6) circle[radius=2.0pt];
+    \draw (10,6) node[right] {$\mapsto -1/2$};
+    
+    \begin{scope}
+      \foreach \y in {-8,...,5}{
+        \draw[draw=black, fill=white] (-1,\y) circle[radius=2.0pt];
+      }
+      \foreach \y in {-8,...,3}{
+        \draw[draw=black, fill=white] (+5,\y) circle[radius=2.0pt];
+      }
+      \clip (-1,-8.2) -- (+5,-8.2) -- (+5,+4.0) -- (-1,+6.0) -- cycle;
+      \foreach \x in {-1,...,5}{
+        \foreach \y in {-8,...,8}{
+          \draw[draw=black, fill=teal] (\x,\y) circle[radius=2.0pt];
         }
-        \foreach \y in {5,...,8}{
-          \draw[draw=black, fill=white] (+5,\y) circle[radius=2.0pt];
-        }
-        \clip (+5,+4.0) -- (+5,+8.2) -- (-1,+8.2) -- (-1,+6.0) -- cycle;
-        \foreach \x in {-1,...,5}{
-          \foreach \y in {-8,...,8}{
-            \draw[draw=black, fill=purple] (\x,\y) circle[radius=2.0pt];
-          }
-        }
-      \end{scope}
-      
-      \draw[draw=black, fill=purple] (10,6) circle[radius=2.0pt];
-      \draw (10,6) node[right] {$\mapsto -1/2$};
-      
-      \begin{scope}
-        \foreach \y in {-8,...,5}{
-          \draw[draw=black, fill=white] (-1,\y) circle[radius=2.0pt];
-        }
-        \foreach \y in {-8,...,3}{
-          \draw[draw=black, fill=white] (+5,\y) circle[radius=2.0pt];
-        }
-        \clip (-1,-8.2) -- (+5,-8.2) -- (+5,+4.0) -- (-1,+6.0) -- cycle;
-        \foreach \x in {-1,...,5}{
-          \foreach \y in {-8,...,8}{
-            \draw[draw=black, fill=teal] (\x,\y) circle[radius=2.0pt];
-          }
-        }
-      \end{scope}
+      }
+    \end{scope}
+    
+    \draw[draw=black, fill=white]
+    (-1,6) circle[radius=2.0pt]
+    (+2,5) circle[radius=2.0pt]
+    (+5,4) circle[radius=2.0pt];
+    
+    \draw[draw=black, fill=teal] (10,4) circle[radius=2.0pt];
+    \draw (10,4) node[right] {$\mapsto +1/2$};
+  \end{tikzpicture}
+  \caption{Proving $\area(u,v) = \welp(u,v)$}
+  \label{fig:AreaEqualsWelp}
+\end{figure}
 
-      \draw[draw=black, fill=white]
-      (-1,6) circle[radius=2.0pt]
-      (+2,5) circle[radius=2.0pt]
-      (+5,4) circle[radius=2.0pt];
-      
-      \draw[draw=black, fill=teal] (10,4) circle[radius=2.0pt];
-      \draw (10,4) node[right] {$\mapsto +1/2$};
-    \end{tikzpicture}
-    \caption{Proving $\area(u,v) = \welp(u,v)$}
-    \label{fig:AreaEqualsWelp}
-  \end{figure}
+% We consider the edge between two integer points $u,v \in Q$.
 
-  % We consider the edge between two integer points $u,v \in Q$.
+The proof is illustrated in \autoref{fig:AreaEqualsWelp}.
+The algebraic calculation proceeds as follows.
+We can assume $v_1 < u_1$ and $u_2 + v_2 \ge 2$;
+the other cases are symmetric.
+\begin{enumerate}
+\item
+  For $q_1 < v_1 < u_1$ we have $\dang(u-q,v-q) = 0$.
+\item
+  For $q_1 > u_1 > v_1$ we have $\dang(u-q,v-q) = 0$.
+\item
+  The rectangle $R = \{v_1,\ldots,u_1\} \times \{u+v-r,\ldots,r\}$
+  allows the involution $q \mapsto u+v-q$.
+  We find $\dang(u-(u+v-q), v-(u+v-q)) = \dang(v-q,u-q) = -\dang(u-q,v-q)$.
+  Thus all summands cancel pairwise,
+  and we obtain $\sum_{q \in R} \dang(u-q,v-q) = 0$.
+\item
+  The remaining points add up to $\frac{1}{2} (u_1-v_1) (u_2+v_2) = \area(u,v)$.
+\end{enumerate}
 
-  The proof is illustrated in \autoref{fig:AreaEqualsWelp}.
-  The algebraic calculation proceeds as follows.
-  We can assume $v_1 < u_1$ and $u_2 + v_2 \ge 2$;
-  the other cases are symmetric.
-  \begin{enumerate}
-  \item
-    For $q_1 < v_1 < u_1$ we have $\dang(u-q,v-q) = 0$.
-  \item
-    For $q_1 > u_1 > v_1$ we have $\dang(u-q,v-q) = 0$.
-  \item
-    The rectangle $R = \{v_1,\ldots,u_1\} \times \{u+v-r,\ldots,r\}$
-    allows the involution $q \mapsto u+v-q$.
-    We find $\dang(u-(u+v-q), v-(u+v-q)) = \dang(v-q,u-q) = -\dang(u-q,v-q)$.
-    Thus all summands cancel pairwise,
-    and we obtain $\sum_{q \in R} \dang(u-q,v-q) = 0$.
-  \item
-    The remaining points add to $\frac{1}{2} (u_1-v_1) (u_2+v_2) = \area(u,v)$.
-  \end{enumerate}
+This proves $\welp(u,v) = \area(u,v)$
+for any edge with end points $u,v \in Q$.
+By summing over all edges of our polygon $P$,
+we conclude $\Area(P) = \Welp(P)$.
 
-\end{proof}
+% \end{proof}
+
+\begin{remark}
+  In this algebraic form, the proof is readily implemented in Lean,
+  or any other proof assistant.
+\end{remark}
 
 \appendix
 
 \section{Axiomatic angle measure}
 
-We can use different angle measures for the theorems of Jordan, Hopf, and Pick.
+We can use different angle measures for the theorems of
+Jordan and Hopf and thus Pick.
 In order to cover all cases simultaneously, 
 we extract the essential properties used in the proofs:
 
 \begin{definition}[angle measure\label{def:AngleMeasure}]
-  Let $\K$ be an ordered field.
-  An \emph{angle measure} is a map $w \colon \K^2 \times \K^2 \to \K$
+  Let $(\K,+,\cdot,\le)$ be an ordered field.
+  An \emph{angle measure} is a map $\mu \colon \K^2 \times \K^2 \to \K$
   satisfying the following conditions:
   \begin{enumerate}
   \item
-    Scaling: For all $u,v \in \K^2$ and $\lambda, \mu \in \K_{>0}$
-    we have $w(\lambda u, \mu v) = w(u,v)$.
+    Scaling: For all $u,v \in \K^2$ and $\lambda \in \K_{>0}$
+    we have $\mu(u,v) = \mu(\lambda u, v) = \mu(u, \lambda v)$.
   \item
-    Symmetry: $w(v,u) = -w(u,v)$ and $w(-u,-v) = w(u,v)$.
+    Symmetry: $\mu(v,u) = -\mu(u,v)$ and $\mu(-u,-v) = \mu(u,v)$.
   \item
-    Addition: $w(u,v) = w(u,s) + w(s,v)$ for $s \in [u,v]$.
+    Addition: $\mu(u,v) = \mu(u,s) + \mu(s,v)$ for $s \in [u,v]$.
   \item
-    Normalisation: $w(e_1,e_2) = \sfrac{1}{4}$.
+    Normalisation: $\mu(e_1,e_2) = \sfrac{1}{4}$.
   \end{enumerate}
 \end{definition}
 
-\section{Jordan's theorem for polygons}
 
-\section{Hopf's theorem for polygons}
+\section{Jordan's decomposition for polygons}
 
-\section{Ridorous proof vs intuitive plausibility: ``water proof''}
+The classical theorem, reformulated and reproven using our angle measure $\mu$.
+
+
+\section{Hopf's umlaufsatz for polygons}
+
+The classical theorem, reformulated and reproven using our angle measure $\mu$.
+
+
+\section{Physical plausibility: ``water proof'' }
 % \subsection{How to prove Pick's theorem?}
 
 In every-day mathematical communication we often only sketch
-the idea and rely on some degree of informal intuition.
+the idea and appeal to some degree of informal intuition.
 This is especially true for geometric statements,
 like Pick's theorem, where we often heavily rely on our visual perception.
 This is usually a good thing for human learning and understanding,
 but it notoriously hinders any sound formalization.
-I will first sketch such an intuive geometric visual proof, which seems hard to formalize.
-Then I will the carefully translate it into a more rigorous algebraic proof,
-which is much easier to formalize.
+
+We sketch such a visual proof, appealing to geometric intuition
+as a counterpart to our algebraic formalization.
+We then explain how the intuition can be made precise
+and finally translates to our algebraic viewpoint.
+
+\begin{figure}[ht]
+  \begin{tikzpicture}[x=5mm, y=5mm, rounded corners=0.1pt]
+    \begin{scope}[shift={(0,0)}]
+      \draw[color=black!50, step=1] (-1,-1) grid (6,7);
+      \draw[line width=1pt, black] %, fill=black!20, fill opacity=0.3]
+      (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
+      (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
+      \begin{scope}
+        \clip (-1,-1) rectangle (6,7)
+        (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
+        (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
+        \foreach \x in {-1,0,...,6}{
+          \foreach \y in {-1,0,...,7}{
+            \draw[draw=none, fill=black!30, fill opacity=0.4] (\x,\y) circle[radius=1mm];
+          }
+        }
+      \end{scope}
+      \begin{scope}
+        \clip (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
+        (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
+        \foreach \x in {-1,0,...,6}{
+          \foreach \y in {-1,0,...,7}{
+            \draw[draw=none, fill=blue!60, fill opacity=0.4] (\x,\y) circle[radius=1mm];
+          }
+        }
+      \end{scope}
+    \end{scope}
+    \begin{scope}[shift={(9,0)}]
+      \draw[color=black!50, step=1] (-1,-1) grid (6,7);
+      \draw[line width=1pt, black] %, fill=black!20, fill opacity=0.3]
+      (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
+      (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
+      \begin{scope}
+        \clip (-1,-1) rectangle (6,7)
+        (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
+        (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
+        \foreach \x in {-1,0,...,6}{
+          \foreach \y in {-1,0,...,7}{
+            \draw[draw=none, fill=black!30, fill opacity=0.2] (\x,\y) circle[radius=2mm];
+          }
+        }
+      \end{scope}
+      \begin{scope}
+        \clip (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
+        (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
+        \foreach \x in {-1,0,...,6}{
+          \foreach \y in {-1,0,...,7}{
+            \draw[draw=none, fill=blue!60, fill opacity=0.2] (\x,\y) circle[radius=2mm];
+          }
+        }
+      \end{scope}
+    \end{scope}
+    \begin{scope}[shift={(18,0)}]
+      \draw[color=black!50, step=1] (-1,-1) grid (6,7);
+      \draw[line width=1pt, black] %, fill=black!20, fill opacity=0.3]
+      (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
+      (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
+      \begin{scope}
+        \clip (-1,-1) rectangle (6,7)
+        (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
+        (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
+        \foreach \x in {-1,0,...,6}{
+          \foreach \y in {-1,0,...,7}{
+            \draw[draw=none, fill=black!30, fill opacity=0.1] (\x,\y) circle[radius=4mm];
+          }
+        }
+      \end{scope}
+      \begin{scope}
+        \clip (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
+        (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
+        \foreach \x in {-1,0,...,6}{
+          \foreach \y in {-1,0,...,7}{
+            \draw[draw=none, fill=blue!80, fill opacity=0.1] (\x,\y) circle[radius=4mm];
+          }
+        }
+      \end{scope}
+    \end{scope}
+  \end{tikzpicture}
+  \caption{\textgreek{Πάντα ῥεῖ}, everything flows.  We let the water do the work.}
+  % \caption{\textgreek{Πάντα ῥεῖ}, everything flows.  Let gravity do the work!}
+  \label{fig:WaterFlow}
+\end{figure}
 
 \begin{proof}[The water proof]
   At each integer point $q \in \Z^2$ we place a unit drop of water.
   The water then flows evenly in all directions.  Finally, the plane is
   uniformly covered with water, one unit of water per unit square.
-  To ensure finiteness, we can think of periodic boundary conditions.
+  (To ensure finiteness, we can think of periodic boundary conditions.)
   % This is a more reasonable experimental setup!
 
-  \begin{figure}[ht]
-    \begin{tikzpicture}[x=5mm, y=5mm, rounded corners=0.1pt]
-      \begin{scope}[shift={(0,0)}]
-        \draw[color=black!50, step=1] (-1,-1) grid (6,7);
-        \draw[line width=1pt, black] %, fill=black!20, fill opacity=0.3]
-        (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
-        (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
-        \begin{scope}
-          \clip (-1,-1) rectangle (6,7)
-          (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
-          (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
-          \foreach \x in {-1,0,...,6}{
-            \foreach \y in {-1,0,...,7}{
-              \draw[draw=none, fill=black!30, fill opacity=0.4] (\x,\y) circle[radius=1mm];
-            }
-          }
-        \end{scope}
-        \begin{scope}
-          \clip (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
-          (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
-          \foreach \x in {-1,0,...,6}{
-            \foreach \y in {-1,0,...,7}{
-              \draw[draw=none, fill=blue!60, fill opacity=0.4] (\x,\y) circle[radius=1mm];
-            }
-          }
-        \end{scope}
-      \end{scope}
-      \begin{scope}[shift={(9,0)}]
-        \draw[color=black!50, step=1] (-1,-1) grid (6,7);
-        \draw[line width=1pt, black] %, fill=black!20, fill opacity=0.3]
-        (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
-        (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
-        \begin{scope}
-          \clip (-1,-1) rectangle (6,7)
-          (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
-          (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
-          \foreach \x in {-1,0,...,6}{
-            \foreach \y in {-1,0,...,7}{
-              \draw[draw=none, fill=black!30, fill opacity=0.2] (\x,\y) circle[radius=2mm];
-            }
-          }
-        \end{scope}
-        \begin{scope}
-          \clip (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
-          (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
-          \foreach \x in {-1,0,...,6}{
-            \foreach \y in {-1,0,...,7}{
-              \draw[draw=none, fill=blue!60, fill opacity=0.2] (\x,\y) circle[radius=2mm];
-            }
-          }
-        \end{scope}
-      \end{scope}
-      \begin{scope}[shift={(18,0)}]
-        \draw[color=black!50, step=1] (-1,-1) grid (6,7);
-        \draw[line width=1pt, black] %, fill=black!20, fill opacity=0.3]
-        (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
-        (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
-        \begin{scope}
-          \clip (-1,-1) rectangle (6,7)
-          (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
-          (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
-          \foreach \x in {-1,0,...,6}{
-            \foreach \y in {-1,0,...,7}{
-              \draw[draw=none, fill=black!30, fill opacity=0.1] (\x,\y) circle[radius=4mm];
-            }
-          }
-        \end{scope}
-        \begin{scope}
-          \clip (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
-          (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
-          \foreach \x in {-1,0,...,6}{
-            \foreach \y in {-1,0,...,7}{
-              \draw[draw=none, fill=blue!80, fill opacity=0.1] (\x,\y) circle[radius=4mm];
-            }
-          }
-        \end{scope}
-      \end{scope}
-    \end{tikzpicture}
-    \caption{\textgreek{Πάντα ῥεῖ}, everything flows.  We let the water do the work.}
-    % \caption{\textgreek{Πάντα ῥεῖ}, everything flows.  Let gravity do the work!}
-    \label{fig:WaterFlow}
-  \end{figure}
-  
-  The net flow over each edge $[u,v]$ is zero by symmetry:
-  Half rotation $\rho \colon z \mapsto c - z$ about
-  its center $c = (u+v)/2$ reverses the edge and thus the flow.
-  Since its end points $u,v \in \Z^2$ are integer,
-  $\rho$ maps the lattice $\Z^2$ to itself; % , so nothing changes.
+  Now consider two integer points $u,v \in \Z^2$.
+  Half rotation about its center $c = (u+v)/2$
+  defines the involution $\rho \colon z \mapsto u + v - z$.
+  This reverses the edge and thus the flow.
+  Since $\rho$ maps the lattice $\Z^2$ to itself,
   the water that flows from the point $q \in \Z^2$ over $[u,v]$ 
   is compensated by the water flowing from the point $\rho(q) \in \Z^2$ over $[u,v]$.
+  The net flow over the edge $[u,v]$ is zero.
   
-  This shows that the enclosed amount of water never changes.
-  At the start it is the share of drops that fall into $R$.
-  At the end it equals the surface area of $R$:
+  This shows that the amount of water in $B$ never changes.
+  At the start it is the share of drops that fall into $B$.
+  At the end it equals the surface area of $B$.
+  We thus obtain:
   \begin{align*}
-    A = I + \sum_{q \in \Z^2 \cap \partial R} \alpha(q) / 2\pi
+    \vol_2(B) = I + \sum_{q \in \Z^2 \cap C} \alpha(q) / 2\pi
   \end{align*}
 
-  Here $\alpha(q)$ is the inner angle at the boundary point $q \in \Z^2 \cap \partial R$.
-  Recall that the sum of outer angles is $\sum_q [ \pi - \alpha(q) ] = 2\pi$,
-  so we arrive at picks formula.
+  Here $\alpha(q)$ is the inner angle at the boundary point $q \in C$.
+  So our physical intuition, or gedankenexperiment, leads us to
+  Pick's lemma \ref{lem:PickEuclidean} using the euclidean angle measure.
+
+  We once again invoke Hopf's umlaufsatz:
+  the sum of outer angles is $\sum_{q \in C} [ \pi - \alpha(q) ] = 2\pi$,
+  so we arrive at Pick's theorem $\vol_2(B) = I + J/2 - 1$.
 \end{proof}
 
-Pick's theorem can be split in two parts:
-First, the point count.
-Second, the umlaufsatz.
+% Pick's theorem can be split in two parts:
+% First, the point count.
+% Second, the umlaufsatz.
 
 % The traditional way is to count each boundary point with $\sfrac{1}{2}$
 % and finally add $-1$ as a correction term
@@ -878,27 +997,85 @@ Second, the umlaufsatz.
 % The algebraic way is detailed below.  It is less intuitive, but much easier to compute.
 
 \begin{remark}
+  This “water proof” is a wonderful example
+  of a physical plausibility argument.
+  To many people is seems convincing
+  because it appeals to our physical experience
+  and our tried-and-tested understanding of the world.
+  But is it a proof, really?
+  Can we actually understand the physical world?
+  It is easy to visualize, intuitively, but hard to formalize, rigorously.
+\end{remark}
+
+We can give the physical argument more mathematical substance.
+%
+First, we want to ensure finiteness of our experimentation table,
+so instead of the entire plane $\R^2$ we consider a square $[-r,+r]^2$
+with sufficiently large $r \in \N$ and periodic boundary conditions.
+Geometrically, this is a flat torus $T = \R^2 / 2r\Z^2$,
+and we keep all necessary symmetries: translations and reflections.
+
+Second, we specify the properties of our idealized water drops.
+For each time $t \in \ei{0}{1}$ let $\mu_t$ be a continuous probability measure,
+% starting with $\mu_0$ as the Dirac measure concentrated in $0$ and
+ending with the uniform (Haar) measure $\mu_1$ on $T$,
+so that $4 r^2 \mu_1(B)$ is the area of our inner region. 
+Now we observe the quantity 
+\[
+% f \colon \ei{0}{1} \to \R_{\ge0} \colon t \mapsto
+f(t) := \sum_{q \in \Z^2/2r\Z^2} \mu_t(B-q) .
+\]
+
+We have $f(1) = \vol_2(B)$.
+For each $t > 0$ we assume $\mu_t$ to be symmetric
+with respect to $z \mapsto -z$ and uniform on its support.
+Assuming that $\mu_t$ varies continuously with $t$,
+the above symmetry argument suggests that $f$ is constant.
+At the other end we look at the limit for $t \searrow 0$:
+
+\begin{example}
+  % In our above experiment, as illustrated in \autoref{fig:WaterFlow},
+  As illustrated in \autoref{fig:WaterFlow}, for small $t$ % $0 < t \le \sfrac{1}{2}$
+  we set $\supp \mu_t = D(0,t)$ to be the disc of radius $t$ around the origin $0$.
+  For sufficiently small $t$ thus obtain $f(t) = \sum_{q \in \Z^2} \Ang(P-q)$.
+
+  This recovers Pick's lemma \ref{lem:PickEuclidean}
+  using the euclidean angle measure.
+\end{example}
+
+\begin{example}
+  Alternatively, for small $t$ % $0 < t \le \sfrac{1}{2}$
+  we consider set $\supp \mu_t = [-t^2,t^2] \times [-t,t]$
+  to be a thin vertical rectangle.
+  In the limit $t \searrow 0$ we thus obtain
+  $f(t) \to \sum_{q \in \Z^2} \Dang(P-q)$.
+
+  This recovers Pick's lemma \ref{lem:PickDiscrete}
+  using the discrete angle measure.
+\end{example}
+
+\begin{remark}
   This tale can be recounted by replacing water with heat.
   This is appealing for a physically inclined audience
   familiar with the heat equation or diffusion.
-  It emphasizes superposition and the linear nature of the argument,
-  whereas the actual equations for water rather obfuscate the picture.
-  At any rate, we can choose from two versions,
-  one story each for summer and winter semesters.
-
-  % Another variant is to think of reflective walls.
-  % Geometrically, we can take two copies of $R$
-  % and glue them together along their common boundary.
-  % This produces a closed surface $S$ homeomorphic to the sphere,
-  % with volume $\vol_2(S) = 2 A$ and Euler characteristic $\chi(S) = 2$.
+  Moreover, this provides an explicit model of the flow
+  as partial differential equations.
+  Within the chosen model, we can then 
+  prove that $f$ is indeed constant
+  and calculate the limit for $t \searrow 0$.
+  % It emphasizes superposition and the linear nature of the argument,
+  % whereas the actual equations for water rather obfuscate the picture.
+  % At any rate, we can choose from two versions,
+  % one story each for summer and winter semesters.
 \end{remark}
 
 \begin{remark}
-  This “water proof” is a wonderful example of a plausibility argument.
-  It is so very convincing because it appeals to our physical experience
-  and our tried-and-tested understanding of the world.  But is it a proof, really?
-  Can we actually understand the world?
-  It is easy to visualize, intuitively, but hard to formalize, rigorously.
+  Another variant is to think of reflective walls.
+  Geometrically, we can take two copies of $B \cup C$
+  and glue them together along their common boundary $C$.
+  This produces a closed surface $S$ homeomorphic to the sphere,
+  with volume $\vol_2(S) = 2 \vol_2(B)$ and Euler characteristic $\chi(S) = 2$.
+  The vertices provide the curvature, as in the Gauß--Bonnet theorem.
 \end{remark}
 
 % superposition, will be used later
