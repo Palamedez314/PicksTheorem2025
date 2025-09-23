@@ -42,19 +42,24 @@
 
 \usepackage[a4paper]{geometry}
 \geometry{
+  twoside,
   width=135mm,
   height=240mm,
+  left=40mm,
   headsep=5mm,
   footskip=20mm,
 }
 
-\title{Formalizing Pick's Theorem} % in Lean}
+\title{Formalizing Pick's Theorem, efficiently} % in Lean}
 
-\author{Elli zu Neblberg \& friends} % collaborators} % 
+\author{Michael Eisermann}
 
 \address{Institut für Geometrie und Topologie, Universität Stuttgart, Germany}
 \email{Michael.Eisermann@mathematik.uni-stuttgart.de}
 % \urladdr{www.igt.uni-stuttgart.de/eiserm}
+
+\author{Elli zu Neblberg}
+% \author{Elli zu Neblberg \& friends}
 
 \date{Burg Liebenzell, first version September 2024, this version compiled \today}
 
@@ -142,7 +147,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Introduction} \label{sec:Introduction}
+\section{Introduction: Pick's wonderful theorem} \label{sec:Introduction}
 
 \bibliographystyle{amsplain}
 \bibliography{leanpick}
@@ -239,22 +244,22 @@ Here the magic of Pick's theorem happens:
 
 \begin{figure}[ht]
   \begin{tikzpicture}[x=5mm, y=5mm, rounded corners=0.1pt]
-    \begin{scope}[shift={(-5,-2)}]
-      \draw[color=black!50, step=1] (-1,-1) grid (7,5);
-      \draw[line width=1pt, blue, fill=yellow!50, fill opacity=0.3] (0,0) rectangle (6,4);
+    \begin{scope}[shift={(0.0,-2)}]
+      \draw[color=black!50, step=1] (-1,-1) grid (6,5);
+      \draw[line width=1pt, blue, fill=yellow!50, fill opacity=0.3] (0,0) rectangle (5,4);
       \draw[inner sep=1pt, font=\small\fade\mathstrut] 
       (0,0) node[below right]{$0$}
-      (6,0) node[below left]{$a$}
+      (5,0) node[below left]{$a$}
       (0,0) node[above left]{$0$}
       (0,4) node[below left]{$b$};
-      \clip (0,0) rectangle (6,4);
-      \foreach \x in {0,...,6}{
+      \clip (0,0) rectangle (5,4);
+      \foreach \x in {0,...,5}{
         \foreach \y in {0,...,4}{
           \draw[draw=none, fill=blue, fill opacity=0.5] (\x,\y) circle[radius=1mm];
         }
       }
     \end{scope}
-    \begin{scope}[shift={(6,0)}]
+    \begin{scope}[shift={(9.5,0)}]
       \draw[color=black!50, step=1] (-3,-3) grid (3,3);
       \draw[line width=1pt, teal, fill=yellow!50, fill opacity=0.3]
       (+3,0) -- (0,+3) -- (-3,0) -- (0,-3) -- cycle;
@@ -267,7 +272,7 @@ Here the magic of Pick's theorem happens:
         }
       }
     \end{scope}
-    \begin{scope}[shift={(13,0)}, x=2.5mm, y=2.5mm]
+    \begin{scope}[shift={(16,0)}, x=2.5mm, y=2.5mm]
       \draw[color=black!50, step=1] (-6,-6) grid (6,6); % (-7,-7) grid (7,7);
       \draw[line width=1pt, orange, fill=yellow!50, fill opacity=0.3]
       (+1,+0) -- (+6,+1) -- (+3,+1) -- (+5,+2) -- (+2,+1) -- (+5,+3) -- (+3,+2) -- (+6,+5) --
@@ -281,8 +286,9 @@ Here the magic of Pick's theorem happens:
       cycle;
       \draw[draw=none, fill=orange, fill opacity=0.5] (0,0) circle[radius=1mm];
     \end{scope}
+    \draw (22,0) node{\includegraphics[height=30mm]{Georg-Pick}};
   \end{tikzpicture}
-  \caption{(a) rectangle, (b) oblique square, (c) Farey sunburst $F_6$}
+  \caption{(a) rectangle, (b) oblique square, (c) Farey sunburst $F_6$, (d) Georg Pick}
   \label{fig:PickExamples}
 \end{figure}
 
@@ -293,7 +299,7 @@ Here the magic of Pick's theorem happens:
   which nicely adds up to $\vol_2(R) = a b$.
 
   (b) For the oblique square $Q$ of \autoref{fig:PickExamples}(b) 
-  we find $I = 8$ and $J = 18$, whence $\vol_2(Q) = 16$.
+  we find $I = 13$ and $J = 12$, whence $\vol_2(Q) = 18$.
   By Pick's theorem we can measure the area
   or count lattice points, whichever is simpler.
   
@@ -586,8 +592,9 @@ by Jordan and Hopf.
 
 \subsection{The discrete angle measure}
 
-The euclidean angle measure requires the real numbers and transcendental functions.
-For computer implementation this is a burden:
+The euclidean angle measure requires
+real numbers and transcendental functions.
+For computer implementation this is a heavy burden:
 \texttt{Real} is good for proofs but bad for calculation,
 whereas \texttt{Float} ist good for approximations but bad for proofs.
 
@@ -649,7 +656,7 @@ for example $\Q \subseteq \K \subseteq \R$.
 \end{definition}
 
 If our polygon $P$ is closed and $0 \notin C$,
-as before $\Dang(P) = \Ang(P)$ measures the winding number around $0$.
+then $\Dang(P) = \Ang(P)$ measures the winding number around $0$.
 The summands change, but the overall sum is the same;
 the difference is only noticeable for boundary points $q \in C$ or open polygons.
 
@@ -821,9 +828,8 @@ We assume $v_1 < u_1$ and $u_2 + v_2 \ge 2$;
 the other cases are symmetric.
 \begin{enumerate}
 \item
-  For $q_1 < v_1 < u_1$ we have $\dang(u-q,v-q) = 0$.
-\item
-  For $q_1 > u_1 > v_1$ we have $\dang(u-q,v-q) = 0$.
+  For $q_1 < v_1$ or $q_1 > u_1$ we have $\dang(u-q,v-q) = 0$.
+  % For $q_1 < v_1 < u_1$ or $q_1 > u_1 > v_1$ we have $\dang(u-q,v-q) = 0$.
 \item
   The rectangle $R = \{v_1,\ldots,u_1\} \times \{u+v-r,\ldots,r\}$
   allows the involution $q \mapsto u+v-q$.
@@ -831,13 +837,17 @@ the other cases are symmetric.
   Thus all summands cancel pairwise,
   and we obtain $\sum_{q \in R} \dang(u-q,v-q) = 0$.
 \item
-  The remaining points add up to $\frac{1}{2} (u_1-v_1) (u_2+v_2) = \area(u,v)$.
+  The remaining summands add up to $\frac{1}{2} (u_1-v_1) (u_2+v_2) = \area(u,v)$.
+  More precisely, we find $\dang(u-q,v-q) = \sfrac{1}{2}$
+  for $q \in \{u_1+1,\ldots,v_1-1\} \times \{-r,\ldots,u_2+v_2-r-1\}$
+  and $\dang(u-q,v-q) = \sfrac{1}{4}$
+  for $q \in \{u_1,v_1\} \times \{-r,\ldots,u_2+v_2-r-1\}$.
 \end{enumerate}
 
 This proves $\welp(u,v) = \area(u,v)$
 for any edge with end points $u,v \in Q$.
 By summing over all edges of our polygon $P$,
-we conclude $\Area(P) = \Welp(P)$.
+we conclude $\Area(P) = \Welp(P)$, as claimed. % desired.
 
 % \end{proof}
 
@@ -908,12 +918,12 @@ Using the angle measure $\mu$, we define the winding number
   (2) The curve $C$ is the boundary of $A$ and of $B$ within the plane $\K^2$.
   % Each point $q \in C$ is a common boundary point of $A$ and $B$.
 
-  (3) At each boundary point $q \in C$, the value $\mu(P-q)$ measures the interior angle.
+  (3) At each boundary point $q \in C$, the value $\mu(P-q)$ measures the interior angle:
 
   (3a) At each point $q \in \ee{p_{i-1}}{p_i}$ in the interior of an edge,
   we find $\mu(P-q) = \sfrac{1}{2}$.
   
-  (3b) At each vertex $q = p_i$, finally, we find
+  (3b) At each vertex $q = p_i$ we find
   $\mu(P-p_i) = \beta_i := \mu(p_{i+1}-p_i, p_{i-1}-p_i)$.
 \end{theorem}
 
@@ -933,10 +943,19 @@ Using the angle measure $\mu$, we define the winding number
   % For $q \in \ee{p_{i-1}}{p_i}$ these can be reached by a small path
   % perpendicular to the edge; for $q \in p_i$ we can bisect the angle.
 
-  (3) The extension to boundary points is usually neglected. % omitted.
-  It is, however, not only oddly satisfying but also practically useful.
-  In particular it leads us to Pick's theorem. % opens a way 
+  (3) The extension to boundary points $q \in C$ % is usually neglected. % omitted.
+  follows from (1) by cutting the corner at $q$. % with an extra edge. 
+  It is not only oddly satisfying but also practically useful.
+  In particular it leads us to Pick's theorem. % opens a way
 \end{remark}
+
+A pen-and-paper proof % of these two theorems
+can be established as in the classical setting,
+% With sufficient patience this can be formalized algebraically
+and then implemented in a proof assistant. % for example Lean,
+This foundational work usually requires
+``augmenting the existing geometry libraries'' \cite{Binder:Kosaian:2024}.
+It merits further exploration beyond the scope of the modest article.
 
 
 \setcounter{section}{7}
@@ -955,7 +974,7 @@ and proven using any angle measure $\mu$.
     \alpha_i := \mu(p_{i+1}-p_i, p_i-p_{i-1}) .
   \end{align*}
 
-  Then the total turning number (or tangent umlaufzahl)
+  Then the total tangent turning number (or umlaufzahl)
   adds up to $\sum_{i=1}^n \alpha_i = 1$.
 \end{theorem}
 
@@ -969,23 +988,129 @@ and proven using any angle measure $\mu$.
   in any triangle, the interiour angles add up
   to $\beta_1 + \beta_2 + \beta_3 = 1/2$,
   correspoding to $\pi/2$ or $180^\circ$.
-  Likewise for any $n$--gon.
+  % Likewise for any $n$--gon.
 \end{remark}
 
 Together with Jordan's theorem, we obtain the desired
 point count $\sum_{q \in \Z^2 \cap C} \mu(P-q) = J/2 - 1$.
 
-A pen-and-paper proof of these two theorems
-can be established as in the classical setting,
-% With sufficient patience this can be formalized algebraically
-and then implemented in a proof assistant. % for example Lean,
-This requires ``augmenting the existing geometry libraries'' \cite{Binder:Kosaian:2024}
-and merits further exploration beyond the scope of the article.
-
 We have used the theorems of Jordan and Hopf in order
 to motivate our \emph{formulation} of Pick's lemma;
 our \emph{proof}, however, is self-contained and
 does not logically require them.
+
+
+\subsection{Formalizing Hopf's umlaufsatz}
+
+A proof of Hopf's umlaufsatz is straight-forward for triangles.
+It immediately extends to convex polygons and
+more generally to star-shaped polygons.
+It seems intuitively plausible for any simply closed polygon,
+but in this general case a proof is far from obvious.
+It becomes false for non-simply closed polygons.
+
+\begin{figure}[ht]
+  \begin{tikzpicture}[x=5mm, y=5mm, font=\footnotesize\mathstrut]
+    \begin{scope}[shift={(0,1)}]
+      \draw[line width=1pt, blue, fill=yellow!50, fill opacity=0.3]
+      (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
+      (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
+      \draw[inner sep=1pt, font=\mathstrut] 
+      (2,0) node[below left]{$p_{n-2}$}
+      (3,0) node[below]{$p_{n-1}$}
+      (4,0) node[below right]{$p_0$}
+      (5,0) node[below right]{$p_1$};
+      \foreach \x/\y in { 0/2, 2/0, 3/0, 4/0, 5/0, 5/2, 4/3, 5/5, 2/6, 0/3, 2/5, 4/1, 3/1, 2/3 }{
+        \draw[fill=black] (\x,\y) circle[radius=1pt];
+      }
+    \end{scope}
+    \begin{scope}[shift={(9,0)}]
+      \draw[draw=black!30, step=1.0] (0,1) grid (5,6);
+      \draw[-latex'] (0,1) -- (6,1) node[above, xshift=-4pt]{$i$};
+      \draw[-latex'] (0,1) -- (0,7) node[right, yshift=-4pt]{$j$};
+      \draw (0,1) node[below]{$0$} (2.5,1) node[below]{$\ldots$} (5,1) node[below]{$n{-}2$};
+      \draw (0,1) node[left]{$1$}  (0,3.5) node[left]{$\vdots$}  (0,6) node[left]{$n{-}1$};
+      \foreach \i [
+        evaluate= \i as \ii using {int(\i+2)}
+      ] in {0,...,3}{
+        \foreach \j in {\ii,...,5}{
+          \draw[draw=black, fill=teal!15] (\i,\j) rectangle (\i+1,\j+1);
+        }
+      }
+      \foreach \i in {0,...,4}{
+        \draw[draw=black, fill=blue!10] (\i,\i+1) |- (\i+1,\i+2) -- cycle;
+      }
+      \foreach \i/\j in {0/1, 1/2, 2/3, 3/4, 4/5, 5/6, 4/6, 3/6, 2/6, 1/6, 0/6, 0/5, 0/4, 0/3, 0/2}{
+        \draw[fill=black] (\i,\j) circle[radius=1pt];
+      }
+      \draw (5.5,3.5) node[right, align=center]{
+        discrete homotopy \\ from the hypotenuse \\ to the catheti};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{Proof of Hopf's theorem}
+  \label{fig:HopfTheorem}
+\end{figure}
+
+Hopf first formulated his umlaufsatz \cite{Hopf:1935} for simply closed paths
+$\gamma \colon [0,1] \to \R^2$ that are continuously differentiable.
+(He then showed that it suffices to require this condition piecewise.)
+He proved his theorem by an ingenious homotopy argument.
+For future reference, we sketch an algebraic version
+for polygons over any ordered field $(\K,+,\cdot,\le)$,
+using any angle measure $\mu$.
+The key idea is adapted from Hopf's original
+and illustrated in \autoref{fig:HopfTheorem}.
+
+\begin{proof}[Hopf's homotopy proof]
+  We consider the vertices $p_1,\ldots,p_n=p_0$ with $p_i = (x_i,y_i) \in \K^2$.
+  After renumbering, we can assume that $y_0$ is minimal.
+  After translation we have $p_0 = (0,0)$ and $y_i \ge 0$ for all $i$.
+  By inserting small edges around $p_0$,
+  we can achieve $0 = y_0 = y_1 = y_{n-1} = y_{n-2}$
+  und $x_{n-2} < x_{n-1} < x_0 < x_1$.
+  (This is shown on the left of \autoref{fig:HopfTheorem}.)
+  
+  For $0 \le i < j \le n-1$ we consider the secant $s_{i,j} := p_j - p_i$.
+  From $s_{0,1}$ via $s_{0,j}$ to $s_{0,n-1}$ we perform a first half turn,
+  then via $s_{i,n-1}$ to $s_{n-2,n-1}$ we perform a second half turn.
+
+  If, moreover, our polygon $P$ is simply closed,
+  then this movement corresponds to the umlaufzahl.
+  More precisely, we prove the following equation by a discrete homotopy:
+  \begin{align}
+    \label{eq:Hopf}
+    % T(p) & \;=\;
+    \sum_{k=1}^{n-2} \mu( s_{k-1,k}, s_{k,k+1} )
+    \;=\;
+    \sum_{j=1}^{n-2} \mu( s_{0,j}, s_{0,j+1} ) +
+    \sum_{i=1}^{n-2} \mu( s_{i-1,n-1}, s_{i,n-1} )
+  \end{align}
+  \begin{enumerate}
+  \item
+    Triangles: For $0 \le i \le n-2$ and $j = i+1$ we find
+    \begin{align*}
+      \mu( s_{i-1,i}, s_{i,i+1} ) =
+      \mu( s_{i-1,i}, s_{i-1,i+1} ) +
+      \mu( s_{i-1,i+1}, s_{i,i+1} ) .
+    \end{align*}
+    This essentially uses that our polygon is simple,
+    so the triangle is non-degenerate.
+  \item
+    Squares: For $0 \le i < n-2$ and $i+1 < j \le n-1$ we find
+    \begin{align*}
+      0 = \mu( s_{i,j}, s_{i,j+1} ) + \mu( s_{i,j+1}, s_{i+1,j+1} )
+      - \mu( s_{i,j}, s_{i+1,j} ) + \mu( s_{i+1,j}, s_{i+1,j+1} ) .
+    \end{align*}
+    This essentially uses that our polygon is simple,
+    so $[p_i,p_{i+1}] \cap [p_j,p_{j+1}] = \emptyset$.
+  \end{enumerate}
+
+  The left hand side of \eqref{eq:Hopf} is the total tangent turning number.
+  We replace each summand using (1) and then add all terms (2).
+  Most of the summands cancel pairwise.
+  The remaining terms yield the right hand side of \eqref{eq:Hopf}.
+  This equals $1$, as explained above.
+\end{proof}
 
 
 \setcounter{section}{22}
@@ -1135,7 +1260,7 @@ closing this circle of ideas.
 % The algebraic way is detailed below.  It is less intuitive, but much easier to compute.
 
 \begin{remark}
-  This “water proof” is a wonderful example
+  This “water proof” is a wonderous example
   of a physical plausibility argument.
   To many people is seems convincing
   because it appeals to our physical experience
@@ -1228,9 +1353,10 @@ At the other end we look at the limit for $t \searrow 0$:
 \section{Quotes}
 
 Pick's theorem has been formally implemented, with considerable effort,
-% in HOL Light \cite{Harrison:2011} and Isabelle \cite{Binder:Kosaian:2024}.
-first in 2011 by John Harrison in \texttt{HOL Light} \cite{Harrison:2011}
-then in 2024 by Sage Binder and Katherine Kosaian in \texttt{Isabelle} \cite{Binder:Kosaian:2024}.
+% in HOL\,Light \cite{Harrison:2011} and Isabelle \cite{Binder:Kosaian:2024}.
+first in 2011 by John Harrison in \texttt{HOL\,Light} \cite{Harrison:2011},
+then in 2024 by Sage Binder and Katherine Kosaian in \texttt{Isabelle}
+\cite{Binder:Kosaian:2024}.
 
 \begin{quote}
   The proof turned out to be somewhat harder work than expected. [\dots]
@@ -1248,7 +1374,7 @@ then in 2024 by Sage Binder and Katherine Kosaian in \texttt{Isabelle} \cite{Bin
   (John Harrison \cite{Harrison:2011})
 \end{quote}
 
-We close with a wonderful anecdote concerning practical applicability: 
+We close with a heartwarming anecdote concerning practical applicability: 
 
 \begin{quote}
   Some years ago, the Northwest Mathematics Conference was held in Eugene,
@@ -1278,9 +1404,15 @@ Elli zu Neblberg expresses her heartfelt gratitude to all of her collaborators.
 \begin{thebibliography}{8}
 
 \bibitem{Pick:1899}
-  \textsc{Georg Pick:} \textit{Geometrisches zur Zahlenlehre.}
+  \textsc{G.\,Pick:} \textit{Geometrisches zur Zahlenlehre.}
   Sitzungsberichte des deutschen naturwissenschaftlich-medicinischen Vereines für Böhmen
   „Lotos“ in Prag 19 (1899) 311--319. % (neue Folge) 
+  \url{https://www.biodiversitylibrary.org/item/50207#page/327}
+  
+\bibitem{Hopf:1935}
+  \textsc{H.\,Hopf:} \textit{Über die Drehung der Tangenten und Sehnen ebener Kurven.}
+  Compositio Mathematica 2 (1935) 50--62.
+  \url{https://www.numdam.org/article/CM_1935__2__50_0.pdf}
 
 \bibitem{Gruenbaum:Shepard:1993}
   \textsc{B.\,Grünbaum, G.C.\,Shephard:} \textit{Pick's Theorem.}
@@ -1290,7 +1422,7 @@ Elli zu Neblberg expresses her heartfelt gratitude to all of her collaborators.
 \bibitem{Harrison:2011}
   \textsc{J.\,Harrison:} \textit{A formal proof of Pick’s Theorem.}
   Mathematical Structures in Computer Science 21 (2011) 715--729.
-  \url{doi:10.1017/S0960129511000089}
+  \url{https://doi.org/10.1017/S0960129511000089}
   
 \bibitem{Binder:Kosaian:2024}
   \textsc{S.\,Binder, K.\,Kosaian:} \textit{Pick's Theorem.}
