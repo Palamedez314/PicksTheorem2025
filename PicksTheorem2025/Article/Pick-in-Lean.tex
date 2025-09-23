@@ -14,8 +14,11 @@
   noto,
   vvarbb,
   amsthm,
+  nott, 
 ]{newtx}
 
+\usepackage[scale=0.95,varqu,varl]{inconsolata}
+  
 \usepackage{xfrac}
 \usepackage{xcolor}
 
@@ -353,8 +356,8 @@ to ordered fields we cover all cases simultaneously.
   \begin{tikzpicture}[x=10mm, y=10mm, font=\mathstrut, inner sep=2pt]
     \draw[style= help lines, very thin, color=lightgray, step=0.2] (-1,-1) grid (4,4);
     \draw[style= help lines, very thin, color=gray, step=1] (-1,-1) grid (4,4);
-    \draw[->] (-1,0) -- (4,0); % node[below left] {$x$};
-    \draw[->] (0,-1) -- (0,4); % node[below left] {$y$};
+    \draw[semithick, ->] (-1,0) -- (4,0); % node[below left] {$x$};
+    \draw[semithick, ->] (0,-1) -- (0,4); % node[below left] {$y$};
     \filldraw[draw=blue, thick, fill=orange!40, fill opacity=0.3]
     (3.0,1.2) -- (1.0,1.8) -- (1.0,0.0) -- (3.0,0.0) -- cycle;
     \draw[draw=none, fill=blue, radius=1.5pt]
@@ -367,13 +370,14 @@ to ordered fields we cover all cases simultaneously.
     \draw[draw=none, fill=blue, radius=1.5pt]
     (1.0,3.0) circle node[above left] {$\overline{v}$}
     (3.0,3.0) circle node[above right] {$\overline{u}$};
+    \draw (2.0,0.7) node{$\area(u,v)$};
   \end{tikzpicture}
   \quad
   \begin{tikzpicture}[x=10mm, y=10mm, rounded corners=0.2pt]
     \draw[style= help lines, very thin, color=lightgray, step=0.2] (-0.4,-0.6) grid (7.4,4.4);
     \draw[style= help lines, very thin, color=gray, step=1.0] (-0.4,-0.6) grid (7.4,4.4);
-    \draw[->] (-0.4,0.0) -- (7.4,0.0);
-    \draw[->] (0.0,-0.6) -- (0.0,4.4);
+    \draw[semithick, ->] (-0.4,0.0) -- (7.4,0.0);
+    \draw[semithick, ->] (0.0,-0.6) -- (0.0,4.4);
 
     \coordinate (P0) at (6.6,2.2);
     \coordinate (P1) at (3.6,3.6);
@@ -478,6 +482,8 @@ such that rotation by $\theta$ aligns $u$ with $v$:
   \begin{tikzpicture}[x=20mm, y=20mm, baseline={(0.2,0.0)}]
     \draw[style= help lines, very thin, color=lightgray, step=0.1] (-1.001,-0.601) grid (1.001,0.801);
     \draw[style= help lines, very thin, color=gray, step=1.0] (-1.001,-0.601) grid (1.001,0.801);
+    % \draw[semithick, ->] (-1.0,0) -- (+1.0,0);
+    % \draw[semithick, ->] (0,-0.6) -- (0,+0.8);
     \draw[draw=none, fill=teal!30, fill opacity=0.3] (0,0) -- (30:0.5) arc (30:100:0.5) -- cycle;
     \draw[draw=black, -latex'] (30:0.5) arc (30:100:0.5);
     \draw (65:0.3) node[scale=0.8]{$\theta{>}0$};
@@ -593,8 +599,8 @@ for example $\Q \subseteq \K \subseteq \R$.
   \begin{tikzpicture}[x=10mm, y=10mm, inner sep=1pt, font=\footnotesize]
     \draw[style= help lines, very thin, color=lightgray, step=0.2] (-5,-3) grid (+5,+3);
     \draw[style= help lines, very thin, color=gray, step=1] (-5,-3) grid (+5,+3);
-    \draw[thick, ->] (-5,0) -- (+5,0); % node[below left] {$x$};
-    \draw[thick, ->] (0,-3) -- (0,+3); % node[below left] {$y$};
+    \draw[semithick, ->] (-5,0) -- (+5,0); % node[below left] {$x$};
+    \draw[semithick, ->] (0,-3) -- (0,+3); % node[below left] {$y$};
     \draw[thick, blue, -latex'] (+1.4,+2.6) -- (-2.8,+2.0)
     node[pos=0.6, sloped, above]{$+1/2$};
     \draw[thick, blue, -latex'] (-1.4,-2.6) -- (+2.8,-2.0)
@@ -701,14 +707,14 @@ We can restrict it to a sufficiently large
 square box $Q = \{-r,\ldots,r\}^2 \subset \Z^2$
 containing all vertices $p_1,\ldots,p_n$.
 Each point $q \in \Z^2 \minus Q$ yields $\Dang(P-q) = 0$.
-Using this, we rearrange the sum defining the right hand side:
+Using this, we swap the double sum defining the right hand side:
 \begin{alignat}{3}
   & \Welp(P)
   % && := \sum_{q \in \Z^2} \Dang(P-q)
   && = \sum_{q \in Q} \Dang(P-q)
-  && = \sum_{q \in \Z^2} \sum_{i=1}^n \dang(p_{i-1}-q, p_i-q) 
+  && = \sum_{q \in Q} \sum_{i=1}^n \dang(p_{i-1}-q, p_i-q) 
   \\ \notag & && && = \sum_{i=1}^n
-  \underbracket{ \sum_{q \in \Z^2} \dang(q_{i-1}-v, q_i-v) }_{\normalsize =: \welp(p_{i-1},p_i)}
+  \underbracket{ \sum_{q \in Q} \dang(p_{i-1}-q, p_i-q) }_{\normalsize =: \welp(p_{i-1},p_i)}
   % \\ & && = \sum_{i=1}^n \welp(p_{i-1},p_i)
 \end{alignat}
 
@@ -738,8 +744,8 @@ we show that
     % \draw[draw=black, rounded corners=1mm, fill=black!10]
     % (+5,-4) -- (-1,-6) -- (-1,-8) -- (+5,-8) -- cycle;
     \draw[color=black!50, step=1] (-8,-8) grid (+8,+8);
-    \draw[line width=1pt, ->] (-8,0) -- (+8,0); % node[below left] {$x$};
-    \draw[line width=1pt, ->] (0,-8) -- (0,+8); % node[below left] {$y$};
+    \draw[semithick, ->] (-8,0) -- (+8,0); % node[below left] {$x$};
+    \draw[semithick, ->] (0,-8) -- (0,+8); % node[below left] {$y$};
     
     \filldraw[draw=blue, thick, -latex'] (+5,+4) -- (-1,+6);
     \draw[draw=black, fill=white, radius=2.0pt]
@@ -839,7 +845,7 @@ we conclude $\Area(P) = \Welp(P)$.
 
 \appendix
 
-
+\setcounter{section}{0}
 \section{Axiomatic angle measure}
 
 We can use different angle measures for the theorems of
@@ -868,6 +874,7 @@ Examples include the euclidean angle measure $\ang$
 and the discrete angle measure $\dang$.
 
 
+\setcounter{section}{9}
 \section{Jordan's decomposition for polygons}
 
 Jordan's decomposition for polygons can be formulated
@@ -928,6 +935,7 @@ Using the angle measure $\mu$, we define the winding number
 \end{remark}
 
 
+\setcounter{section}{7}
 \section{Hopf's umlaufsatz for polygons}
 
 Hopf's umlaufsatz for polygons can be formulated
@@ -969,12 +977,13 @@ With sufficient patience this can be formalized algebraically
 and implemented in a proof assistant, for example Lean.
 This certainly merits further exploration beyond the scope of the article.
 
-We have used the teorems of Jordan and Hopf in order
-to \emph{motivate} our formulation of Pick's lemma.
-Our proof, however, is self-contained and
+We have used the theorems of Jordan and Hopf in order
+to motivate our \emph{formulation} of Pick's lemma.
+Our \emph{proof}, however, is self-contained and
 does not logically require them.
 
 
+\setcounter{section}{22}
 \section{A ``water proof'' plausiblity argument}
 % \section{Physical plausibility: ``water proof'' }
 % \subsection{How to prove Pick's theorem?}
@@ -1092,13 +1101,13 @@ closing this circle of ideas.
   is compensated by the water flowing from the point $\rho(q) \in \Z^2$ over $[u,v]$.
   The net flow over the edge $[u,v]$ is zero.
   
-  This shows that the amount of water in $B$ never changes.
+  This shows that the total amount of water in $B$ never changes.
   At the start it is the share of drops that fall into $B$.
   At the end it equals the surface area of $B$.
   We thus obtain:
-  \begin{align}
+  \begin{align*}
     \vol_2(B) = I + \sum_{q \in \Z^2 \cap C} \beta(q) / 2\pi
-  \end{align}
+  \end{align*}
 
   Here $\beta(q)$ is the interior angle at the boundary point $q \in C$.
   So our physical intuition, or gedankenexperiment, leads us to
@@ -1145,10 +1154,10 @@ For each time $t \in \ei{0}{1}$ let $\mu_t$ be a continuous probability measure,
 ending with the uniform (Haar) measure $\mu_1$ on $T$,
 so that $4 r^2 \mu_1(B)$ is the area of our inner region. 
 Now we observe the quantity 
-\begin{align}
+\begin{align*}
   % f \colon \ei{0}{1} \to \R_{\ge0} \colon t \mapsto
   f(t) := \sum_{q \in \Z^2/2r\Z^2} \mu_t(B-q) .
-\end{align}
+\end{align*}
 
 We have $f(1) = \vol_2(B)$.
 For each $t > 0$ we assume $\mu_t$ to be symmetric
@@ -1211,7 +1220,7 @@ At the other end we look at the limit for $t \searrow 0$:
 
 \section*{Remerciements}
 
-Elli zu Neblberg expresses her heartfelt gratitude to her collaborators.
+Elli zu Neblberg expresses her heartfelt gratitude to all of her collaborators.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
