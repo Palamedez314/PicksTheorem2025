@@ -25,7 +25,7 @@
 
 \usepackage[pdftex,
             pdfauthor={Michael Eisermann},
-            pdftitle={Formalizing Pick's Theorem in Lean},
+            pdftitle={Formalizing Pick's Theorem}, % in Lean},
             pdfstartview=FitH,
             colorlinks=true,
             anchorcolor=black, 
@@ -45,15 +45,15 @@
   footskip=20mm,
 }
 
-\title{Formalizing Pick's Theorem in Lean}
+\title{Formalizing Pick's Theorem} % in Lean}
 
-\author{Elli zu Neblberg}
+\author{Elli zu Neblberg \& friends} % collaborators} % 
 
 \address{Institut für Geometrie und Topologie, Universität Stuttgart, Germany}
 \email{Michael.Eisermann@mathematik.uni-stuttgart.de}
 % \urladdr{www.igt.uni-stuttgart.de/eiserm}
 
-\date{first version September 2024; this version compiled \today}
+\date{Burg Liebenzell, first version September 2024, this version compiled \today}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% theorem environments %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -127,7 +127,7 @@
   the area of any integer polygon by counting lattice points. % suitably
   % Traditional proofs intend to convince humans % are intended for human understanding
   % and are thus optimized for visual intuition. % therefore typically 
-  It is a notorious challenge % difficult % tricky
+  It is a notoriously difficult challenge % tricky
   to translate the geometric statement and intuitive reasoning
   into a formal statement and rigorous proof. %, suitable for a proof assistant. % like Lean. 
   % Our approach is thus twofold:
@@ -166,14 +166,14 @@ are $\bar{A} = A \cup C$ and $\bar{B} = B \cup C$.
     \setlength{\baselineskip}{5mm}
     \draw[color=black!50, step=1] (-1,-1) grid (23,7);
     \begin{scope}[shift={(0,0)}]
-      \draw[line width=1pt, blue, fill=blue!20, fill opacity=0.5]
+      \draw[line width=1pt, blue, fill=yellow!50, fill opacity=0.3]
       (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
       (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
       \draw[inner sep=1pt, font=\tiny\fade\mathstrut] 
       (2,3) node[above left]{$p_{11}$}
       (0,2) node[below left]{$p_0$}
       (2,0) node[below left]{$p_1$}
-      (5,0) node[below left]{$p_{2}$};
+      (5,0) node[below left]{$p_2$};
       \foreach \x/\y in { 1/2, 2/1, 2/2, 3/4, 3/5, 4/2, 4/4, 4/5 }{
         \draw[draw=black, thin, fill=blue!70!white] (\x,\y) circle[radius=1.5pt];
       }
@@ -187,7 +187,7 @@ are $\bar{A} = A \cup C$ and $\bar{B} = B \cup C$.
       \draw (0,6) node[below right] {(a)};
     \end{scope}
     \begin{scope}[shift={(6,0)}]
-      \draw (0,6) node[below right]{(b) simple, \\ but not closed};
+      \draw (0,6) node[below right]{(b) simple \\ but not closed};
       % (b) einfach, aber \\ nicht geschlossen};
       \draw[line width=1pt, blue] (2,0) -- (5,1) -- (0,3) -- (3,4);
       \draw[line width=1pt, blue, dashed ] (3,4) -- (2,0) node[pos=0.4, above left]{?};
@@ -196,11 +196,11 @@ are $\bar{A} = A \cup C$ and $\bar{B} = B \cup C$.
       }      
     \end{scope}
     \begin{scope}[shift={(12,0)}]
-      \draw (0,6) node[below right]{(c) closed, \\ but not simple};
+      \draw (0,6) node[below right]{(c) closed \\ but not simple};
       % (c) geschlossen, \\ aber nicht einfach};
-      \draw[draw=none, fill=purple!20, fill opacity=0.5]
+      \draw[draw=none, fill=teal!30, fill opacity=0.3]
       (0,2) -- (1,1) -- (5/3,2) -- (1,3) -- cycle;
-      \draw[draw=none, fill=teal!20, fill opacity=0.5]
+      \draw[draw=none, fill=orange!40, fill opacity=0.3]
       (5/3,2) -- (3,4) -- (5,2) -- (3,0) -- cycle;
       \draw[line width=1pt, blue]
       (0,2) -- (1,1) -- (3,4) -- (5,2) -- (3,0) -- (1,3) -- cycle;
@@ -209,9 +209,9 @@ are $\bar{A} = A \cup C$ and $\bar{B} = B \cup C$.
       }
     \end{scope}
     \begin{scope}[shift={(18,0)}]
-      \draw (0,6) node[below right, ]{(d) simply closed, \\ but not integer};
+      \draw (0,6) node[below right, ]{(d) simply closed \\ but not integer};
       % {(d) nicht \\ ganzzahlig};
-      \draw[line width=1pt, blue, fill=yellow!40, fill opacity=0.5]
+      \draw[line width=1pt, blue, fill=purple!30, fill opacity=0.3]
       (0,2.5) -- (2,0) -- (3,2) -- (2,4) -- cycle;
       \foreach \x/\y in { 2/0, 3/2, 2/4 }{
         \draw[draw=black, thin, fill=blue!70!black] (\x,\y) circle[radius=1.5pt];
@@ -238,7 +238,7 @@ Here the magic of Pick's theorem happens:
   \begin{tikzpicture}[x=5mm, y=5mm, rounded corners=0.1pt]
     \begin{scope}[shift={(-5,-2)}]
       \draw[color=black!50, step=1] (-1,-1) grid (7,5);
-      \draw[line width=1pt, blue] (0,0) rectangle (6,4);
+      \draw[line width=1pt, blue, fill=yellow!50, fill opacity=0.3] (0,0) rectangle (6,4);
       \draw[inner sep=1pt, font=\small\fade\mathstrut] 
       (0,0) node[below right]{$0$}
       (6,0) node[below left]{$a$}
@@ -247,25 +247,26 @@ Here the magic of Pick's theorem happens:
       \clip (0,0) rectangle (6,4);
       \foreach \x in {0,...,6}{
         \foreach \y in {0,...,4}{
-          \draw[draw=none, fill=blue, fill opacity=0.4] (\x,\y) circle[radius=1mm];
+          \draw[draw=none, fill=blue, fill opacity=0.5] (\x,\y) circle[radius=1mm];
         }
       }
     \end{scope}
     \begin{scope}[shift={(6,0)}]
       \draw[color=black!50, step=1] (-3,-3) grid (3,3);
-      \draw[line width=1pt, teal] (+3,0) -- (0,+3) -- (-3,0) -- (0,-3) -- cycle;
+      \draw[line width=1pt, teal, fill=yellow!50, fill opacity=0.3]
+      (+3,0) -- (0,+3) -- (-3,0) -- (0,-3) -- cycle;
       \draw[draw=none, inner sep=1pt, font=\small\fade\mathstrut]
       (-3,0) -- (0,+3) node[midway, sloped, above] {$3\sqrt{2}$}; 
       \clip (+3,0) -- (0,+3) -- (-3,0) -- (0,-3) -- cycle;
       \foreach \x in {-3,...,3}{
         \foreach \y in {-3,...,3}{
-          \draw[draw=none, fill=teal, fill opacity=0.4] (\x,\y) circle[radius=1mm];
+          \draw[draw=none, fill=teal, fill opacity=0.5] (\x,\y) circle[radius=1mm];
         }
       }
     \end{scope}
     \begin{scope}[shift={(13,0)}, x=2.5mm, y=2.5mm]
       \draw[color=black!50, step=1] (-6,-6) grid (6,6); % (-7,-7) grid (7,7);
-      \draw[line width=1pt, orange, fill=yellow!40, fill opacity=0.5]
+      \draw[line width=1pt, orange, fill=yellow!50, fill opacity=0.3]
       (+1,+0) -- (+6,+1) -- (+3,+1) -- (+5,+2) -- (+2,+1) -- (+5,+3) -- (+3,+2) -- (+6,+5) --
       (+1,+1) -- (+5,+6) -- (+2,+3) -- (+3,+5) -- (+1,+2) -- (+2,+5) -- (+1,+3) -- (+1,+6) --
       (-0,+1) -- (-1,+6) -- (-1,+3) -- (-2,+5) -- (-1,+2) -- (-3,+5) -- (-2,+3) -- (-5,+6) --
@@ -275,7 +276,7 @@ Here the magic of Pick's theorem happens:
       (+0,-1) -- (+1,-6) -- (+1,-3) -- (+2,-5) -- (+1,-2) -- (+3,-5) -- (+2,-3) -- (+5,-6) --
       (+1,-1) -- (+6,-5) -- (+3,-2) -- (+5,-3) -- (+2,-1) -- (+5,-2) -- (+3,-1) -- (+6,-1) --
       cycle;
-      \draw[draw=none, fill=orange, fill opacity=0.4] (0,0) circle[radius=1mm];
+      \draw[draw=none, fill=orange, fill opacity=0.5] (0,0) circle[radius=1mm];
     \end{scope}
   \end{tikzpicture}
   \caption{(a) rectangle, (b) oblique square, (c) Farey sunburst $F_6$}
@@ -337,7 +338,8 @@ Here the magic of Pick's theorem happens:
 \end{remark}
 
 
-\section{Formalizing Pick's theorem}
+\section{How to formalize Pick's theorem?}
+% \section{Formalizing Pick's theorem}
 
 We work over an ordered field $(\K,+,\cdot,\le)$.
 The traditional choice is the field $\R$
@@ -348,19 +350,19 @@ By abstracting both these primary examples
 to ordered fields we cover all cases simultaneously.
 
 \begin{figure}[ht]
-  \begin{tikzpicture}[x=10mm, y=10mm, font=\mathstrut]
+  \begin{tikzpicture}[x=10mm, y=10mm, font=\mathstrut, inner sep=2pt]
     \draw[style= help lines, very thin, color=lightgray, step=0.2] (-1,-1) grid (4,4);
     \draw[style= help lines, very thin, color=gray, step=1] (-1,-1) grid (4,4);
     \draw[->] (-1,0) -- (4,0); % node[below left] {$x$};
     \draw[->] (0,-1) -- (0,4); % node[below left] {$y$};
-    \filldraw[draw=blue, thick, fill=orange!40, fill opacity=0.5]
+    \filldraw[draw=blue, thick, fill=orange!40, fill opacity=0.3]
     (3.0,1.2) -- (1.0,1.8) -- (1.0,0.0) -- (3.0,0.0) -- cycle;
     \draw[draw=none, fill=blue, radius=1.5pt]
     (3.0,1.2) circle node[right] {$u$}
     (1.0,1.8) circle node[left] {$v$}
     (1.0,0.0) circle node[below left] {$\underline{v}$}
     (3.0,0.0) circle node[below right] {$\underline{u}$};
-    \filldraw[draw=blue, thick, fill=teal!30, fill opacity=0.5]
+    \filldraw[draw=blue, thick, fill=teal!30, fill opacity=0.3]
     (3.0,1.2) -- (3.0,3.0) -- (1.0,3.0) -- (1.0,1.8) -- cycle;
     \draw[draw=none, fill=blue, radius=1.5pt]
     (1.0,3.0) circle node[above left] {$\overline{v}$}
@@ -373,61 +375,77 @@ to ordered fields we cover all cases simultaneously.
     \draw[->] (-0.4,0.0) -- (7.4,0.0);
     \draw[->] (0.0,-0.6) -- (0.0,4.4);
 
-    \coordinate (P0) at (6.4,2.2);
-    \coordinate (P1) at (3.4,3.6);
-    \coordinate (P2) at (0.6,2.0);
-    \coordinate (P3) at (1.4,0.8);
-    \coordinate (P4) at (3.0,1.4);
-    \coordinate (P5) at (3.8,1.0);
+    \coordinate (P0) at (6.6,2.2);
+    \coordinate (P1) at (3.6,3.6);
+    \coordinate (P2) at (0.8,2.0);
+    \coordinate (P3) at (1.6,0.8);
+    \coordinate (P4) at (3.2,1.4);
+    \coordinate (P5) at (4.0,1.0);
     
-    \coordinate (Q0) at (6.4,0.0);
-    \coordinate (Q1) at (3.4,0.0);
-    \coordinate (Q2) at (0.6,0.0);
-    \coordinate (Q3) at (1.4,0.0);
-    \coordinate (Q4) at (3.0,0.0);
-    \coordinate (Q5) at (3.8,0.0);
+    \coordinate (Q0) at (6.6,0.0);
+    \coordinate (Q1) at (3.6,0.0);
+    \coordinate (Q2) at (0.8,0.0);
+    \coordinate (Q3) at (1.6,0.0);
+    \coordinate (Q4) at (3.2,0.0);
+    \coordinate (Q5) at (4.0,0.0);
     
-    \draw[blue, fill=yellow!40, fill opacity=0.5]
+    \draw[blue, fill=orange!40, fill opacity=0.3]
     (Q0) -- (P0) -- (P1) -- (Q1) -- cycle;
-    \draw[blue, fill=yellow!40, fill opacity=0.5]
+    \draw[blue, fill=orange!40, fill opacity=0.3]
     (Q1) -- (P1) -- (P2) -- (Q2) -- cycle;
-    \draw[blue, fill=orange!40, fill opacity=0.5]
+    \draw[blue, fill=yellow!50, fill opacity=0.3]
     (Q2) -- (P2) -- (P3) -- (Q3) -- cycle;
-    \draw[blue, fill=orange!40, fill opacity=0.5]
+    \draw[blue, fill=yellow!50, fill opacity=0.3]
     (Q3) -- (P3) -- (P4) -- (Q4) -- cycle;
-    \draw[blue, fill=orange!40, fill opacity=0.5]
+    \draw[blue, fill=yellow!50, fill opacity=0.3]
     (Q4) -- (P4) -- (P5) -- (Q5) -- cycle;
-    \draw[blue, fill=orange!40, fill opacity=0.5]
+    \draw[blue, fill=yellow!50, fill opacity=0.3]
     (Q5) -- (P5) -- (P0) -- (Q0) -- cycle;
+
     \draw[blue, line width=1pt]
     (P0) -- (P1) -- (P2) -- (P3) -- (P4) -- (P5) -- cycle;
-    \draw[draw=none, fill=blue, radius=1.5pt]
-    (P0) circle node[right, align=left] {$p_0$ \\ $p_6$}
-    (P1) circle node[above] {$p_1$}
-    (P2) circle node[left]  {$p_2$}
-    (P3) circle node[left]  {$p_3$}
-    (P4) circle node[above] {$p_4$}
-    (P5) circle node[right, yshift=-3pt] {$p_{5}$};
+    \draw[draw=none, fill=blue, radius=1.5pt, inner sep=2pt]
+    (P0) circle node[right, align=left] {$p_0$ \\[-3pt] $=$ \\[-3pt] $p_n$}
+    (P1) circle[] node[above] {$p_1$}
+    (P2) circle[] node[left] {$p_{i-1}$}
+    (P3) circle[] node[left] {$p_i$}
+    (P4) circle[] node[above] {$p_{i+1}$}
+    (P5) circle[]; % node[left, yshift=-3pt] {$p_5$};
+
+    \draw[blue, densely dotted] (P3) -- +(+0.4,-0.6);
+    \draw[draw=black!60, -latex'] (P3) +(-57:0.45) arc (-57:+21:0.45);
+    \draw (P3) +(-20:0.27) node[black!60, scale=0.8]{$\alpha_i$};
+    \draw[draw=black!60, -latex'] (P3) +(+21:0.50) arc (+21:124:0.50);
+    \draw (P3) +(70:0.30) node[black!60, scale=0.8]{$\beta_i$};
+    % \draw[blue, densely dotted] (P5) -- +(+0.8,-0.4);
+    % \draw[draw=black, -latex'] (P5) +(-28:0.6) arc (-28:+26:0.6);
+    % \draw (P5) +(-5:0.35) node[scale=0.8]{$\alpha_i$};
+    % \draw[draw=black, -latex'] (P5) +(+26:0.5) arc (+26:152:0.5);
+    % \draw (P5) +(90:0.25) node[scale=0.8]{$\beta_i$};
+
+    \draw (4.2,2.4) node[scale=1.2]{$B$};
+
   \end{tikzpicture}
-  \caption{Area of a polygon}
+  \caption{Oriented area of a trapezoid and of a polygon}
+  \label{fig:AreaAngle}
 \end{figure}
 
 \begin{definition}
-  Given two points $u,v \in \K^2$ we have the (oriented) area under the trapezoid,
-  \[
-  \area(u,v) := \frac{1}{2} (u_1 - v_1) (u_2 + v_2) .
-  \]
+  Given two points $u,v \in \K^2$ we have the (oriented) area of the trapezoid,
+  \begin{align}
+    \area(u,v) := \frac{1}{2} (u_1 - v_1) (u_2 + v_2) .
+  \end{align}
   
   For every polygon $P = (p_0,p_1,\ldots,p_n)$ in $\K^2$
   we thus define its area to be 
-  \[
-  \Area(P) := \sum_{i=1}^{n} \area(p_{i-1},p_i) .
-  \]
+  \begin{align}
+    \Area(P) := \sum_{i=1}^{n} \area(p_{i-1},p_i) .
+  \end{align}
 \end{definition}
 
 \begin{remark}
   For a simply closed polygon in $\R^2$, this yields $\abs{\Area(P)} = \vol_2(B) > 0$.
-
+  
   If $\Area(P) > 0$, we call our polygon $P$ \emph{positively oriented}.
   Otherwiese, if $\Area(P) < 0$, we reverse $P = (p_0,p_1,\ldots,p_n)$
   to $P' = (p_n,\ldots,p_1,p_0)$.  This does not change the curve $C$,
@@ -451,29 +469,29 @@ $\theta = \sphericalangle(u,v)$ between vectors $u,v \in \R^2$:
 For each $u \ne 0$ and $v \notin u \, \R_{\le 0}$,
 there exists a unique real number $\theta \in \ee{-\pi}{\pi}$
 such that rotation by $\theta$ aligns $u$ with $v$:
-\[
-\frac{v}{\abs{v}} = \begin{bmatrix}
-  \cos\theta & -\sin\theta \\
-  \sin\theta & \cos\theta
-\end{bmatrix} \frac{u}{\abs{u}} .
-\qquad
-\begin{tikzpicture}[x=20mm, y=20mm, baseline={(0.2,0.0)}]
-  \draw[style= help lines, very thin, color=lightgray, step=0.1] (-1.001,-0.601) grid (1.001,0.801);
-  \draw[style= help lines, very thin, color=gray, step=1.0] (-1.001,-0.601) grid (1.001,0.801);
-  \draw[draw=none, fill=green!30, fill opacity=0.4] (0,0) -- (30:0.5) arc (30:100:0.5) -- cycle;
-  \draw[draw=black, -latex'] (30:0.5) arc (30:100:0.5);
-  \draw (65:0.3) node[scale=0.8]{$\theta{>}0$};
-  \draw[draw=none, fill=red!30, fill opacity=0.4] (0,0) -- (30:0.5) arc (30:-40:0.5) -- cycle;
-  \draw[draw=black, -latex'] (30:0.5) arc (30:-40:0.5);
-  \draw (-5:0.3) node[scale=0.8]{$\theta'{<}0$};
-  \draw[draw=blue, thick] (0,0) -- (30:0.9) (0,0) -- (100:0.7) (0,0) -- (-40:0.8);
-  \draw[draw=black, fill=red] (0,0) circle[radius=2pt] node[shift={(-4pt,-5pt)}] {$0$};
-  \filldraw[blue, radius=1pt]
-  ( 30:0.9) circle node[below] {$u$} 
-  (100:0.7) circle node[right, yshift=-5pt] {$v$}
-  (-40:0.8) circle node[above, xshift=+5pt] {$v'$};
-\end{tikzpicture}
-\]
+\begin{align}
+  \frac{v}{\abs{v}} = \begin{bmatrix}
+    \cos\theta & -\sin\theta \\
+    \sin\theta & \cos\theta
+  \end{bmatrix} \frac{u}{\abs{u}} .
+  \qquad
+  \begin{tikzpicture}[x=20mm, y=20mm, baseline={(0.2,0.0)}]
+    \draw[style= help lines, very thin, color=lightgray, step=0.1] (-1.001,-0.601) grid (1.001,0.801);
+    \draw[style= help lines, very thin, color=gray, step=1.0] (-1.001,-0.601) grid (1.001,0.801);
+    \draw[draw=none, fill=teal!30, fill opacity=0.3] (0,0) -- (30:0.5) arc (30:100:0.5) -- cycle;
+    \draw[draw=black, -latex'] (30:0.5) arc (30:100:0.5);
+    \draw (65:0.3) node[scale=0.8]{$\theta{>}0$};
+    \draw[draw=none, fill=purple!30, fill opacity=0.3] (0,0) -- (30:0.5) arc (30:-40:0.5) -- cycle;
+    \draw[draw=black, -latex'] (30:0.5) arc (30:-40:0.5);
+    \draw (-5:0.3) node[scale=0.8]{$\theta'{<}0$};
+    \draw[draw=blue, thick] (0,0) -- (30:0.9) (0,0) -- (100:0.7) (0,0) -- (-40:0.8);
+    \draw[draw=black, fill=red] (0,0) circle[radius=2pt] node[shift={(-4pt,-5pt)}] {$0$};
+    \filldraw[blue, radius=1pt]
+    ( 30:0.9) circle node[below] {$u$} 
+    (100:0.7) circle node[right, yshift=-5pt] {$v$}
+    (-40:0.8) circle node[above, xshift=+5pt] {$v'$};
+  \end{tikzpicture}
+\end{align}
 
 In the controversial case $v \in u \, \R_{<0}$,
 both solutions $\theta = \pm\pi$ are equally possible.
@@ -486,18 +504,18 @@ and miraculously leads to the correct point count on the boundary.
 \begin{definition}
   We define our \emph{euclidean angle measure}
   $\ang \colon \R^2 \times \R^2 \to \ee{-\sfrac{1}{2}}{+\sfrac{1}{2}}$ by
-  \[
-  \ang(u,v) := \begin{cases}
-    \theta / 2\pi & \text{if $\abs{u} \cdot \abs{v} + u \cdot v > 0$,}
-    \\ 0 & \text{if $\abs{u} \cdot \abs{v} + u \cdot v = 0$.}
-  \end{cases}
-  \]
+  \begin{align}
+    \ang(u,v) := \begin{cases}
+      \theta / 2\pi & \text{if $\abs{u} \cdot \abs{v} + u \cdot v > 0$,}
+      \\ 0 & \text{if $\abs{u} \cdot \abs{v} + u \cdot v = 0$.}
+    \end{cases}
+  \end{align}
   
   By summing the angles of all edges of $P$,
   we obtain the (euclidean) \emph{winding number} % of $P$ around $0$
-  \[
-  \Ang(P) := \sum_{i=1}^n \ang(p_{i-1},p_i) .
-  \]
+  \begin{align}
+    \Ang(P) := \sum_{i=1}^n \ang(p_{i-1},p_i) .
+  \end{align}
 \end{definition}
 
 \begin{remark}
@@ -507,30 +525,32 @@ and miraculously leads to the correct point count on the boundary.
   around the point $q \in \R^2 \minus C$,
   where $P-q = (p_0-q,p_1-q,\ldots,p_n-q)$.
 
-  Moreover, if $P$ is simply closed and positively oriented,
+  If $P$ is simply closed and positively oriented,
   then its Jordan decomposition $\R^2 = A \sqcup B \sqcup C$
   is characterized by the winding number:
   We have $\Ang(P-q) = 0$ for each exterior point $q \in A$
   and $\Ang(P-q) = 1$ for each interior point $q \in B$.
   We thus obtain
-  \[
-  I = \sum_{q \in \Z^2 \minus C} \Ang(P-q) .
-  \]
+  \begin{align}
+    I = \sum_{q \in \Z^2 \minus C} \Ang(P-q) .
+  \end{align}
   
-  Our careful definition pays off for boundary points:
-  We find $\Ang(P-q) = \sfrac{1}{2}$
-  for $q \in \ee{p_{i-1}}{p_i}$ in the interior of any edge.
-  In each vertex $p_i$, finally,
-  $\Ang(P-p_i) = \alpha_i = \ang(p_{i+1}-p_i, p_{i-1}-p_i)$
-  measures the enclosed angle. 
-  By adding the turning angle $\beta_i = \ang(p_i-p_{i-1}, p_{i+1}-p_i)$
+  Our careful definition pays off: % for boundary points:
+  $\Ang(P-q)$ measures the interior angle at each boundary point $q \in C$.
+  For $q \in \ee{p_{i-1}}{p_i}$ in the interior of any edge,
+  we find $\Ang(P-q) = \sfrac{1}{2}$.  In each vertex, we find
+  $\Ang(P-p_i) = \beta_i := \ang(p_{i+1}-p_i, p_{i-1}-p_i)$.
+  % measures the interior angle. 
+  By adding the turning angle $\alpha_i = \ang(p_i-p_{i-1}, p_{i+1}-p_i)$
   each vertex point is counted by $\sfrac{1}{2}$ as well.
+  (This is illustrated in \autoref{fig:AreaAngle}.)
   The sum of all turning angles is $1$ by Hopf's umlaufsatz. % theorem.
 
-  If $P$ is a lattice polygon, with integer vertices $v_0,\ldots,v_n \in \Z^2$, then
-  \[
-  J/2 - 1 = \sum_{q \in \Z^2 \cap C} \Ang(P-q) .
-  \]
+  If $P$ is a simply closed lattice polygon,
+  with integer vertices $v_0,\ldots,v_n \in \Z^2$, then
+  \begin{align}
+    J/2 - 1 = \sum_{q \in \Z^2 \cap C} \Ang(P-q) .
+  \end{align}
 \end{remark}
 
 The right hand side $I + J/2 - 1$ of Pick's equation
@@ -538,20 +558,18 @@ is defined geometrically, and usually formulated intuitively.
 Any attempt to define it precisely relies on Jordan's theorem.
 The winding number, as defined above, allows us to algebraically count
 this as % the \emph{weighted sum of enclosed lattice points}
-\[
-I + J/2 - 1  = \sum_{q \in \Z^2} \Ang(P-q) .
-% \Welp(P) = \sum_{q \in \Z^2} \Ang(P-q) .
-\]
+\begin{align}
+  I + J/2 - 1  = \sum_{q \in \Z^2} \Ang(P-q) .
+\end{align}
 
 This reduces Pick's theorem to the following algebraic statement:
 
 \begin{lemma}[Pick's lemma, using the euclidean angle measure] \label{lem:PickEuclidean}
   Let $p_1,\ldots,p_n=p_0 \in \Z^2$ be any sequence of integer points.
   Then the closed polygon $P = (p_0,p_1,\ldots,p_n)$ satisfies Pick's equation 
-  \[
-  \Area(P) = \sum_{q \in \Z^2} \Ang(P-q)
-  % \Area(P) = \Welp(P)
-  \]
+  \begin{align}
+    \Area(P) = \sum_{q \in \Z^2} \Ang(P-q)
+  \end{align}
 \end{lemma}
 
 Notice that this formulation does not require $P$ to be simple.
@@ -593,14 +611,14 @@ for example $\Q \subseteq \K \subseteq \R$.
     node[pos=0.5, sloped, below]{$-1/4$};
     \draw[thick, teal, -latex'] (-0.0,-0.6) -- (-1.4,-0.6)
     node[pos=0.5, sloped, below]{$-1/4$};
-    \draw[thick, black!50, -latex'] (-3.0,+1.2) -- (-3.2,-1.0);
-    \draw[thick, black!50, -latex'] (-3.8,-1.0) -- (-3.9,+1.2);
-    \draw[thick, black!50, -latex'] (+3.0,-1.2) -- (+3.2,+1.0);
-    \draw[thick, black!50, -latex'] (+3.8,+1.0) -- (+3.9,-1.2);
-    \draw[thick, black!50, -latex'] (+1.0,+0.3) -- (+0.0,+0.0);
-    \draw[thick, black!50, -latex'] (+0.0,+0.0) -- (+0.8,-0.2);
-    \draw[thick, black!50, -latex'] (-1.0,+0.3) -- (-0.0,+0.0);
-    \draw[thick, black!50, -latex'] (-0.0,+0.0) -- (-0.8,-0.2);
+    \draw[thick, black!60, -latex'] (-3.0,+1.2) -- (-3.2,-1.0);
+    \draw[thick, black!60, -latex'] (-3.8,-1.0) -- (-3.9,+1.2);
+    \draw[thick, black!60, -latex'] (+3.0,-1.2) -- (+3.2,+1.0);
+    \draw[thick, black!60, -latex'] (+3.8,+1.0) -- (+3.9,-1.2);
+    \draw[thick, black!60, -latex'] (+1.0,+0.3) -- (+0.0,+0.0);
+    \draw[thick, black!60, -latex'] (+0.0,+0.0) -- (+0.8,-0.2);
+    \draw[thick, black!60, -latex'] (-1.0,+0.3) -- (-0.0,+0.0);
+    \draw[thick, black!60, -latex'] (-0.0,+0.0) -- (-0.8,-0.2);
   \end{tikzpicture}
   \caption{The discrete angle measure}
   \label{fig:Dang}
@@ -611,94 +629,95 @@ for example $\Q \subseteq \K \subseteq \R$.
   we define the \emph{discrete angle measure}
   as the number of axis crossings,
   as illustrated in Figure \ref{fig:Dang}:
-  \[
+  \begin{align}
     \dang(u,v) :=
-    \frac{1}{4} \bigabs{ \sign u_1 - \sign v_1 }
+    \frac{1}{4} \abs{ \sign u_1 - \sign v_1 }
     \cdot \sign \det \begin{bmatrix} u_1 & v_1 \\ u_2 & v_2 \end{bmatrix} .
-  \]
+  \end{align}
 
   By summing the angles of all edges of $P$,
   we obtain the (discrete) \emph{winding number} % of $P$ around $0$
-  \[
-  \Dang(P) := \sum_{i=1}^n \dang(p_{i-1},p_i) .
-  \]
+  \begin{align}
+    \Dang(P) := \sum_{i=1}^n \dang(p_{i-1},p_i) .
+  \end{align}
 \end{definition}
 
 If our polygon $P$ is closed and $0 \notin C$,
-then we obtain $\Dang(P-q) = \Ang(P-q)$.
-The summands change, but the end result is the same.
-The difference is only noticable for open polygons
-or boundary points $q \in C$.
-
-% As before, if our polygon $P$ is closed,
-% $\Dang(P-q) = \Ang(P-q)$ measures the winding number
-% around any point $q \in \R^2 \minus C$.
+as before $\Dang(P) = \Ang(P)$ measures the winding number around $0$.
+The summands change, but the overall sum is the same;
+the difference is only noticeable for boundary points $q \in C$ or open polygons.
 
 The theorems of Jordan and Hopf, as stated above, continue
 to hold with $\Dang(P)$ in place of $\Ang(P)$, see the Appendix.
-This generalizes and simplifies! % calculations!
+% This generalizes and simplifies our calculation!
 We can thus define the elusive right hand side $I + J/2 - 1$ of Pick's equation
 by the \emph{weighted sum of enclosed lattice points}
-\[
-\Welp(P) := \sum_{q \in \Z^2} \Dang(P-q) .
-\]
+\begin{align}
+  \label{eq:Welp}
+  \Welp(P) := \sum_{q \in \Z^2} \Dang(P-q) .
+\end{align}
 
 \begin{lemma}[Pick's lemma, using the discrete angle measure] \label{lem:PickDiscrete}
   Let $p_1,\ldots,p_n=p_0 \in \Z^2$ be any sequence of integer points.
   Then the closed polygon $P = (p_0,p_1,\ldots,p_n)$ satisfies Pick's equation 
-  \[
-  % \Area(P) = \sum_{q \in \Z^2} \Dang(P-q) .
-  \Area(P) = \Welp(P) .
-  \]
+  \begin{align}
+    % \Area(P) = \sum_{q \in \Z^2} \Dang(P-q) .
+    \Area(P) = \Welp(P) .
+  \end{align}
 \end{lemma}
 
 \begin{remark}
-  At first glance this may no longer look like Pick's classical theorem.
+  Notice that this formulation does not require $P$ to be simple.
+  If $P$ is simply closed and positively oriented, 
+  then the right hand side equals $I + J/2 - 1$,
+  by Jordan and Hopf.
+
+  At first glance Pick's lemma may no longer look like Pick's classical theorem.
   Admittedly, the quantity $I + J/2 - 1$ is geometrically more intuitive,
   alas notoriously vague. (``Just look!'') %  Our admirably concise
   Our formula for $\Welp(P)$ provides a precise definition,
   alas less intuitive. (``Just calculate!'')
   
   We cautiously call the above statement \emph{Pick's lemma}.
-  In order to arrive at \emph{Pick's theorem},
+  In order to arrive at Pick's theorem,
   we have to invoke Jordan's decomposition and Hopf's umlaufsatz
   for simply closed polygonal curves.
   This bridges the gap between the algebraic lemma
   and the geometric theorem.
 
   Since Jordan's and Hopf's are classical theorems in their own right,
-  we do not consider them as part of the \emph{proof},
-  but rather use them as the foundation
-  for \emph{formulating} Pick's equation. % lemma. theorem.
-  This translation being achieved, we can now focus on Pick's lemma.
+  we do not consider them as part of the \emph{proof} of Pick's theorem,
+  but rather as the foundation for precisely \emph{formulating} the statement.
+  This translation being achieved, we can now focus on proving Pick's lemma.
 \end{remark}
 
 
-\section{Proving Pick's lemma}
+\section{Proof of Pick's lemma}
+% \section{Proving Pick's lemma}
 
 % \begin{proof}[Proof of Pick's lemma]
-The sum over $q \in \Z^2$ has finite support:
+The sum \eqref{eq:Welp} over $q \in \Z^2$ has finite support:
 We can restrict it to a sufficiently large
 square box $Q = \{-r,\ldots,r\}^2 \subset \Z^2$
 containing all vertices $p_1,\ldots,p_n$.
 Each point $q \in \Z^2 \minus Q$ yields $\Dang(P-q) = 0$.
 Using this, we rearrange the sum defining the right hand side:
-\begin{alignat*}{3}
+\begin{alignat}{3}
   & \Welp(P)
   % && := \sum_{q \in \Z^2} \Dang(P-q)
   && = \sum_{q \in Q} \Dang(P-q)
   && = \sum_{q \in \Z^2} \sum_{i=1}^n \dang(p_{i-1}-q, p_i-q) 
-  \\ & && && = \sum_{i=1}^n
+  \\ \notag & && && = \sum_{i=1}^n
   \underbracket{ \sum_{q \in \Z^2} \dang(q_{i-1}-v, q_i-v) }_{\normalsize =: \welp(p_{i-1},p_i)}
   % \\ & && = \sum_{i=1}^n \welp(p_{i-1},p_i)
-\end{alignat*}
+\end{alignat}
 
 Now both sides of Pick's equation look formally very similar:
-\begin{alignat*}{3}
+\begin{alignat}{3}
   & \Area(P) && = \sum_{i=1}^{n} \area(p_{i-1},p_i) ,
   \\
   & \Welp(P) && = \sum_{i=1}^n \welp(p_{i-1},p_i) .
-\end{alignat*}
+\end{alignat}
 
 Here another miracle happens:
 Both sums are not only equal, but termwise equal!
@@ -706,9 +725,9 @@ Both sums are not only equal, but termwise equal!
 For any to lattice points $u,v \in Q$
 in our square box $Q = \{-r,\ldots,r\}^2 \subset \Z^2$
 we show that
-\[
-\area(u,v) = \welp(u,v) .
-\]
+\begin{align}
+  \area(u,v) = \welp(u,v) .
+\end{align}
 
 \begin{figure}[ht]
   \begin{tikzpicture}[x=4mm, y=4mm, font=\mathstrut]
@@ -814,15 +833,17 @@ we conclude $\Area(P) = \Welp(P)$.
 
 \begin{remark}
   In this algebraic form, the proof is readily implemented in Lean,
-  or any other proof assistant.
+  or any other proof assistant.  This completes the promised formalization.
 \end{remark}
 
+
 \appendix
+
 
 \section{Axiomatic angle measure}
 
 We can use different angle measures for the theorems of
-Jordan and Hopf and thus Pick.
+Jordan and Hopf and finally Pick.
 In order to cover all cases simultaneously, 
 we extract the essential properties used in the proofs:
 
@@ -843,18 +864,119 @@ we extract the essential properties used in the proofs:
   \end{enumerate}
 \end{definition}
 
+Examples include the euclidean angle measure $\ang$
+and the discrete angle measure $\dang$.
+
 
 \section{Jordan's decomposition for polygons}
 
-The classical theorem, reformulated and reproven using our angle measure $\mu$.
+Jordan's decomposition for polygons can be formulated
+and proven using any angle measure. % $\mu$.
+We work over any ordered field $(\K,+,\cdot,\le)$
+and continue to use the notation of the introduction.
+Let $P = (p_0,p_1,\ldots,p_n)$ be a polygon in $\K^2$
+with corresponding path $\gamma \colon [0,1] \to \K^2$
+and image curve $C = \gamma([0,1]) \subset \K^2$.
+Using the angle measure $\mu$, we define the winding number 
+\begin{align*}
+  \mu(P) := \sum_{i=1}^n \mu(p_{i-1},p_i) .
+\end{align*}
+
+\begin{theorem}
+  Let $P = (p_0,p_1,\ldots,p_n)$ be a polygon in $\K^2$,
+  simply closed and positively oriented.
+  
+  (1) The complement $X := \K^2 \minus C = A \sqcup B$
+  decomposes into two connected components, namely  
+  \begin{align*}
+    A & = \set{ q \in X | \mu(P-q) = 0 } ,
+    \\
+    B & = \set{ q \in X | \mu(P-q) = 1 } .
+  \end{align*}
+
+  (2) The curve $C$ is the boundary of $A$ and of $B$ within the plane $\K^2$.
+  % Each point $q \in C$ is a common boundary point of $A$ and $B$.
+
+  (3) At each boundary point $q \in C$, the value $\mu(P-q)$ measures the interior angle.
+
+  (3a) At each point $q \in \ee{p_{i-1}}{p_i}$ in the interior of an edge,
+  we find $\mu(P-q) = \sfrac{1}{2}$.
+  
+  (3b) At each vertex $q = p_i$, finally, we find
+  $\mu(P-p_i) = \beta_i := \mu(p_{i+1}-p_i, p_{i-1}-p_i)$.
+\end{theorem}
+
+\begin{remark}
+  We assume positive orientation, so that $\area(P) > 0$.
+  Geometrically this ensures that, when traveling along the path $\gamma$,
+  the interior region $B$ will be on the left of our curve $C$.
+  
+  (1) The usual topological notions over $\R$
+  now aquire an algebraic flavour over $\K$:
+  Two points $a,b \in X$ are \emph{connected} in $X$,
+  if they can be connected by a polygonal path within $X$.
+  
+  (2) The fact that $C$ is the common boundary means that
+  each point $q \in C$ has arbitrarily close neighbours in $A$ and in $B$.
+  These can be reached by the two bisectors of the angle at $q$.
+  % For $q \in \ee{p_{i-1}}{p_i}$ these can be reached by a small path
+  % perpendicular to the edge; for $q \in p_i$ we can bisect the angle.
+
+  (3) The extension to boundary points is usually neglected. % omitted.
+  It is, however, not only oddly satisfying but also practically useful.
+  In particular it leads us to Pick's theorem. % opens a way 
+\end{remark}
 
 
 \section{Hopf's umlaufsatz for polygons}
 
-The classical theorem, reformulated and reproven using our angle measure $\mu$.
+Hopf's umlaufsatz for polygons can be formulated
+and proven using any angle measure $\mu$.
+
+\begin{theorem}
+  Let $P = (p_0,p_1,\ldots,p_n)$ be a simply closed
+  polygon in $\K^2$ and positively oriented.
+  
+  At each vertex $p_i$, cyclically indexed
+  by integers modulo $n$, we define the turning angle
+  \begin{align*}
+    \alpha_i := \mu(p_{i+1}-p_i, p_i-p_{i-1}) .
+  \end{align*}
+
+  Then the total turning number (or tangent umlaufzahl)
+  adds up to $\sum_{i=1}^n \alpha_i = 1$.
+\end{theorem}
+
+\begin{remark}
+  The turning angle $\alpha_i$ and the interior angle $\beta_i$
+  add up to $\sfrac{1}{2}$.  Summing over all vertices, we obtain
+  $n/2 = \sum_{i=1}^n \alpha_i + \beta_i = 1 + \sum_{i=1}^n \beta_i$,
+  whence $\sum_{i=1}^n \beta_i = n/2 - 1$.
+
+  The simplest case $n=3$ is the familiar statement that,
+  in any triangle, the interiour angles add up
+  to $\beta_1 + \beta_2 + \beta_3 = 1/2$,
+  correspoding to $\pi/2$ or $180^\circ$.
+  Likewise for any $n$--gon.
+\end{remark}
+
+Together with Jordan's theorem, we obtain the desired
+point count $\sum_{q \in \Z^2 \cap C} \mu(P-q) = J/2 - 1$.
+%
+A pen-and-paper proof of these two theorems
+can be established as in the classical setting.
+With sufficient patience this can be formalized algebraically
+and implemented in a proof assistant, for example Lean.
+This certainly merits further exploration beyond the scope of the article.
+
+We have used the teorems of Jordan and Hopf in order
+to \emph{motivate} our formulation of Pick's lemma.
+Our proof, however, is self-contained and
+does not logically require them.
 
 
-\section{Physical plausibility: ``water proof'' }
+\section{A ``water proof'' plausiblity argument}
+% \section{Physical plausibility: ``water proof'' }
 % \subsection{How to prove Pick's theorem?}
 
 In every-day mathematical communication we often only sketch
@@ -862,12 +984,14 @@ the idea and appeal to some degree of informal intuition.
 This is especially true for geometric statements,
 like Pick's theorem, where we often heavily rely on our visual perception.
 This is usually a good thing for human learning and understanding,
-but it notoriously hinders any sound formalization.
+but may also inhibit the desire for a sound formalization.
+% Why prove a statement that is intuitively plausible?
 
 We sketch such a visual proof, appealing to geometric intuition
 as a counterpart to our algebraic formalization.
 We then explain how the intuition can be made precise
-and finally translates to our algebraic viewpoint.
+and finally translates to our algebraic viewpoint,
+closing this circle of ideas.
 
 \begin{figure}[ht]
   \begin{tikzpicture}[x=5mm, y=5mm, rounded corners=0.1pt]
@@ -972,16 +1096,16 @@ and finally translates to our algebraic viewpoint.
   At the start it is the share of drops that fall into $B$.
   At the end it equals the surface area of $B$.
   We thus obtain:
-  \begin{align*}
-    \vol_2(B) = I + \sum_{q \in \Z^2 \cap C} \alpha(q) / 2\pi
-  \end{align*}
+  \begin{align}
+    \vol_2(B) = I + \sum_{q \in \Z^2 \cap C} \beta(q) / 2\pi
+  \end{align}
 
-  Here $\alpha(q)$ is the inner angle at the boundary point $q \in C$.
+  Here $\beta(q)$ is the interior angle at the boundary point $q \in C$.
   So our physical intuition, or gedankenexperiment, leads us to
   Pick's lemma \ref{lem:PickEuclidean} using the euclidean angle measure.
 
   We once again invoke Hopf's umlaufsatz:
-  the sum of outer angles is $\sum_{q \in C} [ \pi - \alpha(q) ] = 2\pi$,
+  the sum of turning angles is $\sum_{q \in C} [ \pi - \beta(q) ] = 2\pi$,
   so we arrive at Pick's theorem $\vol_2(B) = I + J/2 - 1$.
 \end{proof}
 
@@ -1021,10 +1145,10 @@ For each time $t \in \ei{0}{1}$ let $\mu_t$ be a continuous probability measure,
 ending with the uniform (Haar) measure $\mu_1$ on $T$,
 so that $4 r^2 \mu_1(B)$ is the area of our inner region. 
 Now we observe the quantity 
-\[
-% f \colon \ei{0}{1} \to \R_{\ge0} \colon t \mapsto
-f(t) := \sum_{q \in \Z^2/2r\Z^2} \mu_t(B-q) .
-\]
+\begin{align}
+  % f \colon \ei{0}{1} \to \R_{\ge0} \colon t \mapsto
+  f(t) := \sum_{q \in \Z^2/2r\Z^2} \mu_t(B-q) .
+\end{align}
 
 We have $f(1) = \vol_2(B)$.
 For each $t > 0$ we assume $\mu_t$ to be symmetric
@@ -1059,7 +1183,7 @@ At the other end we look at the limit for $t \searrow 0$:
   This is appealing for a physically inclined audience
   familiar with the heat equation or diffusion.
   Moreover, this provides an explicit model of the flow
-  as partial differential equations.
+  as partial differential equations, this time for $t \in \ee{0}{\infty}$.
   Within the chosen model, we can then 
   prove that $f$ is indeed constant
   and calculate the limit for $t \searrow 0$.
@@ -1084,6 +1208,11 @@ At the other end we look at the limit for $t \searrow 0$:
 
 % more rigorous proof?  Proofs from the book!
 % We will not pursue this line of thought, but only give references.
+
+\section*{Remerciements}
+
+Elli zu Neblberg expresses her heartfelt gratitude to her collaborators.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
