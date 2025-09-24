@@ -172,7 +172,7 @@ are $\bar{A} = A \cup C$ and $\bar{B} = B \cup C$.
   \begin{tikzpicture}[x=5mm, y=5mm, font=\footnotesize,
       rounded corners=0.2pt, inner sep=2pt, align= left]
     \setlength{\baselineskip}{5mm}
-    \draw[color=black!50, step=1] (-1,-1) grid (23,7);
+    \draw[color=black!50, step=1] (-1,-1) grid (21,7);
     \begin{scope}[shift={(0,0)}]
       \draw[line width=1pt, blue, fill=yellow!50, fill opacity=0.3]
       (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
@@ -197,26 +197,34 @@ are $\bar{A} = A \cup C$ and $\bar{B} = B \cup C$.
     \begin{scope}[shift={(6,0)}]
       \draw (0,6) node[below right]{(b) simple \\ but not closed};
       % (b) einfach, aber \\ nicht geschlossen};
-      \draw[line width=1pt, blue] (2,0) -- (5,1) -- (0,3) -- (3,4);
-      \draw[line width=1pt, blue, dashed ] (3,4) -- (2,0) node[pos=0.4, above left]{?};
-      \foreach \x/\y in { 2/0, 5/1, 0/3, 3/4 }{
+      \draw[line width=1pt, blue] (1,0) -- (4,1) -- (0,3) -- (3,4);
+      \draw[line width=1pt, blue, dashed ] (3,4) -- (1,0) node[pos=0.4, above left]{?};
+      \foreach \x/\y in { 1/0, 4/1, 0/3, 3/4 }{
         \draw[draw=black, thin, fill=blue!70!black] (\x,\y) circle[radius=1.5pt];
       }      
     \end{scope}
-    \begin{scope}[shift={(12,0)}]
+    \begin{scope}[shift={(11,0)}]
       \draw (0,6) node[below right]{(c) closed \\ but not simple};
       % (c) geschlossen, \\ aber nicht einfach};
       \draw[draw=none, fill=teal!30, fill opacity=0.3]
-      (0,2) -- (1,1) -- (5/3,2) -- (1,3) -- cycle;
+      (1,0) -- (4,1) -- (2,2) -- cycle;
       \draw[draw=none, fill=orange!40, fill opacity=0.3]
-      (5/3,2) -- (3,4) -- (5,2) -- (3,0) -- cycle;
-      \draw[line width=1pt, blue]
-      (0,2) -- (1,1) -- (3,4) -- (5,2) -- (3,0) -- (1,3) -- cycle;
-      \foreach \x/\y in { 0/2, 1/1, 3/4, 5/2, 3/0, 1/3 }{
+      (0,3) -- (3,4) -- (2,2) -- cycle;
+      \draw[line width=1pt, blue] (1,0) -- (4,1) -- (0,3) -- (3,4) -- cycle;
+      \foreach \x/\y in { 1/0, 4/1, 0/3, 3/4 }{
         \draw[draw=black, thin, fill=blue!70!black] (\x,\y) circle[radius=1.5pt];
-      }
+      }      
+      % \draw[draw=none, fill=teal!30, fill opacity=0.3]
+      % (0,2) -- (1,1) -- (5/3,2) -- (1,3) -- cycle;
+      % \draw[draw=none, fill=orange!40, fill opacity=0.3]
+      % (5/3,2) -- (3,4) -- (4,2) -- (3,0) -- cycle;
+      % \draw[line width=1pt, blue]
+      % (0,2) -- (1,1) -- (3,4) -- (4,2) -- (3,0) -- (1,3) -- cycle;
+      % \foreach \x/\y in { 0/2, 1/1, 3/4, 4/2, 3/0, 1/3 }{
+      %   \draw[draw=black, thin, fill=blue!70!black] (\x,\y) circle[radius=1.5pt];
+      % }
     \end{scope}
-    \begin{scope}[shift={(18,0)}]
+    \begin{scope}[shift={(16,0)}]
       \draw (0,6) node[below right, ]{(d) simply closed \\ but not integer};
       % {(d) nicht \\ ganzzahlig};
       \draw[line width=1pt, blue, fill=purple!30, fill opacity=0.3]
@@ -226,6 +234,8 @@ are $\bar{A} = A \cup C$ and $\bar{B} = B \cup C$.
       }
       \draw[draw=black, thin, fill=purple] (0.0,2.5) circle[radius=1.5pt];
     \end{scope}
+    \draw (23,3) node{\includegraphics[height=30mm]{Camille-Jordan}};
+    \draw (23,0) node[below, font=\footnotesize]{Camille Jordan};
   \end{tikzpicture}
 \end{figure}
 
@@ -449,6 +459,7 @@ to ordered fields we cover all cases simultaneously.
   For every polygon $P = (p_0,p_1,\ldots,p_n)$ in $\K^2$
   we thus define its area to be 
   \begin{align}
+    \label{eq:Area}
     \Area(P) := \sum_{i=1}^{n} \area(p_{i-1},p_i) .
   \end{align}
 \end{definition}
@@ -596,7 +607,7 @@ The euclidean angle measure requires
 real numbers and transcendental functions.
 For computer implementation this is a heavy burden:
 \texttt{Real} is good for proofs but bad for calculation,
-whereas \texttt{Float} ist good for approximations but bad for proofs.
+whereas \texttt{Float} is good for approximations but bad for proofs.
 
 For our purposes we prefer to work with the following \emph{discrete angle measure}.
 This allows us to work over any ordered field $\K$,
@@ -624,10 +635,10 @@ for example $\Q \subseteq \K \subseteq \R$.
     node[pos=0.5, sloped, below]{$-1/4$};
     \draw[thick, teal, -latex'] (-0.0,-0.6) -- (-1.4,-0.6)
     node[pos=0.5, sloped, below]{$-1/4$};
-    \draw[thick, black!60, -latex'] (-3.0,+1.2) -- (-3.2,-1.0);
-    \draw[thick, black!60, -latex'] (-3.8,-1.0) -- (-3.9,+1.2);
-    \draw[thick, black!60, -latex'] (+3.0,-1.2) -- (+3.2,+1.0);
-    \draw[thick, black!60, -latex'] (+3.8,+1.0) -- (+3.9,-1.2);
+    \draw[thick, black!60, -latex'] (-3.0,+1.2) -- (-3.2,-1.0) node[pos=0.7, left]{$0$};
+    \draw[thick, black!60, -latex'] (-3.8,-1.0) -- (-3.9,+1.2) node[pos=0.7, right]{$0$};
+    \draw[thick, black!60, -latex'] (+3.0,-1.2) -- (+3.2,+1.0) node[pos=0.7, right]{$0$};
+    \draw[thick, black!60, -latex'] (+3.8,+1.0) -- (+3.9,-1.2) node[pos=0.7, left]{$0$};
     \draw[thick, black!60, -latex'] (+1.0,+0.3) -- (+0.0,+0.0);
     \draw[thick, black!60, -latex'] (+0.0,+0.0) -- (+0.8,-0.2);
     \draw[thick, black!60, -latex'] (-1.0,+0.3) -- (-0.0,+0.0);
@@ -699,9 +710,10 @@ by the \emph{weighted sum of enclosed lattice points}
   and the geometric theorem.
 
   Since Jordan's and Hopf's are classical theorems in their own right,
-  we do not consider them as part of the \emph{proof} of Pick's theorem,
-  but rather as the foundation for precisely \emph{formulating} the statement.
-  This translation being achieved, we can now focus on proving Pick's lemma.
+  we do not consider them as part of the \emph{proof} of Pick's lemma,
+  but rather as the foundation to \emph{motivate} or \emph{interpret} the statement.
+  This groundwork being provided, % achieved,
+  we can now focus on proving Pick's lemma.
 \end{remark}
 
 
@@ -955,6 +967,7 @@ can be established as in the classical setting,
 and then implemented in a proof assistant. % for example Lean,
 This foundational work usually requires
 ``augmenting the existing geometry libraries'' \cite{Binder:Kosaian:2024}.
+% The same holds for deriving the area formula \ref{eq:Area} from the Lebesgue measure.
 It merits further exploration beyond the scope of the modest article.
 
 
@@ -1043,18 +1056,26 @@ It becomes false for non-simply closed polygons.
       \foreach \i/\j in {0/1, 1/2, 2/3, 3/4, 4/5, 5/6, 4/6, 3/6, 2/6, 1/6, 0/6, 0/5, 0/4, 0/3, 0/2}{
         \draw[fill=black] (\i,\j) circle[radius=1pt];
       }
-      \draw (5.5,3.5) node[right, align=center]{
-        discrete homotopy \\ from the hypotenuse \\ to the catheti};
+      \draw (3.5,3.5) node[right, align=center]{
+        % discrete homotopy \\ from the hypotenuse \\ to the catheti};
+        discrete homotopy \\ from the diagonal \\ to both sides};
     \end{scope}
   \end{tikzpicture}
-  \caption{Proof of Hopf's theorem}
+  \caption{Hopf's homotopy argument for his umlaufsatz}
   \label{fig:HopfTheorem}
 \end{figure}
 
 Hopf first formulated his umlaufsatz \cite{Hopf:1935} for simply closed paths
-$\gamma \colon [0,1] \to \R^2$ that are continuously differentiable.
-(He then showed that it suffices to require this condition piecewise.)
-He proved his theorem by an ingenious homotopy argument.
+$\gamma \colon [0,1] \to \R^2$ that are continuously differentiable,
+and proved it by an ingenious homotopy argument.
+%
+% ``Von seinen bisherigen, mir bekannten, Beweisen erscheint mir keiner
+% so kurz und einfach, daß es sich nicht mehr lohnte, noch kürzere
+% und einfachere Beweise zu suchen; in Nr.\ 2 teile ich einen
+% Beweis mit, den ich für einfacher halte als die früheren.''
+%
+He then showed that it suffices to require
+a \emph{piecewise} continuously differentiable curve.
 For future reference, we sketch an algebraic version
 for polygons over any ordered field $(\K,+,\cdot,\le)$,
 using any angle measure $\mu$.
@@ -1067,13 +1088,15 @@ and illustrated in \autoref{fig:HopfTheorem}.
   After translation we have $p_0 = (0,0)$ and $y_i \ge 0$ for all $i$.
   By inserting small edges around $p_0$,
   we can achieve $0 = y_0 = y_1 = y_{n-1} = y_{n-2}$
-  und $x_{n-2} < x_{n-1} < x_0 < x_1$.
+  and $x_{n-2} < x_{n-1} < x_0 < x_1$.
   (This is shown on the left of \autoref{fig:HopfTheorem}.)
   
   For $0 \le i < j \le n-1$ we consider the secant $s_{i,j} := p_j - p_i$.
-  From $s_{0,1}$ via $s_{0,j}$ to $s_{0,n-1}$ we perform a first half turn,
-  then via $s_{i,n-1}$ to $s_{n-2,n-1}$ we perform a second half turn.
-
+  From $s_{0,1}$ via $s_{0,j}$ to $s_{0,n-1}$ we perform a half turn,
+  then via $s_{i,n-1}$ to $s_{n-2,n-1}$ we perform another half turn.
+  Both add up to $1$.  (This uses that our polygon is simple,
+  a degenerate polygon with $0 = y_0 = \ldots = y_n$ yields $0$.)
+  
   If, moreover, our polygon $P$ is simply closed,
   then this movement corresponds to the umlaufzahl.
   More precisely, we prove the following equation by a discrete homotopy:
@@ -1093,22 +1116,23 @@ and illustrated in \autoref{fig:HopfTheorem}.
       \mu( s_{i-1,i}, s_{i-1,i+1} ) +
       \mu( s_{i-1,i+1}, s_{i,i+1} ) .
     \end{align*}
-    This essentially uses that our polygon is simple,
-    so the triangle is non-degenerate.
+    % This essentially uses that our polygon is simple,
+    % so the triangle is non-degenerate.
   \item
     Squares: For $0 \le i < n-2$ and $i+1 < j \le n-1$ we find
     \begin{align*}
       0 = \mu( s_{i,j}, s_{i,j+1} ) + \mu( s_{i,j+1}, s_{i+1,j+1} )
-      - \mu( s_{i,j}, s_{i+1,j} ) + \mu( s_{i+1,j}, s_{i+1,j+1} ) .
+      - \mu( s_{i,j}, s_{i+1,j} ) - \mu( s_{i+1,j}, s_{i+1,j+1} ) .
     \end{align*}
     This essentially uses that our polygon is simple,
     so $[p_i,p_{i+1}] \cap [p_j,p_{j+1}] = \emptyset$.
   \end{enumerate}
 
-  The left hand side of \eqref{eq:Hopf} is the total tangent turning number.
-  We replace each summand using (1) and then add all terms (2).
-  Most of the summands cancel pairwise.
-  The remaining terms yield the right hand side of \eqref{eq:Hopf}.
+  The left hand side of \eqref{eq:Hopf}
+  is the umlaufzahl. % total tangent turning number.
+  We replace each summand using (1) and then add all sums from (2).
+  Most of the summands cancel pairwise,
+  what remains is the right hand side of \eqref{eq:Hopf}.
   This equals $1$, as explained above.
 \end{proof}
 
@@ -1129,7 +1153,7 @@ but may also inhibit the desire for a sound formalization.
 We sketch such a visual proof, appealing to geometric intuition
 as a counterpart to our algebraic formalization.
 We then explain how the intuition can be made precise
-and finally translates to our algebraic viewpoint,
+and finally leads to our algebraic viewpoint,
 closing this circle of ideas.
 
 \begin{figure}[ht]
@@ -1231,7 +1255,7 @@ closing this circle of ideas.
   is compensated by the water flowing from the point $\rho(q) \in \Z^2$ over $[u,v]$.
   The net flow over the edge $[u,v]$ is zero.
   
-  This shows that the total amount of water in $B$ never changes.
+  This shows that the total amount of water within $B$ never changes.
   At the start it is the share of drops that fall into $B$.
   At the end it equals the surface area of $B$.
   We thus obtain:
@@ -1298,48 +1322,52 @@ At the other end we look at the limit for $t \searrow 0$:
 
 \begin{example}
   % In our above experiment, as illustrated in \autoref{fig:WaterFlow},
-  As illustrated in \autoref{fig:WaterFlow}, for small $t$ % $0 < t \le \sfrac{1}{2}$
-  we set $\supp \mu_t = D(0,t)$ to be the disc of radius $t$ around the origin $0$.
-  For sufficiently small $t$ thus obtain $f(t) = \sum_{q \in \Z^2} \Ang(P-q)$.
+  As in \autoref{fig:WaterFlow}, for small $t$ % $0 < t \le \sfrac{1}{2}$
+  we let $\supp \mu_t = D(0,t)$ be the disc of radius $t$ around the origin $0$.
+  For sufficiently small $t$ we obtain $f(t) = \sum_{q \in \Z^2} \Ang(P-q)$
+  as in \ref{lem:PickEuclidean}.
 
-  This recovers Pick's lemma \ref{lem:PickEuclidean}
-  using the euclidean angle measure.
+  % This recovers Pick's lemma \ref{lem:PickEuclidean}
+  % using the euclidean angle measure.
 \end{example}
 
 \begin{example}
   Alternatively, for small $t$ % $0 < t \le \sfrac{1}{2}$
-  we consider set $\supp \mu_t = [-t^2,t^2] \times [-t,t]$
+  we consider $\supp \mu_t = [-t^2,t^2] \times [-t,t]$
   to be a thin vertical rectangle.
-  In the limit $t \searrow 0$ we thus obtain
-  $f(t) \to \sum_{q \in \Z^2} \Dang(P-q)$.
-
-  This recovers Pick's lemma \ref{lem:PickDiscrete}
-  using the discrete angle measure.
+  In the limit $t \searrow 0$ we obtain
+  $f(t) \to \sum_{q \in \Z^2} \Dang(P-q)$
+  as in \ref{lem:PickDiscrete}.
+  
+  % This recovers Pick's lemma \ref{lem:PickDiscrete}
+  % using the discrete angle measure.
 \end{example}
+
+In this fashion our physical intuition can lead us to both flavours of Pick's lemma.
 
 \begin{remark}
   This tale can be recounted by replacing water with heat.
   This is appealing for a physically inclined audience
-  familiar with the heat equation or diffusion.
+  familiar with the heat equation. % or diffusion.
   Moreover, this provides an explicit model of the flow
   as partial differential equations, this time for $t \in \ee{0}{\infty}$.
-  Within the chosen model, we can then 
-  prove that $f$ is indeed constant
-  and calculate the limit for $t \searrow 0$.
+  In this model % Within the chosen model
+  we can then prove that $f$ is indeed constant
+  and calculate the limit for $t \searrow 0$ and for $t \nearrow \infty$.
   % It emphasizes superposition and the linear nature of the argument,
   % whereas the actual equations for water rather obfuscate the picture.
   % At any rate, we can choose from two versions,
   % one story each for summer and winter semesters.
 \end{remark}
 
-\begin{remark}
-  Another variant is to think of reflective walls.
-  Geometrically, we can take two copies of $B \cup C$
-  and glue them together along their common boundary $C$.
-  This produces a closed surface $S$ homeomorphic to the sphere,
-  with volume $\vol_2(S) = 2 \vol_2(B)$ and Euler characteristic $\chi(S) = 2$.
-  The vertices provide the curvature, as in the Gauß--Bonnet theorem.
-\end{remark}
+% \begin{remark}
+%   Another variant is to think of reflective walls.
+%   Geometrically, we can take two copies of $B \cup C$
+%   and glue them together along their common boundary $C$.
+%   This produces a closed surface $S$ homeomorphic to the sphere,
+%   with volume $\vol_2(S) = 2 \vol_2(B)$ and Euler characteristic $\chi(S) = 2$.
+%   The vertices provide the curvature, as in the Gauß--Bonnet theorem.
+% \end{remark}
 
 % superposition, will be used later
 
