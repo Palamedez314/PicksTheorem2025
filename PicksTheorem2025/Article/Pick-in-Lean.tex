@@ -145,7 +145,13 @@
 
 \maketitle
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+  \small\it
+  % “L'algébre n'est qu'une géométrie écrite, la géométrie n'est qu'une algèbre figurée.”
+  “Algebra is but written geometry, geometry is but figured algebra.”
+  \rm (Sophie Germain, 1776--1831)
+  % https://old.maa.org/press/periodicals/convergence/quotations-in-context-germain
+\end{center}
 
 \section{Introduction: Pick's wonderful theorem} \label{sec:Introduction}
 
@@ -296,9 +302,10 @@ Here the magic of Pick's theorem happens:
       cycle;
       \draw[draw=none, fill=orange, fill opacity=0.5] (0,0) circle[radius=1mm];
     \end{scope}
-    \draw (22,0) node{\includegraphics[height=30mm]{Georg-Pick}};
+    \draw (22, 0) node{\includegraphics[height=30mm]{Georg-Pick}};
+    \draw (22,-3) node[below, font=\footnotesize]{Georg Pick};
   \end{tikzpicture}
-  \caption{(a) rectangle, (b) oblique square, (c) Farey sunburst $F_6$, (d) Georg Pick}
+  \caption{(a) rectangle, (b) oblique square, (c) Farey sunburst $F_6$} %, (d) Georg Pick}
   \label{fig:PickExamples}
 \end{figure}
 
@@ -884,7 +891,7 @@ the result more geometrically user-friendly.
     \draw (-3,+1) node[draw=black, inner sep=3pt, font=\strut]{Polygons};
     \draw (+3,+1) node[draw=black, inner sep=3pt, font=\strut]{Counting};
     \draw (-3,-1) node[draw=black, inner sep=3pt, font=\strut]{Winding};
-    \draw (+3,-1) node[draw=black, inner sep=3pt, font=\strut]{Counting};
+    \draw (+3,-1) node[draw=black, inner sep=3pt, font=\strut]{Summing};
     \draw[-latex'] (-2.1,+1.0) -- (+2.1,+1.0) node[midway, above]{Pick's Theorem};
     \draw[-latex'] (-2.1,-1.0) -- (+2.1,-1.0) node[midway, above]{Pick's Lemma};
     \draw[-latex'] (-3.0,+0.6) -- (-3.0,-0.6) node[midway, left]{Jordan};
@@ -1220,7 +1227,7 @@ closing this circle of ideas.
         }
       \end{scope}
       \begin{scope}
-        \clip (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
+L’algébre n’est qu’une géométrie écrite, la géométrie n’est qu’une algèbre figure [Germain 1879, p. 264].         \clip (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
         (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
         \foreach \x in {-1,0,...,6}{
           \foreach \y in {-1,0,...,7}{
