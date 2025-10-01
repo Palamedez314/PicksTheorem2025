@@ -874,6 +874,32 @@ we conclude $\Area(P) = \Welp(P)$, as claimed. % desired.
 \setcounter{section}{0}
 \section{Axiomatic angle measure}
 
+Nicely summarized, we need Jordan's decomposition
+to formulate Pick's theorem precisely.
+We use Hopf's umlaufsatz to interpret
+the result more geometrically user-friendly.
+
+\begin{figure}[ht]
+  \begin{tikzpicture}[x=10mm, y=10mm]
+    \draw (-3,+1) node[draw=black, inner sep=3pt, font=\strut]{Polygons};
+    \draw (+3,+1) node[draw=black, inner sep=3pt, font=\strut]{Counting};
+    \draw (-3,-1) node[draw=black, inner sep=3pt, font=\strut]{Winding};
+    \draw (+3,-1) node[draw=black, inner sep=3pt, font=\strut]{Counting};
+    \draw[-latex'] (-2.1,+1.0) -- (+2.1,+1.0) node[midway, above]{Pick's Theorem};
+    \draw[-latex'] (-2.1,-1.0) -- (+2.1,-1.0) node[midway, above]{Pick's Lemma};
+    \draw[-latex'] (-3.0,+0.6) -- (-3.0,-0.6) node[midway, left]{Jordan};
+    \draw[-latex'] (+3.0,-0.6) -- (+3.0,+0.6) node[midway, right]{Hopf};
+  \end{tikzpicture}
+  \caption{We transform Pick's Theorem to Pick's lemma}
+  \label{fig:PickTransform}
+\end{figure}
+
+% We have used the theorems of Jordan and Hopf in order
+% to motivate our \emph{formulation} of Pick's lemma;
+% our \emph{proof}, however, is self-contained and
+% does not logically require them.
+
+
 We can use different angle measures for the theorems of
 Jordan and Hopf and finally Pick.
 In order to cover all cases simultaneously, 
@@ -1006,11 +1032,6 @@ and proven using any angle measure $\mu$.
 
 Together with Jordan's theorem, we obtain the desired
 point count $\sum_{q \in \Z^2 \cap C} \mu(P-q) = J/2 - 1$.
-
-We have used the theorems of Jordan and Hopf in order
-to motivate our \emph{formulation} of Pick's lemma;
-our \emph{proof}, however, is self-contained and
-does not logically require them.
 
 
 \subsection{Formalizing Hopf's umlaufsatz}
