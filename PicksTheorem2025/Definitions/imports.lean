@@ -1,10 +1,10 @@
+import Mathlib.Tactic
 import Mathlib.Data.Sign.Defs
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Image
 import Mathlib.Data.Finset.Prod
 import Mathlib.Data.Finset.Sigma
 import Mathlib.Algebra.BigOperators.Group.Finset.Defs
-import Mathlib.Algebra.Bigoperators.Group.Finset.Sigma
 import Mathlib.Algebra.Order.Group.Abs
 import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Algebra.Field.Rat
