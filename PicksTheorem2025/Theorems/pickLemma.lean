@@ -1,7 +1,6 @@
 import PicksTheorem2025.Definitions.polygon
 import PicksTheorem2025.Definitions.area
 import PicksTheorem2025.Definitions.winding
-import Mathlib.Tactic
 
 variable {K : Type} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
 variable {R : Type} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
@@ -28,7 +27,7 @@ def bluebox_y (r : Nat) (u v : Point ℤ) := Finset.image
     (fun n ↦ v.2 + u.2 - r + Int.ofNat n) (Finset.range (2*r - (v.2 + u.2).toNat + 1))
 
 def bluebox (r : Nat) (u v : Point ℤ) : Finset (Point ℤ) :=
-  Finset.instSProd.sprod (bluebox_x u v) (bluebox_y r u v)
+  (bluebox_x u v) ×ˢ (bluebox_y r u v)
 
 theorem case3 (r : Nat) (u v : Point ℤ) (hu : u ∈ (Box2d r)) (hv : v ∈ (Box2d r)) (huv : u.1 > v.1)
     : ∑ p ∈ (bluebox r u v), (dang (u-p) (v-p) : K) = 0 := by
@@ -58,7 +57,15 @@ theorem case3 (r : Nat) (u v : Point ℤ) (hu : u ∈ (Box2d r)) (hv : v ∈ (Bo
 
   -- schwieriger Teil des Beweises, bei dem die
   --(gerade relativ schlechte) Definition von bluebox_x bzw _y aufgegriffen wird
-  have g_mem : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), g p hp ∈ bluebox r u v := sorry
+  have g_mem : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), g p hp ∈ bluebox r u v := by
+    intro p hp
+    change p ∈ (bluebox_x u v) ×ˢ (bluebox_y r u v) at hp
+    rw[Finset.mem_product] at hp
+    cases' hp with h1 h2
+    change p.1 ∈ Finset.image (fun n ↦ v.1 + Int.ofNat n)
+        (Finset.range (|u.1 - v.1|.toNat + 1)) at h1
+    rw[Finset.mem_image] at h1
+    sorry
 
   have hg₄ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), g (g p hp) (g_mem p hp) = p := by
     intro p hp
