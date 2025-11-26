@@ -65,6 +65,7 @@ theorem case3 (r : Nat) (u v : Point ℤ) (hu : u ∈ (Box2d r)) (hv : v ∈ (Bo
     change p.1 ∈ Finset.image (fun n ↦ v.1 + Int.ofNat n)
         (Finset.range (|u.1 - v.1|.toNat + 1)) at h1
     rw[Finset.mem_image] at h1
+    have hp ↔
     sorry
 
   have hg₄ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), g (g p hp) (g_mem p hp) = p := by
@@ -72,3 +73,76 @@ theorem case3 (r : Nat) (u v : Point ℤ) (hu : u ∈ (Box2d r)) (hv : v ∈ (Bo
     unfold g
     simp
   apply Finset.sum_involution g hg₁ hg₃ g_mem hg₄
+
+theorem box_values (r : Nat) : Box1d r = {k : Int | k > -(r+1) ∧ k < (r+1)} := by
+  ext x
+  constructor
+  intro h
+  change x ∈ Finset.image (fun n ↦ Int.ofNat n - Int.ofNat r) (Finset.range (2*r +1)) at h
+  rw [Finset.mem_image] at h
+  obtain ⟨a, ha⟩ := h
+  cases' ha with h1 h2
+  change x > -↑(r+1) ∧ x < ↑(r+1)
+  constructor
+  have h3 : Int.ofNat a ≥ 0 := Int.Nonneg.natCast a
+  have h4 : Int.ofNat a - Int.ofNat r ≥ -Int.ofNat r := by
+    rw [← Int.zero_sub (Int.ofNat r)]
+    apply Int.sub_le_sub_right h3
+  rw [h2] at h4
+  have h5 : x > -Int.ofNat r + -1 := by
+    rw [← add_zero x]
+    exact add_lt_add_of_le_of_lt h4 neg_one_lt_zero
+  have h6 : -Int.ofNat r + -1 = -Int.ofNat (r+1) := by
+    rw [← neg_add]
+    rfl
+  rw [h6] at h5
+  exact h5
+  rw [Finset.mem_range] at h1
+  have h3 : Int.ofNat a < 2 * Int.ofNat r + 1 := Int.lt_of_toNat_lt h1
+  have h4 : Int.ofNat a - Int.ofNat r < 2 * Int.ofNat r + 1 - Int.ofNat r := by
+    apply sub_lt_sub_right
+    exact h3
+  have h5 : 2 * Int.ofNat r + 1 - Int.ofNat r = Int.ofNat r + 1 := by ring
+  have h6 : Int.ofNat r + 1 = Int.ofNat (r+1) := rfl
+  rw [h2, h5, h6] at h4
+  exact h4
+  intro h
+  cases' h with h1 h2
+  change x ∈ Finset.image (fun n ↦ Int.ofNat n - Int.ofNat r) (Finset.range (2*r +1))
+  rw [Finset.mem_image]
+  change x > -(Int.ofNat r + 1) at h1
+  change x < Int.ofNat r + 1 at h2
+  have h3 : -Int.ofNat r + -1 = -(Int.ofNat r+1) := by
+    rw [← neg_add]
+  have h4 : Int.ofNat r + 1 = Int.ofNat (r+1) := rfl
+  rw [← h3] at h1
+  let a : Int := x + Int.ofNat r
+  have h5 : x = a - Int.ofNat r := by rw [Int.add_sub_cancel]
+  have h : a ≥ 0 := by
+    apply Int.le_of_lt_add_one
+    rw [← neg_add_cancel 1]
+    apply add_lt_add_right
+    change x + Int.ofNat r > -1
+    rw [← add_zero (-1), ← neg_add_cancel (Int.ofNat r), ← add_assoc]
+    nth_rewrite 3 [add_comm]
+    change -Int.ofNat r + -1 + Int.ofNat r < x + Int.ofNat r
+    rw [add_lt_add_iff_right]
+    exact h1
+  use Int.toNat a
+  constructor
+  rw [Finset.mem_range]
+  have h6 : a < 2 * Int.ofNat r + 1 := by
+    rw [two_mul, add_assoc, add_comm, ← sub_lt_iff_lt_add, ← h5]
+    exact h2
+  have h7 : 2 * Int.ofNat r + 1 = Int.ofNat (2 * r + 1) := rfl
+  rw [Int.toNat_lt]
+  change a < Int.ofNat (2 * r + 1)
+  rw [← h7]
+  exact h6
+  exact h
+  have h6 : a = Int.ofNat a.toNat := by
+    change a = ↑a.toNat
+    rw[Int.eq_natCast_toNat]
+    exact h
+  rw [← h6]
+  exact h5.symm
