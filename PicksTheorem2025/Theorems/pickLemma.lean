@@ -19,6 +19,7 @@ def PolygonBound (P : Polygon ℤ) : Nat := sorry
 theorem polygon_bounded (P : Polygon ℤ)
     : ∀ r : Nat, r ≥ (PolygonBound P) → isBounded P r := by sorry
 
+omit [IsStrictOrderedRing K] in
 theorem dang_neg_symm (u v : Point R) :
     - dang v u = (dang u v : K) := by
   unfold dang
@@ -26,6 +27,7 @@ theorem dang_neg_symm (u v : Point R) :
     mul_comm v.2, mul_comm v.1, Left.sign_neg]
   rw [SignType.coe_neg, mul_neg, neg_div, neg_neg]
 
+omit [IsStrictOrderedRing K] in
 open SignType in
 theorem dang_neg_neg (u v : Point R) :
     dang (-u) (-v) = (dang u v : K) := by
