@@ -5,42 +5,100 @@ import PicksTheorem2025.Definitions.winding
 variable {K : Type} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
 variable {R : Type} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
 
+-- theorem point_in_Box_le_r (r : Nat) (p : Point ℤ) : p ∈ Box2d r ↔ supNorm p ≤ r := by
+--   constructor
+--   · by_cases h1_le_2 :|p.1| ≤ |p.2|
+--     · have supNorm_eq_p2: supNorm p = |p.2| := by
+--         sorry
+--       sorry
+--     sorry
+--   sorry
 
-theorem Point_in_Box_le_r (r : Nat) (p : Point ℤ) (h1 : p ∈ Box2d r) : supNorm p ≤ r := by
-  by_cases h1_le_2 :|p.1| ≤ |p.2|
-  have supNorm_eq_p2: supNorm p = |p.2| := by
-    sorry
-  sorry
-  sorry
+def PolygonBound (P : Polygon ℤ) : Nat := sorry
 
-theorem dang_switch_order (u v : Point R) : (dang u v : K) = - dang v u := by sorry
+theorem polygon_bounded (P : Polygon ℤ)
+    : ∀ r : Nat, r ≥ (PolygonBound P) → isBounded P r := by sorry
 
+theorem dang_neg_symm (u v : Point R) :
+    - dang v u = (dang u v : K) := by
+  unfold dang
+  rw [abs_sub_comm, ← neg_sub (v.2 * u.1),
+    mul_comm v.2, mul_comm v.1, Left.sign_neg]
+  rw [SignType.coe_neg, mul_neg, neg_div, neg_neg]
 
-theorem dang_change_sign (u v : Point R) : (dang u v : K) = dang (-u) (-v) := by sorry
+open SignType in
+theorem dang_neg_neg (u v : Point R) :
+    dang (-u) (-v) = (dang u v : K) := by
+  unfold dang
+  rw [abs_sub_comm]
+  simp only [Prod.fst_neg, Left.sign_neg, coe_neg, sub_neg_eq_add, Prod.snd_neg, mul_neg, neg_mul,
+    neg_neg]
+  rw [add_comm, ← sub_eq_add_neg]
 
+def leftBoxwithBorder (r : Nat) (u _v : Point ℤ) :=
+  Finset.Icc ((-r : ℤ), (-r : ℤ)) (u.1 - 1, r)
 
+def rightBoxwithBorder (r : Nat) (_u v : Point ℤ) :=
+  Finset.Icc (v.1 + 1, (-r : ℤ)) (r, r)
 
-def bluebox_x (u v : Point ℤ) := Finset.image
-    --argumente vor .toNat vielleicht im Nachhinein verändern. hier haben wir uns es leicht gemacht
-    (fun n ↦ v.1 + Int.ofNat n) (Finset.range (|u.1 - v.1|.toNat + 1))
-def bluebox_y (r : Nat) (u v : Point ℤ) := Finset.image
-    (fun n ↦ v.2 + u.2 - r + Int.ofNat n) (Finset.range (2*r - (v.2 + u.2).toNat + 1))
+def middleBox (r : Nat) (u v : Point ℤ) :=
+  Finset.Icc (u.1, (-r : ℤ)) (v.1, r)
+
+def bottomBox (r : Nat) (u v : Point ℤ) :=
+  Finset.Icc (u.1, (-r: ℤ)) (v.1, u.2 + v.2 - r - 1)
 
 def bluebox (r : Nat) (u v : Point ℤ) : Finset (Point ℤ) :=
-  (bluebox_x u v) ×ˢ (bluebox_y r u v)
+  Finset.Icc (u.1, u.2 + v.2 - r) (v.1, r)
 
-theorem case3 (r : Nat) (u v : Point ℤ) (hu : u ∈ (Box2d r)) (hv : v ∈ (Box2d r)) (huv : u.1 > v.1)
-    : ∑ p ∈ (bluebox r u v), (dang (u-p) (v-p) : K) = 0 := by
+lemma and_iff_and_of_iff {a b c : Prop} : (a ↔ b) → (c ∧ a ↔ c ∧ b) := by
+    intro hiff
+    rw [hiff]
 
-  let f : Point ℤ → K := fun p ↦ (dang (u-p) (v-p) : K)
-  let g : (p : Point ℤ) → (p ∈ bluebox r u v) → Point ℤ := fun p _ ↦ u + v - p
-  have hg₁ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), f p + f (g p hp) = 0 := by
+theorem middleBoxPartition (r : Nat) (u v : Point ℤ) :
+    middleBox r u v = bottomBox r u v ∪ bluebox r u v
+    := by
+  ext x
+  unfold middleBox bottomBox bluebox
+  simp [Prod.le_def]
+  rw [and_and_and_comm]
+  nth_rewrite 2 [and_and_and_comm]
+  nth_rewrite 3 [and_and_and_comm]
+  rw [← and_or_left]
+  apply and_iff_and_of_iff
+  -- kann ich hier iwann grind benutzen?
+  sorry
+
+theorem BoxPartition
+    {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r)
+    (hx : u.1 < v.1) (hy : u.2 + v.2 ≥ 0)
+    : Box2d r = leftBoxwithBorder r u v ∪ rightBoxwithBorder r u v
+              ∪ bottomBox r u v ∪ bluebox r u v
+    := by
+  rw [Finset.union_assoc]
+  rw [← middleBoxPartition r u v]
+  ext x
+  unfold leftBoxwithBorder rightBoxwithBorder middleBox Box2d
+  simp [Prod.le_def]
+  nth_rewrite 2 [and_and_and_comm]
+  nth_rewrite 3 [and_and_and_comm]
+  nth_rewrite 4 [and_and_and_comm]
+  rw [← or_and_right, ← or_and_right, and_comm]
+  nth_rewrite 4 [and_comm]
+  sorry
+
+theorem sum_bluebox_dang_sub_sub --formally known as case3
+    {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) (huv : v.1 < u.1) :
+    ∑ p ∈ bluebox r u v, (dang (u-p) (v-p) : K) = 0
+    := by
+  let f (p : Point ℤ) : K := dang (u-p) (v-p)
+  let g (p : Point ℤ) : Point ℤ := u + v - p
+  have hg₁ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), f p + f (g p) = 0 := by
     intro p hp
     unfold f g
     have h1 : u - (u + v - p) = - (v - p) := by rw[add_sub_assoc, sub_add_cancel_left]
     have h2 : v - (u + v - p) = - (u - p) := by rw[add_comm, add_sub_assoc, sub_add_cancel_left]
-    rw[h1, h2, dang_change_sign, dang_switch_order, neg_add_cancel]
-  have hg₃ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), f p ≠ 0 → g p hp ≠ p := by
+    rw[h1, h2, dang_neg_neg, ← dang_neg_symm, neg_add_cancel]
+  have hg₃ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), f p ≠ 0 → g p ≠ p := by
     have h1 : (2 : K) ≠ 0 := by
       rw[ne_comm]
       apply LT.lt.ne
@@ -48,101 +106,50 @@ theorem case3 (r : Nat) (u v : Point ℤ) (hu : u ∈ (Box2d r)) (hv : v ∈ (Bo
       apply lt_add_of_pos_of_lt zero_lt_one
       exact zero_lt_one
     intro p hp h2 h3
-    have h4 : f p + f (g p hp) = 0 := hg₁ p hp
+    have h4 : f p + f (g p) = 0 := hg₁ p hp
     rw [h3] at h4
     have h5 : f p + f p = 2 * f p := by ring
     have h6 : 2 * f p = 2 * 0 := by rw [h5, ← mul_zero (2 : K)] at h4; assumption
     have h7 : f p = 0 := by apply mul_left_cancel₀ h1 h6
     exact h2 h7
-
-  -- schwieriger Teil des Beweises, bei dem die
-  --(gerade relativ schlechte) Definition von bluebox_x bzw _y aufgegriffen wird
-  have g_mem : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), g p hp ∈ bluebox r u v := by
+  have g_mem : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), g p ∈ bluebox r u v := by
     intro p hp
-    change p ∈ (bluebox_x u v) ×ˢ (bluebox_y r u v) at hp
-    rw[Finset.mem_product] at hp
-    cases' hp with h1 h2
-    change p.1 ∈ Finset.image (fun n ↦ v.1 + Int.ofNat n)
-        (Finset.range (|u.1 - v.1|.toNat + 1)) at h1
-    rw[Finset.mem_image] at h1
-    have hp ↔
-    sorry
-
-  have hg₄ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), g (g p hp) (g_mem p hp) = p := by
+    simp [bluebox, g, Prod.le_def] at hp ⊢
+    grind
+  have hg₄ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), g (g p) = p := by
     intro p hp
     unfold g
     simp
-  apply Finset.sum_involution g hg₁ hg₃ g_mem hg₄
+  apply Finset.sum_involution (fun a _ => g a) hg₁ hg₃ g_mem hg₄
 
-theorem box_values (r : Nat) : Box1d r = {k : Int | k > -(r+1) ∧ k < (r+1)} := by
-  ext x
-  constructor
-  intro h
-  change x ∈ Finset.image (fun n ↦ Int.ofNat n - Int.ofNat r) (Finset.range (2*r +1)) at h
-  rw [Finset.mem_image] at h
-  obtain ⟨a, ha⟩ := h
-  cases' ha with h1 h2
-  change x > -↑(r+1) ∧ x < ↑(r+1)
-  constructor
-  have h3 : Int.ofNat a ≥ 0 := Int.Nonneg.natCast a
-  have h4 : Int.ofNat a - Int.ofNat r ≥ -Int.ofNat r := by
-    rw [← Int.zero_sub (Int.ofNat r)]
-    apply Int.sub_le_sub_right h3
-  rw [h2] at h4
-  have h5 : x > -Int.ofNat r + -1 := by
-    rw [← add_zero x]
-    exact add_lt_add_of_le_of_lt h4 neg_one_lt_zero
-  have h6 : -Int.ofNat r + -1 = -Int.ofNat (r+1) := by
-    rw [← neg_add]
-    rfl
-  rw [h6] at h5
-  exact h5
-  rw [Finset.mem_range] at h1
-  have h3 : Int.ofNat a < 2 * Int.ofNat r + 1 := Int.lt_of_toNat_lt h1
-  have h4 : Int.ofNat a - Int.ofNat r < 2 * Int.ofNat r + 1 - Int.ofNat r := by
-    apply sub_lt_sub_right
-    exact h3
-  have h5 : 2 * Int.ofNat r + 1 - Int.ofNat r = Int.ofNat r + 1 := by ring
-  have h6 : Int.ofNat r + 1 = Int.ofNat (r+1) := rfl
-  rw [h2, h5, h6] at h4
-  exact h4
-  intro h
-  cases' h with h1 h2
-  change x ∈ Finset.image (fun n ↦ Int.ofNat n - Int.ofNat r) (Finset.range (2*r +1))
-  rw [Finset.mem_image]
-  change x > -(Int.ofNat r + 1) at h1
-  change x < Int.ofNat r + 1 at h2
-  have h3 : -Int.ofNat r + -1 = -(Int.ofNat r+1) := by
-    rw [← neg_add]
-  have h4 : Int.ofNat r + 1 = Int.ofNat (r+1) := rfl
-  rw [← h3] at h1
-  let a : Int := x + Int.ofNat r
-  have h5 : x = a - Int.ofNat r := by rw [Int.add_sub_cancel]
-  have h : a ≥ 0 := by
-    apply Int.le_of_lt_add_one
-    rw [← neg_add_cancel 1]
-    apply add_lt_add_right
-    change x + Int.ofNat r > -1
-    rw [← add_zero (-1), ← neg_add_cancel (Int.ofNat r), ← add_assoc]
-    nth_rewrite 3 [add_comm]
-    change -Int.ofNat r + -1 + Int.ofNat r < x + Int.ofNat r
-    rw [add_lt_add_iff_right]
-    exact h1
-  use Int.toNat a
-  constructor
-  rw [Finset.mem_range]
-  have h6 : a < 2 * Int.ofNat r + 1 := by
-    rw [two_mul, add_assoc, add_comm, ← sub_lt_iff_lt_add, ← h5]
-    exact h2
-  have h7 : 2 * Int.ofNat r + 1 = Int.ofNat (2 * r + 1) := rfl
-  rw [Int.toNat_lt]
-  change a < Int.ofNat (2 * r + 1)
-  rw [← h7]
-  exact h6
-  exact h
-  have h6 : a = Int.ofNat a.toNat := by
-    change a = ↑a.toNat
-    rw[Int.eq_natCast_toNat]
-    exact h
-  rw [← h6]
-  exact h5.symm
+-- theorem box_values (r : Nat) : Box1d r = {k : Int | k > -(r+1) ∧ k < (r+1)} := by
+--   ext x
+--   rw [Box1d]
+--   simp only [Finset.coe_Icc, Set.mem_Icc, neg_add_rev, Int.reduceNeg, gt_iff_lt,
+--     add_neg_lt_iff_lt_add, Set.mem_setOf_eq]
+--   rw [Int.lt_add_one_iff, ← sub_lt_iff_lt_add, neg_sub_comm, sub_lt_iff_lt_add,
+--     Int.lt_add_one_iff]
+
+theorem termwise_pick {u v : Point ℤ} {r : Nat} (hu : supNorm u ≤ r) (hv : supNorm v ≤ r)
+    : welp u v r = trapezoidArea (Int.cast : Int → K) u v
+    := by
+  unfold welp trapezoidArea
+  sorry
+
+-- langfristig überarbeiten: Finsupp-Summe in welp, damit explizites r redundant wird
+theorem pick_lemma (P : Polygon ℤ)
+    : ∀ r : Nat, r ≥ (PolygonBound P) →
+      (polygonArea (Int.cast : ℤ → K) P = ∑ i, welp (P.vertex i) (P.vertex (i+1)) r)
+    := by
+  intro r hr
+  unfold polygonArea
+  apply Finset.sum_congr
+  · rfl
+  · intro i hi
+    apply polygon_bounded at hr
+    let u := (P.vertex i)
+    let v := (P.vertex (i + 1))
+    change trapezoidArea Int.cast u v = welp u v r
+    have hu : supNorm u ≤ r := by apply hr
+    have hv : supNorm v ≤ r := by apply hr
+    rw[termwise_pick hu hv]
