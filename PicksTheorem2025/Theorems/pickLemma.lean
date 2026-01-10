@@ -19,7 +19,10 @@ def PolygonBound (P : Polygon ℤ) : Nat := sorry
 theorem polygon_bounded (P : Polygon ℤ)
     : ∀ r : Nat, r ≥ (PolygonBound P) → isBounded P r := by sorry
 
+
+
 omit [IsStrictOrderedRing K] in
+
 theorem dang_neg_symm (u v : Point R) :
     - dang v u = (dang u v : K) := by
   unfold dang
@@ -27,8 +30,11 @@ theorem dang_neg_symm (u v : Point R) :
     mul_comm v.2, mul_comm v.1, Left.sign_neg]
   rw [SignType.coe_neg, mul_neg, neg_div, neg_neg]
 
+
+
 omit [IsStrictOrderedRing K] in
 open SignType in
+
 theorem dang_neg_neg (u v : Point R) :
     dang (-u) (-v) = (dang u v : K) := by
   unfold dang
@@ -36,6 +42,8 @@ theorem dang_neg_neg (u v : Point R) :
   simp only [Prod.fst_neg, Left.sign_neg, coe_neg, sub_neg_eq_add, Prod.snd_neg, mul_neg, neg_mul,
     neg_neg]
   rw [add_comm, ← sub_eq_add_neg]
+
+
 
 def leftBoxwithBorder (r : Nat) (u _v : Point ℤ) :=
   Finset.Icc ((-r : ℤ), (-r : ℤ)) (u.1 - 1, r)
@@ -52,9 +60,14 @@ def bottomBox (r : Nat) (u v : Point ℤ) :=
 def bluebox (r : Nat) (u v : Point ℤ) : Finset (Point ℤ) :=
   Finset.Icc (u.1, u.2 + v.2 - r) (v.1, r)
 
+
+
 lemma and_iff_and_of_iff {a b c : Prop} : (a ↔ b) → (c ∧ a ↔ c ∧ b) := by
     intro hiff
     rw [hiff]
+
+
+
 
 theorem middleBoxPartition (r : Nat) (u v : Point ℤ) :
     middleBox r u v = bottomBox r u v ∪ bluebox r u v
@@ -67,8 +80,31 @@ theorem middleBoxPartition (r : Nat) (u v : Point ℤ) :
   nth_rewrite 3 [and_and_and_comm]
   rw [← and_or_left]
   apply and_iff_and_of_iff
+  -- have temp (r:ℕ): -r ≤ x.2 ↔ ↑0 ≤ x.2 + r := by rw[←zero_sub r,tsub_le_iff_left, add_comm]
+  -- nth_rewrite 2[←zero_sub]
+  rw[add_comm x.2]
+  rw[←tsub_le_iff_left]
+  have sub_one_le (a:ℤ): a-1 ≤ a := by simp
+  rw[Int.le_sub_one_iff]
+  by_cases lt_middle_box_bound : x.2 < u.2 + v.2 - r
+
+  have lt_middle_box_bound_neg : ¬(x.2 < u.2 + v.2 - r)
+  calc
+    -↑r ≤ x.2 ∧ x.2 ≤ ↑r ↔ (-r ≤ x.2 ∧ True) ∧ x.2 ≤ r := by rw[and_true (-r ≤ x.2)]
+    _ ↔ ((-r ≤ x.2 ∧ True) ∨ False) ∧ x.2 ≤ r := by rw[or_false]
+    _ ↔ ((-r ≤ x.2 ∧ x.2 < u.2 + v.2 -r) ∨ False) ∧ x.2 ≤ r := by simp[lt_middle_box_bound]
+    _ ↔ -↑r ≤ x.2 ∧ x.2 < u.2 + v.2 - ↑r ∨ u.2 + v.2 - ↑r ≤ x.2 ∧ x.2 ≤ ↑r := by simp[lt_middle_box_bound_neg]
+
+
+  -- rw[←iff_true (x.2 < u.2 +v.2 -r)] at lt_middle_box_bound
+  -- change ((x.2 < u.2 +v.2 -r) ↔ True) at lt_middle_box_bound
+  -- rw[lt_middle_box_bound]
+
   -- kann ich hier iwann grind benutzen?
+    --idk
   sorry
+
+
 
 theorem BoxPartition
     {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r)
@@ -87,6 +123,8 @@ theorem BoxPartition
   rw [← or_and_right, ← or_and_right, and_comm]
   nth_rewrite 4 [and_comm]
   sorry
+
+
 
 theorem sum_bluebox_dang_sub_sub --formally known as case3
     {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) (huv : v.1 < u.1) :
@@ -136,7 +174,10 @@ theorem termwise_pick {u v : Point ℤ} {r : Nat} (hu : supNorm u ≤ r) (hv : s
     : welp u v r = trapezoidArea (Int.cast : Int → K) u v
     := by
   unfold welp trapezoidArea
+
   sorry
+
+
 
 -- langfristig überarbeiten: Finsupp-Summe in welp, damit explizites r redundant wird
 theorem pick_lemma (P : Polygon ℤ)
