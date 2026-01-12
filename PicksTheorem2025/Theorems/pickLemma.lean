@@ -69,12 +69,16 @@ lemma and_iff_and_of_iff {a b c : Prop} : (a ↔ b) → (c ∧ a ↔ c ∧ b) :=
 
 
 -- Das stimmt noch nicht ganz, die Box kann nach unten rausgehen
-theorem middleBoxPartition (r : Nat) (u v : Point ℤ) (htemp1 : u.2 + v.2 ≥ -r) (htemp2_u : supNorm u ≤ r) (htemp2_v : supNorm v ≤ r):
+theorem middleBoxPartition
+    (r : Nat) (u v : Point ℤ)
+    (htemp1 : u.2 + v.2 ≥ 0) (hu : u ∈ Box2d r) (hv : v ∈ Box2d r):
     middleBox r u v = bottomBox r u v ∪ bluebox r u v
     := by
   ext x
   unfold middleBox bottomBox bluebox
-  simp [Prod.le_def]
+  unfold Box2d at *
+  simp [Prod.le_def] at *
+  have upper_bound_u_v : u.2 + v.2 - r ≤ r :=by simp[hu.right.right,hv.right.right,add_le_add]
   rw [and_and_and_comm]
   nth_rewrite 2 [and_and_and_comm]
   nth_rewrite 3 [and_and_and_comm]
@@ -87,82 +91,50 @@ theorem middleBoxPartition (r : Nat) (u v : Point ℤ) (htemp1 : u.2 + v.2 ≥ -
   have sub_one_le (a:ℤ): a-1 ≤ a := by simp
   rw[Int.le_sub_one_iff]
 
-  #check Int.lt_add_one_iff.mp
-
-  unfold supNorm at *
-  apply le_of_max_le_right at htemp2_u
-  apply le_of_max_le_right at htemp2_v
-
-  have upper_bound_u_v : u.2 + v.2 - r ≤ r
-    := by
-    simp
-    exact (add_le_add (le_of_max_le_left htemp2_u) (le_of_max_le_left htemp2_v))
-
-  have lower_bound_u_v : -r - r ≤ u.2 + v.2
-    := by
-    sorry
-    --#check (add_le_add (le_of_max_le_right htemp2_u) (le_of_max_le_right htemp2_v))
-
+  have upper_bound_u_v : u.2 + v.2 - r ≤ r :=by simp[hu.right.right,hv.right.right,add_le_add]
 
   by_cases lt_middle_box_bound : x.2 < u.2 + v.2 - r
 
-  have lower_bound : -r ≤ x.2 ∧ x.2 < u.2 + v.2 - r ∨ u.2 + v.2 -r ≤ x.2 ∧ x.2 ≤ r ↔ -r ≤ x.2
-    := by
-      calc -r ≤ x.2 ∧ x.2 < u.2 + v.2 - r ∨ u.2 + v.2 -r ≤ x.2 ∧ x.2 ≤ r
-        _ ↔ -r ≤ x.2 ∧ x.2 < u.2 + v.2 - r ∨ False ∧ x.2 ≤ r := by rw[(Iff.intro (Int.not_le.mpr lt_middle_box_bound) False.elim)]
-        _ ↔ -r ≤ x.2 ∧ True ∨ False ∧ x.2 ≤ r := by rw[(iff_true_intro lt_middle_box_bound)]
-        _ ↔ -r ≤ x.2 ∧ True ∨ False := by rw[false_and]
-        _ ↔ -r ≤ x.2 := by rw[or_false,and_true]
-  constructor
-  --Hinrichtung
-  intro lh_side
-  rw[(Iff.intro (Int.not_le.mpr lt_middle_box_bound) False.elim),false_and,or_false]
-  exact (And.intro lh_side.left lt_middle_box_bound)
-  --Rückrichtung
-  intro rh_side
-  constructor
-  exact lower_bound.mp rh_side
-  exact (Or.elim rh_side (fun a ↦ (le_trans (Int.le_of_lt a.right) upper_bound_u_v)) (·.right))
+  ·(have lower_bound : -r ≤ x.2 ∧ x.2 < u.2 + v.2 - r ∨ u.2 + v.2 -r ≤ x.2 ∧ x.2 ≤ r ↔ -r ≤ x.2
+      := by
+        ·calc -r ≤ x.2 ∧ x.2 < u.2 + v.2 - r ∨ u.2 + v.2 -r ≤ x.2 ∧ x.2 ≤ r
+          _ ↔ -r ≤ x.2 ∧ x.2 < u.2 + v.2 - r ∨ False ∧ x.2 ≤ r
+            := by rw[(Iff.intro (Int.not_le.mpr lt_middle_box_bound) False.elim)]
+          _ ↔ -r ≤ x.2 ∧ True ∨ False ∧ x.2 ≤ r := by rw[(iff_true_intro lt_middle_box_bound)]
+          _ ↔ -r ≤ x.2 ∧ True ∨ False := by rw[false_and]
+          _ ↔ -r ≤ x.2 := by rw[or_false,and_true]
+
+    constructor
+    --Hinrichtung
+    ·(intro lh_side
+      rw[(Iff.intro (Int.not_le.mpr lt_middle_box_bound) False.elim),false_and,or_false]
+      exact (And.intro lh_side.left lt_middle_box_bound))
+    --Rückrichtung
+    ·(intro rh_side
+      constructor
+      ·exact lower_bound.mp rh_side
+      ·exact (Or.elim rh_side (fun a ↦
+          (le_trans (Int.le_of_lt a.right) upper_bound_u_v))
+        (·.right))))
 
   --case 2:
-  have ge_middle_box_bound := Int.lt_add_one_iff.mp (Int.not_le.mp lt_middle_box_bound)--keine Ahnung, warum hier not_le.mp hier ein +1 hinzufügt
-  constructor
-  --Hinrichtung
-  intro lh_side
-  rw[(iff_true_intro ge_middle_box_bound), true_and]
-  rw[(Iff.intro lt_middle_box_bound False.elim), and_false, false_or]
-  exact lh_side.right
-  --Rückrichtung
-  intro rh_side
-  constructor
-  simp at ge_middle_box_bound
-  #check (Int.add_le_add_iff_right r).mpr
-  --keine Ahnung wie man das machen soll
-  sorry
-  sorry
-
-  --exact (Or.elim rh_side (·.left) (fun a ↦ (le_trans ())))
-
-
-
-
-
-
-  -- calc
-  --   -↑r ≤ x.2 ∧ x.2 ≤ ↑r ↔ -r ≤ x.2 ∧ True ∧ x.2 ≤ r := by rw[true_and (x.2 ≤ r)]
-  --   _ ↔ -r ≤ x.2 ∧ True ∨ False ∧ x.2 ≤ r := by rw[or_false]
-  --   _ ↔ -r ≤ x.2 ∧ x.2 < u.2 + v.2 -r ∨ False ∧ x.2 ≤ r := by simp[lt_middle_box_bound]
-  --   _ ↔ -↑r ≤ x.2 ∧ x.2 < u.2 + v.2 - ↑r ∨ u.2 + v.2 - ↑r ≤ x.2 ∧ x.2 ≤ ↑r := by rw[(Iff.intro lt_middle_box_bound_neg False.elim)]
-
-
-  -- rw[←iff_true (x.2 < u.2 +v.2 -r)] at lt_middle_box_bound
-  -- change ((x.2 < u.2 +v.2 -r) ↔ True) at lt_middle_box_bound
-  -- rw[lt_middle_box_bound]
-
-  -- kann ich hier iwann grind benutzen?
-    --idk
-
-
+  ·(have ge_middle_box_bound := Int.lt_add_one_iff.mp (Int.not_le.mp lt_middle_box_bound)
+      --keine Ahnung, warum hier not_le.mp hier ein +1 hinzufügt
+    constructor
+    --Hinrichtung
+    ·(intro lh_side
+      rw[(iff_true_intro ge_middle_box_bound), true_and]
+      rw[(Iff.intro lt_middle_box_bound False.elim), and_false, false_or]
+      exact lh_side.right)
+    --Rückrichtung
+    ·(intro rh_side
+      constructor
+      ·(apply (le_trans' ge_middle_box_bound)
+        apply (Int.add_le_add_iff_right r).mp
+        simp[htemp1])
+      ·exact (Or.elim rh_side (fun a ↦
+          (le_trans (Int.le_of_lt a.right) upper_bound_u_v))
+        (·.right))))
 
 
 theorem BoxPartition
