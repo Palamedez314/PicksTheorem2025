@@ -70,7 +70,7 @@ lemma and_iff_and_of_iff {a b c : Prop} : (a ↔ b) → (c ∧ a ↔ c ∧ b) :=
 
 theorem middleBoxPartition
     (r : Nat) (u v : Point ℤ)
-    (hy : u.2 + v.2 ≥ 0) (hu : u ∈ Box2d r) (hv : v ∈ Box2d r):
+    (hy : u.2 + v.2 ≥ 0) (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) :
     middleBox r u v = bottomBox r u v ∪ bluebox r u v
     := by
   ext x
@@ -134,10 +134,6 @@ theorem middleBoxPartition
       ·exact (Or.elim rh_side
                 (fun a ↦ (le_trans (Int.le_of_lt a.right) upper_bound_u_v))
                 (·.right))))
-
-lemma test (a b : ℤ): a + 1 ≤ b → a ≤ b  := by exact?
-
-
 
 
 theorem BoxPartition
