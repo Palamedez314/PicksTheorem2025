@@ -68,10 +68,9 @@ lemma and_iff_and_of_iff {a b c : Prop} : (a ↔ b) → (c ∧ a ↔ c ∧ b) :=
 
 
 
--- Das stimmt noch nicht ganz, die Box kann nach unten rausgehen
 theorem middleBoxPartition
     (r : Nat) (u v : Point ℤ)
-    (htemp1 : u.2 + v.2 ≥ 0) (hu : u ∈ Box2d r) (hv : v ∈ Box2d r):
+    (hy : u.2 + v.2 ≥ 0) (hu : u ∈ Box2d r) (hv : v ∈ Box2d r):
     middleBox r u v = bottomBox r u v ∪ bluebox r u v
     := by
   ext x
@@ -131,10 +130,14 @@ theorem middleBoxPartition
       constructor
       ·(apply (le_trans' ge_middle_box_bound)
         apply (Int.add_le_add_iff_right r).mp
-        simp[htemp1])
-      ·exact (Or.elim rh_side (fun a ↦
-          (le_trans (Int.le_of_lt a.right) upper_bound_u_v))
-        (·.right))))
+        simp[hy])
+      ·exact (Or.elim rh_side
+                (fun a ↦ (le_trans (Int.le_of_lt a.right) upper_bound_u_v))
+                (·.right))))
+
+lemma test (a b : ℤ): a + 1 ≤ b → a ≤ b  := by exact?
+
+
 
 
 theorem BoxPartition
@@ -144,18 +147,52 @@ theorem BoxPartition
               ∪ bottomBox r u v ∪ bluebox r u v
     := by
   rw [Finset.union_assoc]
-  rw [← middleBoxPartition r u v]
+  rw [← middleBoxPartition r u v hy hu hv]
   ext x
-  unfold leftBoxwithBorder rightBoxwithBorder middleBox Box2d
-  simp [Prod.le_def]
+  unfold leftBoxwithBorder rightBoxwithBorder middleBox
+  unfold Box2d at *
+  simp [Prod.le_def] at *
+  rw[and_and_and_comm]
+  -- nth_rewrite 1 [and_and_and_comm]
   nth_rewrite 2 [and_and_and_comm]
   nth_rewrite 3 [and_and_and_comm]
   nth_rewrite 4 [and_and_and_comm]
   rw [← or_and_right, ← or_and_right, and_comm]
   nth_rewrite 4 [and_comm]
-  sorry
+  apply and_congr_right
+  intro h_x2
+  constructor
+  ·(intro lh_side
+    by_cases case1: x.1 < u.1
+    ·(apply Int.le_sub_one_iff.mpr at case1
+      left
+      exact And.intro lh_side.left case1)
+    by_cases case2: x.1 < v.1 + 1
+    ·(apply not_lt.mp at case1
+      right
+      right
+      exact And.intro case1 (Int.lt_add_one_iff.mp case2))
+    ·(apply not_lt.mp at case2
+      right
+      left
+      exact And.intro case2 lh_side.right))
+  ·(intro rh_side
+    cases rh_side with
+    | inr rh_side_23
+    | inl rh_side_1
+    cases rh_side_23 with
+    | inl rh_side_2
+    | inr rh_side_3
+    --case 2
+    ·exact And.intro (le_trans hv.left.left (Int.le_of_lt rh_side_2.left)) rh_side_2.right
+    --case 3
+    ·exact And.intro (le_trans hu.left.left rh_side_3.left) (le_trans rh_side_3.right hv.right.left)
+    --case 1
+    ·exact And.intro rh_side_1.left
+      (le_trans (Int.le_of_lt (Int.add_le_of_le_sub_right rh_side_1.right)) hu.right.left))
 
 
+-- lemma test (a b : ℤ): a < b → a ≤ b := by exact fun a_1 ↦ Int.le_of_lt a_1
 
 theorem sum_bluebox_dang_sub_sub --formally known as case3
     {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) (huv : v.1 < u.1) :
