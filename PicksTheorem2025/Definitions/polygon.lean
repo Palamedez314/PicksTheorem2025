@@ -16,9 +16,6 @@ def isClosed (P : Polygon R) :=
 
 def supNorm (p : Point R) : R := max |p.1| |p.2|
 
-
-
-
 def getBound (P : Polygon R) : R :=
   (Finset.image (supNorm ∘ P.vertex ∘ (Fin.ofNat (P.len+1))) (Finset.range (P.len+1))).max' (
     by
@@ -29,10 +26,8 @@ def getBound (P : Polygon R) : R :=
     simp
     rfl)
 
-
 def isBounded (P : Polygon R) (bound : R)
     := ∀ i : Fin (P.len+1), supNorm (P.vertex i) ≤ (bound : R)
-
 
 omit [IsStrictOrderedRing R] in
 theorem correctBound (P : Polygon R) : isBounded P (getBound P)

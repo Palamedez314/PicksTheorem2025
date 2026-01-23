@@ -14,12 +14,9 @@ variable {R : Type} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
 --     sorry
 --   sorry
 
-def PolygonBound (P : Polygon ℤ) : Nat := sorry
-
-theorem polygon_bounded (P : Polygon ℤ)
-    : ∀ r : Nat, r ≥ (PolygonBound P) → isBounded P r := by sorry
-
-
+theorem is_bound_of_ge_bound (P : Polygon ℤ)
+    : ∀ r : Nat, r ≥ (getBound P) → isBounded P r := by
+  sorry -- einfach
 
 omit [IsStrictOrderedRing K] in
 
@@ -29,8 +26,6 @@ theorem dang_neg_symm (u v : Point R) :
   rw [abs_sub_comm, ← neg_sub (v.2 * u.1),
     mul_comm v.2, mul_comm v.1, Left.sign_neg]
   rw [SignType.coe_neg, mul_neg, neg_div, neg_neg]
-
-
 
 omit [IsStrictOrderedRing K] in
 open SignType in
@@ -43,12 +38,10 @@ theorem dang_neg_neg (u v : Point R) :
     neg_neg]
   rw [add_comm, ← sub_eq_add_neg]
 
-
-
-def leftBoxwithBorder (r : Nat) (u _v : Point ℤ) :=
+def leftBox (r : Nat) (u _v : Point ℤ) :=
   Finset.Icc ((-r : ℤ), (-r : ℤ)) (u.1 - 1, r)
 
-def rightBoxwithBorder (r : Nat) (_u v : Point ℤ) :=
+def rightBox (r : Nat) (_u v : Point ℤ) :=
   Finset.Icc (v.1 + 1, (-r : ℤ)) (r, r)
 
 def middleBox (r : Nat) (u v : Point ℤ) :=
@@ -60,13 +53,11 @@ def bottomBox (r : Nat) (u v : Point ℤ) :=
 def bluebox (r : Nat) (u v : Point ℤ) : Finset (Point ℤ) :=
   Finset.Icc (u.1, u.2 + v.2 - r) (v.1, r)
 
+def bottomBoxSides (r : Nat) (u v : Point ℤ) : Finset (Point ℤ) :=
+  {u.1, v.1} ×ˢ (Finset.Icc (-r: ℤ) (u.2 + v.2 - r - 1))
 
-
-lemma and_iff_and_of_iff {a b c : Prop} : (a ↔ b) → (c ∧ a ↔ c ∧ b) := by
-    intro hiff
-    rw [hiff]
-
-
+def bottomBoxInner (r : Nat) (u v : Point ℤ) : Finset (Point ℤ) :=
+  Finset.Icc (u.1 + 1, (-r: ℤ)) (v.1 - 1, u.2 + v.2 - r - 1)
 
 theorem middleBoxPartition
     (r : Nat) (u v : Point ℤ)
@@ -82,18 +73,15 @@ theorem middleBoxPartition
   nth_rewrite 2 [and_and_and_comm]
   nth_rewrite 3 [and_and_and_comm]
   rw [← and_or_left]
-  apply and_iff_and_of_iff
+  apply (fun c ↦ Iff.and (Iff.refl c))
   -- have temp (r:ℕ): -r ≤ x.2 ↔ ↑0 ≤ x.2 + r := by rw[←zero_sub r,tsub_le_iff_left, add_comm]
   -- nth_rewrite 2[←zero_sub]
   rw[add_comm x.2]
   rw[←tsub_le_iff_left]
   have sub_one_le (a:ℤ): a-1 ≤ a := by simp
   rw[Int.le_sub_one_iff]
-
   have upper_bound_u_v : u.2 + v.2 - r ≤ r :=by simp[hu.right.right,hv.right.right,add_le_add]
-
   by_cases lt_middle_box_bound : x.2 < u.2 + v.2 - r
-
   ·(have lower_bound : -r ≤ x.2 ∧ x.2 < u.2 + v.2 - r ∨ u.2 + v.2 -r ≤ x.2 ∧ x.2 ≤ r ↔ -r ≤ x.2
       := by
         ·calc -r ≤ x.2 ∧ x.2 < u.2 + v.2 - r ∨ u.2 + v.2 -r ≤ x.2 ∧ x.2 ≤ r
@@ -102,7 +90,6 @@ theorem middleBoxPartition
           _ ↔ -r ≤ x.2 ∧ True ∨ False ∧ x.2 ≤ r := by rw[(iff_true_intro lt_middle_box_bound)]
           _ ↔ -r ≤ x.2 ∧ True ∨ False := by rw[false_and]
           _ ↔ -r ≤ x.2 := by rw[or_false,and_true]
-
     constructor
     --Hinrichtung
     ·(intro lh_side
@@ -115,7 +102,6 @@ theorem middleBoxPartition
       ·exact (Or.elim rh_side (fun a ↦
           (le_trans (Int.le_of_lt a.right) upper_bound_u_v))
         (·.right))))
-
   --case 2:
   ·(have ge_middle_box_bound := Int.lt_add_one_iff.mp (Int.not_le.mp lt_middle_box_bound)
       --keine Ahnung, warum hier not_le.mp hier ein +1 hinzufügt
@@ -135,17 +121,16 @@ theorem middleBoxPartition
                 (fun a ↦ (le_trans (Int.le_of_lt a.right) upper_bound_u_v))
                 (·.right))))
 
-
 theorem BoxPartition
     {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r)
     (hx : u.1 < v.1) (hy : u.2 + v.2 ≥ 0)
-    : Box2d r = leftBoxwithBorder r u v ∪ rightBoxwithBorder r u v
+    : Box2d r = leftBox r u v ∪ rightBox r u v
               ∪ bottomBox r u v ∪ bluebox r u v
     := by
   rw [Finset.union_assoc]
   rw [← middleBoxPartition r u v hy hu hv]
   ext x
-  unfold leftBoxwithBorder rightBoxwithBorder middleBox
+  unfold leftBox rightBox middleBox
   unfold Box2d at *
   simp [Prod.le_def] at *
   rw[and_and_and_comm]
@@ -187,10 +172,19 @@ theorem BoxPartition
     ·exact And.intro rh_side_1.left
       (le_trans (Int.le_of_lt (Int.add_le_of_le_sub_right rh_side_1.right)) hu.right.left))
 
+theorem sum_leftBox_dang_sub_sub --Fall 1
+    {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) (huv : v.1 < u.1) :
+    ∑ p ∈ leftBox r u v, (dang (u-p) (v-p) : K) = 0
+    := by
+  sorry -- mittel
 
--- lemma test (a b : ℤ): a < b → a ≤ b := by exact fun a_1 ↦ Int.le_of_lt a_1
+theorem sum_rightBox_dang_sub_sub --Fall 2
+    {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) (huv : v.1 < u.1) :
+    ∑ p ∈ rightBox r u v, (dang (u-p) (v-p) : K) = 0
+    := by
+  sorry -- mittel
 
-theorem sum_bluebox_dang_sub_sub --formally known as case3
+theorem sum_bluebox_dang_sub_sub --Fall 3
     {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) (huv : v.1 < u.1) :
     ∑ p ∈ bluebox r u v, (dang (u-p) (v-p) : K) = 0
     := by
@@ -226,26 +220,31 @@ theorem sum_bluebox_dang_sub_sub --formally known as case3
     simp
   apply Finset.sum_involution (fun a _ => g a) hg₁ hg₃ g_mem hg₄
 
--- theorem box_values (r : Nat) : Box1d r = {k : Int | k > -(r+1) ∧ k < (r+1)} := by
---   ext x
---   rw [Box1d]
---   simp only [Finset.coe_Icc, Set.mem_Icc, neg_add_rev, Int.reduceNeg, gt_iff_lt,
---     add_neg_lt_iff_lt_add, Set.mem_setOf_eq]
---   rw [Int.lt_add_one_iff, ← sub_lt_iff_lt_add, neg_sub_comm, sub_lt_iff_lt_add,
---     Int.lt_add_one_iff]
+theorem bottomBoxPartition
+    (r : Nat) (u v : Point ℤ)
+    (hy : u.2 + v.2 ≥ 0) (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) :
+    bottomBox r u v = bottomBoxSides r u v ∪ bottomBoxInner r u v
+    := by
+  sorry -- einfach (nachdem man unfolded hat)
+
+
+theorem sum_bottomBox_dang_sub_sub --Fälle 4 und 5
+    {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) (huv : v.1 < u.1) :
+    ∑ p ∈ rightBox r u v, (dang (u-p) (v-p) : K) = 0
+    := by
+  sorry -- mittel
 
 theorem termwise_pick {u v : Point ℤ} {r : Nat} (hu : supNorm u ≤ r) (hv : supNorm v ≤ r)
     : welp u v r = trapezoidArea (Int.cast : Int → K) u v
     := by
   unfold welp trapezoidArea
-
-  sorry
-
-
+  -- wir brauchen in den Box-Partition Sätzen voher wahrscheinlich ein disjUnion oder so,
+  -- um die Summe auf die einzelnen Fälle aufzuteilen
+  sorry -- schwerer/aufwändiger
 
 -- langfristig überarbeiten: Finsupp-Summe in welp, damit explizites r redundant wird
 theorem pick_lemma (P : Polygon ℤ)
-    : ∀ r : Nat, r ≥ (PolygonBound P) →
+    : ∀ r : Nat, r ≥ (getBound P) →
       (polygonArea (Int.cast : ℤ → K) P = ∑ i, welp (P.vertex i) (P.vertex (i+1)) r)
     := by
   intro r hr
@@ -253,7 +252,7 @@ theorem pick_lemma (P : Polygon ℤ)
   apply Finset.sum_congr
   · rfl
   · intro i hi
-    apply polygon_bounded at hr
+    apply is_bound_of_ge_bound at hr
     let u := (P.vertex i)
     let v := (P.vertex (i + 1))
     change trapezoidArea Int.cast u v = welp u v r
