@@ -2,21 +2,13 @@ import PicksTheorem2025.Definitions.polygon
 import PicksTheorem2025.Definitions.area
 import PicksTheorem2025.Definitions.winding
 
-variable {K : Type} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
-variable {R : Type} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
-
--- theorem point_in_Box_le_r (r : Nat) (p : Point ℤ) : p ∈ Box2d r ↔ supNorm p ≤ r := by
---   constructor
---   · by_cases h1_le_2 :|p.1| ≤ |p.2|
---     · have supNorm_eq_p2: supNorm p = |p.2| := by
---         sorry
---       sorry
---     sorry
---   sorry
+variable {K : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
+variable {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
 
 theorem is_bound_of_ge_bound (P : Polygon ℤ)
     : ∀ r : Nat, r ≥ (getBound P) → isBounded P r := by
-  sorry -- einfach
+  intro r hr
+  simpa [getBound, isBounded] using hr
 
 omit [IsStrictOrderedRing K] in
 
@@ -38,154 +30,69 @@ theorem dang_neg_neg (u v : Point R) :
     neg_neg]
   rw [add_comm, ← sub_eq_add_neg]
 
-def leftBox (r : Nat) (u _v : Point ℤ) :=
+abbrev leftBox (r : Nat) (u _v : Point ℤ) :=
   Finset.Icc ((-r : ℤ), (-r : ℤ)) (u.1 - 1, r)
 
-def rightBox (r : Nat) (_u v : Point ℤ) :=
+abbrev rightBox (r : Nat) (_u v : Point ℤ) :=
   Finset.Icc (v.1 + 1, (-r : ℤ)) (r, r)
 
-def middleBox (r : Nat) (u v : Point ℤ) :=
+abbrev middleBox (r : Nat) (u v : Point ℤ) :=
   Finset.Icc (u.1, (-r : ℤ)) (v.1, r)
 
-def bottomBox (r : Nat) (u v : Point ℤ) :=
+abbrev bottomBox (r : Nat) (u v : Point ℤ) :=
   Finset.Icc (u.1, (-r: ℤ)) (v.1, u.2 + v.2 - r - 1)
 
-def bluebox (r : Nat) (u v : Point ℤ) : Finset (Point ℤ) :=
+abbrev bluebox (r : Nat) (u v : Point ℤ) : Finset (Point ℤ) :=
   Finset.Icc (u.1, u.2 + v.2 - r) (v.1, r)
 
-def bottomBoxSides (r : Nat) (u v : Point ℤ) : Finset (Point ℤ) :=
+abbrev bottomBoxSides (r : Nat) (u v : Point ℤ) : Finset (Point ℤ) :=
   {u.1, v.1} ×ˢ (Finset.Icc (-r: ℤ) (u.2 + v.2 - r - 1))
 
-def bottomBoxInner (r : Nat) (u v : Point ℤ) : Finset (Point ℤ) :=
+abbrev bottomBoxInner (r : Nat) (u v : Point ℤ) : Finset (Point ℤ) :=
   Finset.Icc (u.1 + 1, (-r: ℤ)) (v.1 - 1, u.2 + v.2 - r - 1)
 
-theorem middleBoxPartition
-    (r : Nat) (u v : Point ℤ)
-    (hy : u.2 + v.2 ≥ 0) (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) :
-    middleBox r u v = bottomBox r u v ∪ bluebox r u v
-    := by
-  ext x
-  unfold middleBox bottomBox bluebox
-  unfold Box2d at *
-  simp [Prod.le_def] at *
-  have upper_bound_u_v : u.2 + v.2 - r ≤ r :=by simp[hu.right.right,hv.right.right,add_le_add]
-  rw [and_and_and_comm]
-  nth_rewrite 2 [and_and_and_comm]
-  nth_rewrite 3 [and_and_and_comm]
-  rw [← and_or_left]
-  apply (fun c ↦ Iff.and (Iff.refl c))
-  -- have temp (r:ℕ): -r ≤ x.2 ↔ ↑0 ≤ x.2 + r := by rw[←zero_sub r,tsub_le_iff_left, add_comm]
-  -- nth_rewrite 2[←zero_sub]
-  rw[add_comm x.2]
-  rw[←tsub_le_iff_left]
-  have sub_one_le (a:ℤ): a-1 ≤ a := by simp
-  rw[Int.le_sub_one_iff]
-  have upper_bound_u_v : u.2 + v.2 - r ≤ r :=by simp[hu.right.right,hv.right.right,add_le_add]
-  by_cases lt_middle_box_bound : x.2 < u.2 + v.2 - r
-  ·(have lower_bound : -r ≤ x.2 ∧ x.2 < u.2 + v.2 - r ∨ u.2 + v.2 -r ≤ x.2 ∧ x.2 ≤ r ↔ -r ≤ x.2
-      := by
-        ·calc -r ≤ x.2 ∧ x.2 < u.2 + v.2 - r ∨ u.2 + v.2 -r ≤ x.2 ∧ x.2 ≤ r
-          _ ↔ -r ≤ x.2 ∧ x.2 < u.2 + v.2 - r ∨ False ∧ x.2 ≤ r
-            := by rw[(Iff.intro (Int.not_le.mpr lt_middle_box_bound) False.elim)]
-          _ ↔ -r ≤ x.2 ∧ True ∨ False ∧ x.2 ≤ r := by rw[(iff_true_intro lt_middle_box_bound)]
-          _ ↔ -r ≤ x.2 ∧ True ∨ False := by rw[false_and]
-          _ ↔ -r ≤ x.2 := by rw[or_false,and_true]
-    constructor
-    --Hinrichtung
-    ·(intro lh_side
-      rw[(Iff.intro (Int.not_le.mpr lt_middle_box_bound) False.elim),false_and,or_false]
-      exact (And.intro lh_side.left lt_middle_box_bound))
-    --Rückrichtung
-    ·(intro rh_side
-      constructor
-      ·exact lower_bound.mp rh_side
-      ·exact (Or.elim rh_side (fun a ↦
-          (le_trans (Int.le_of_lt a.right) upper_bound_u_v))
-        (·.right))))
-  --case 2:
-  ·(have ge_middle_box_bound := Int.lt_add_one_iff.mp (Int.not_le.mp lt_middle_box_bound)
-      --keine Ahnung, warum hier not_le.mp hier ein +1 hinzufügt
-    constructor
-    --Hinrichtung
-    ·(intro lh_side
-      rw[(iff_true_intro ge_middle_box_bound), true_and]
-      rw[(Iff.intro lt_middle_box_bound False.elim), and_false, false_or]
-      exact lh_side.right)
-    --Rückrichtung
-    ·(intro rh_side
-      constructor
-      ·(apply (le_trans' ge_middle_box_bound)
-        apply (Int.add_le_add_iff_right r).mp
-        simp[hy])
-      ·exact (Or.elim rh_side
-                (fun a ↦ (le_trans (Int.le_of_lt a.right) upper_bound_u_v))
-                (·.right))))
+local macro "magic" : tactic =>
+  `(tactic| (simp [Prod.le_def, Finset.disjoint_iff_ne] at *; omega))
 
 theorem BoxPartition
-    {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r)
+    {r : Nat} (u v : Point ℤ) (hu : u ∈ Box2d r) (hv : v ∈ Box2d r)
     (hx : u.1 < v.1) (hy : u.2 + v.2 ≥ 0)
-    : Box2d r = leftBox r u v ∪ rightBox r u v
-              ∪ bottomBox r u v ∪ bluebox r u v
+    : Box2d r =
+      ((leftBox r u v).disjUnion (rightBox r u v) (by magic)
+        |>.disjUnion (bottomBox r u v) (by magic)
+        |>.disjUnion (bluebox r u v) (by magic))
     := by
-  rw [Finset.union_assoc]
-  rw [← middleBoxPartition r u v hy hu hv]
   ext x
-  unfold leftBox rightBox middleBox
-  unfold Box2d at *
-  simp [Prod.le_def] at *
-  rw[and_and_and_comm]
-  -- nth_rewrite 1 [and_and_and_comm]
-  nth_rewrite 2 [and_and_and_comm]
-  nth_rewrite 3 [and_and_and_comm]
-  nth_rewrite 4 [and_and_and_comm]
-  rw [← or_and_right, ← or_and_right, and_comm]
-  nth_rewrite 4 [and_comm]
-  apply and_congr_right
-  intro h_x2
-  constructor
-  ·(intro lh_side
-    by_cases case1: x.1 < u.1
-    ·(apply Int.le_sub_one_iff.mpr at case1
-      left
-      exact And.intro lh_side.left case1)
-    by_cases case2: x.1 < v.1 + 1
-    ·(apply not_lt.mp at case1
-      right
-      right
-      exact And.intro case1 (Int.lt_add_one_iff.mp case2))
-    ·(apply not_lt.mp at case2
-      right
-      left
-      exact And.intro case2 lh_side.right))
-  ·(intro rh_side
-    cases rh_side with
-    | inr rh_side_23
-    | inl rh_side_1
-    cases rh_side_23 with
-    | inl rh_side_2
-    | inr rh_side_3
-    --case 2
-    ·exact And.intro (le_trans hv.left.left (Int.le_of_lt rh_side_2.left)) rh_side_2.right
-    --case 3
-    ·exact And.intro (le_trans hu.left.left rh_side_3.left) (le_trans rh_side_3.right hv.right.left)
-    --case 1
-    ·exact And.intro rh_side_1.left
-      (le_trans (Int.le_of_lt (Int.add_le_of_le_sub_right rh_side_1.right)) hu.right.left))
+  magic
 
 theorem sum_leftBox_dang_sub_sub --Fall 1
-    {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) (huv : v.1 < u.1) :
+    {r : Nat} {u v : Point ℤ} (huv : u.1 < v.1) :
     ∑ p ∈ leftBox r u v, (dang (u-p) (v-p) : K) = 0
     := by
-  sorry -- mittel
+  apply Finset.sum_eq_zero
+  intro p hp
+  simp only [Finset.mem_Icc, Prod.le_def] at hp
+  rw [dang]
+  simp only [Prod.fst_sub, Prod.snd_sub, div_eq_zero_iff, mul_eq_zero, abs_eq_zero,
+    OfNat.ofNat_ne_zero, or_false]
+  rw [sign_pos (by omega), sign_pos (by omega)]
+  simp
 
 theorem sum_rightBox_dang_sub_sub --Fall 2
-    {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) (huv : v.1 < u.1) :
+    {r : Nat} {u v : Point ℤ} (huv : u.1 < v.1) :
     ∑ p ∈ rightBox r u v, (dang (u-p) (v-p) : K) = 0
     := by
-  sorry -- mittel
+  apply Finset.sum_eq_zero
+  intro p hp
+  simp only [Finset.mem_Icc, Prod.le_def] at hp
+  rw [dang]
+  simp only [Prod.fst_sub, Prod.snd_sub, div_eq_zero_iff, mul_eq_zero, abs_eq_zero,
+    OfNat.ofNat_ne_zero, or_false]
+  rw [sign_neg (by omega), sign_neg (by omega)]
+  simp
 
 theorem sum_bluebox_dang_sub_sub --Fall 3
-    {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) (huv : v.1 < u.1) :
+    {r : Nat} {u v : Point ℤ} :
     ∑ p ∈ bluebox r u v, (dang (u-p) (v-p) : K) = 0
     := by
   let f (p : Point ℤ) : K := dang (u-p) (v-p)
@@ -193,27 +100,21 @@ theorem sum_bluebox_dang_sub_sub --Fall 3
   have hg₁ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), f p + f (g p) = 0 := by
     intro p hp
     unfold f g
-    have h1 : u - (u + v - p) = - (v - p) := by rw[add_sub_assoc, sub_add_cancel_left]
-    have h2 : v - (u + v - p) = - (u - p) := by rw[add_comm, add_sub_assoc, sub_add_cancel_left]
+    have h1 : u - (u + v - p) = - (v - p) := by abel
+    have h2 : v - (u + v - p) = - (u - p) := by abel
     rw[h1, h2, dang_neg_neg, ← dang_neg_symm, neg_add_cancel]
   have hg₃ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), f p ≠ 0 → g p ≠ p := by
-    have h1 : (2 : K) ≠ 0 := by
-      rw[ne_comm]
-      apply LT.lt.ne
-      rw [← one_add_one_eq_two]
-      apply lt_add_of_pos_of_lt zero_lt_one
-      exact zero_lt_one
     intro p hp h2 h3
     have h4 : f p + f (g p) = 0 := hg₁ p hp
     rw [h3] at h4
     have h5 : f p + f p = 2 * f p := by ring
     have h6 : 2 * f p = 2 * 0 := by rw [h5, ← mul_zero (2 : K)] at h4; assumption
-    have h7 : f p = 0 := by apply mul_left_cancel₀ h1 h6
+    have h7 : f p = 0 := by apply mul_left_cancel₀ two_ne_zero h6
     exact h2 h7
   have g_mem : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), g p ∈ bluebox r u v := by
     intro p hp
     simp [bluebox, g, Prod.le_def] at hp ⊢
-    grind
+    magic
   have hg₄ : ∀ (p : Point ℤ) (hp : p ∈ bluebox r u v), g (g p) = p := by
     intro p hp
     unfold g
@@ -221,33 +122,106 @@ theorem sum_bluebox_dang_sub_sub --Fall 3
   apply Finset.sum_involution (fun a _ => g a) hg₁ hg₃ g_mem hg₄
 
 theorem bottomBoxPartition
-    (r : Nat) (u v : Point ℤ)
-    (hy : u.2 + v.2 ≥ 0) (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) :
-    bottomBox r u v = bottomBoxSides r u v ∪ bottomBoxInner r u v
-    := by
-  sorry -- einfach (nachdem man unfolded hat)
-
+    {r : Nat} {u v : Point ℤ} (h : u.1 < v.1) :
+    bottomBox r u v =
+      (bottomBoxSides r u v).disjUnion (bottomBoxInner r u v) (by magic) := by
+  ext ⟨a, b⟩
+  magic
 
 theorem sum_bottomBox_dang_sub_sub --Fälle 4 und 5
-    {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) (huv : v.1 < u.1) :
-    ∑ p ∈ rightBox r u v, (dang (u-p) (v-p) : K) = 0
+    {r : Nat} {u v : Point ℤ} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r) (huv : u.1 < v.1)
+    (huv2 : 0 ≤ u.2 + v.2) :
+    ∑ p ∈ bottomBox r u v, (dang (u-p) (v-p) : K) = trapezoidArea (Int.cast : Int → K) u v
     := by
-  sorry -- mittel
+  rw [bottomBoxPartition huv, Finset.sum_disjUnion]
+  have (p : Point ℤ) (hp : p ∈ bottomBoxSides r u v) :
+      dang (u - p) (v - p) = (-4⁻¹ : K) := by
+    simp only [Finset.mem_product, Finset.mem_insert, Finset.mem_singleton, Finset.mem_Icc] at hp
+    rw [dang]
+    simp only [Prod.fst_sub, Prod.snd_sub]
+    rcases hp.1 with h | h
+    · simp only [h, sub_self, sign_zero, SignType.coe_zero, zero_sub, abs_neg, zero_mul]
+      rw [sign_pos (by omega), sign_neg]
+      · norm_num
+      · simp only [Int.neg_neg_iff_pos]
+        apply mul_pos
+        · magic
+        · simpa
+    · simp only [h, sub_self, sign_zero, SignType.coe_zero, sub_zero, mul_zero]
+      rw [sign_neg (by omega), sign_neg]
+      · norm_num
+      · apply mul_neg_of_neg_of_pos
+        · simpa
+        · magic
+  simp +contextual only [this, Finset.sum_neg_distrib, Finset.sum_const, Finset.card_product,
+    Finset.mem_singleton, huv.ne, not_false_eq_true, Finset.card_insert_of_notMem,
+    Finset.card_singleton, Nat.reduceAdd, Int.card_Icc, sub_add_cancel, sub_neg_eq_add,
+    nsmul_eq_mul, Nat.cast_mul, Nat.cast_ofNat]
+  have (p : Point ℤ) (hp : p ∈ bottomBoxInner r u v) :
+      dang (u - p) (v - p) = (-2⁻¹ : K) := by
+    simp only [Finset.mem_Icc, Prod.le_def] at hp
+    rw [dang]
+    simp only [Prod.fst_sub, Prod.snd_sub]
+    rw [sign_neg (by omega), sign_pos (by omega), sign_neg]
+    · norm_num
+    · rw [sub_neg]
+      trans 0
+      · apply mul_neg_of_neg_of_pos
+        · omega
+        · magic
+      · apply mul_pos
+        · magic
+        · omega
+  simp +contextual only [this, Finset.sum_neg_distrib, Finset.sum_const, Finset.card_Icc_prod,
+    Int.card_Icc, sub_add_cancel, sub_neg_eq_add, nsmul_eq_mul, Nat.cast_mul]
+  rw [trapezoidArea, ← Int.cast_natCast, Int.toNat_of_nonneg huv2,
+    ← Int.cast_natCast, Int.toNat_of_nonneg (by omega)]
+  simp only [Int.cast_add, Int.cast_sub, Int.cast_one, Int.cast_ofNat]
+  ring
 
-theorem termwise_pick {u v : Point ℤ} {r : Nat} (hu : supNorm u ≤ r) (hv : supNorm v ≤ r)
+theorem supNorm_le_iff {u : Point ℤ} {r : ℕ} : supNorm u ≤ r ↔ u ∈ Box2d r := by
+  simp [supNorm, abs_le, Prod.le_def]
+  omega
+
+theorem termwise_pick {K : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
+    {u v : Point ℤ} {r : Nat} (hu : u ∈ Box2d r) (hv : v ∈ Box2d r)
     : welp u v r = trapezoidArea (Int.cast : Int → K) u v
     := by
   unfold welp trapezoidArea
-  -- wir brauchen in den Box-Partition Sätzen voher wahrscheinlich ein disjUnion oder so,
-  -- um die Summe auf die einzelnen Fälle aufzuteilen
-  sorry -- schwerer/aufwändiger
+  wlog huv2 : 0 ≤ u.2 + v.2
+  · replace hu : (-u) ∈ Box2d r := by magic
+    replace hv : (-v) ∈ Box2d r := by magic
+    specialize this (K := K) hu hv (by simp; omega)
+    rw [Finset.sum_bij' (t := Box2d r) (g := fun b => dang (u - b) (v - b))
+        (fun a _ => -a) (fun a _ => -a)
+        (by magic) (by magic) (by simp) (by simp)] at this
+    · rw [this]
+      simp only [Prod.fst_neg, Int.cast_neg, sub_neg_eq_add, Prod.snd_neg, Int.cast_ofNat]
+      rw [← neg_mul_neg]
+      grind
+    · intro a h
+      rw [← dang_neg_neg]
+      simp [add_comm]
+  wlog huv : u.1 < v.1
+  · by_cases huveq : u.1 = v.1
+    · simp [huveq, sub_self, zero_mul, Int.cast_ofNat, zero_div, dang]
+    · have hvu : v.1 < u.1 := by omega
+      specialize this (K := K) hv hu (by magic) hvu
+      simp +singlePass only [← dang_neg_symm, Finset.sum_neg_distrib, Int.cast_ofNat]
+      rw [this]
+      grind
+  rw [BoxPartition u v hu hv huv huv2]
+  simp only [Finset.sum_disjUnion]
+  rw [sum_bluebox_dang_sub_sub]
+  rw [sum_bottomBox_dang_sub_sub hu hv huv huv2]
+  rw [sum_leftBox_dang_sub_sub huv]
+  rw [sum_rightBox_dang_sub_sub huv]
+  simp [trapezoidArea]
 
 -- langfristig überarbeiten: Finsupp-Summe in welp, damit explizites r redundant wird
-theorem pick_lemma (P : Polygon ℤ)
-    : ∀ r : Nat, r ≥ (getBound P) →
-      (polygonArea (Int.cast : ℤ → K) P = ∑ i, welp (P.vertex i) (P.vertex (i+1)) r)
+theorem pick_lemma (P : Polygon ℤ) (r : ℕ) (hr : getBound P ≤ r) :
+    (polygonArea (Int.cast : ℤ → K) P = ∑ i, welp (P.vertex i) (P.vertex (i+1)) r)
     := by
-  intro r hr
   unfold polygonArea
   apply Finset.sum_congr
   · rfl
@@ -258,4 +232,5 @@ theorem pick_lemma (P : Polygon ℤ)
     change trapezoidArea Int.cast u v = welp u v r
     have hu : supNorm u ≤ r := by apply hr
     have hv : supNorm v ≤ r := by apply hr
-    rw[termwise_pick hu hv]
+    rw [supNorm_le_iff] at hu hv
+    rw [termwise_pick hu hv]

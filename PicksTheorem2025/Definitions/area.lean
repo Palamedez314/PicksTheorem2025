@@ -1,6 +1,6 @@
 import PicksTheorem2025.Definitions.polygon
 
-variable {K : Type} [Field K] {R : Type} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
+variable {K : Type*} [Field K] {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
 
 -- area of the trapezoid under two Points
 def trapezoidArea (ι : R → K) (u v : Point R) : K :=

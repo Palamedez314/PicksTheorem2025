@@ -1,1 +1,1 @@
-import PicksTheorem2025.Basic
+import PicksTheorem2025.Theorems.PickLemma
