@@ -220,7 +220,7 @@ theorem termwise_pick {K : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing
 
 -- langfristig überarbeiten: Finsupp-Summe in welp, damit explizites r redundant wird
 theorem pick_lemma (P : Polygon ℤ) (r : ℕ) (hr : getBound P ≤ r) :
-    (polygonArea (Int.cast : ℤ → K) P = ∑ i, welp (P.vertex i) (P.vertex (i+1)) r)
+    polygonArea (Int.cast : ℤ → K) P = ∑ i, welp (P.vertex i) (P.vertex (i+1)) r
     := by
   unfold polygonArea
   apply Finset.sum_congr
@@ -234,3 +234,5 @@ theorem pick_lemma (P : Polygon ℤ) (r : ℕ) (hr : getBound P ≤ r) :
     have hv : supNorm v ≤ r := by apply hr
     rw [supNorm_le_iff] at hu hv
     rw [termwise_pick hu hv]
+
+#print axioms pick_lemma

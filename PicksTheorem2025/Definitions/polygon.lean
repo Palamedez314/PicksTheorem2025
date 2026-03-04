@@ -14,6 +14,10 @@ structure Polygon (R : Type*) where
 def isClosed (P : Polygon R) :=
   P.vertex 0 = P.vertex (Fin.ofNat (P.len+1) P.len)
 
+-- wie könnte man sowas ähnliches hinkriegen
+-- structure closedPolygon (R : Type*) extends (P : Polygon R) where
+--   closed : isClosed P
+
 def supNorm (p : Point R) : R := max |p.1| |p.2|
 
 def getBound (P : Polygon R) : R :=
