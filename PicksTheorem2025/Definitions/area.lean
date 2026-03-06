@@ -1,4 +1,7 @@
+import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.EuclideanDomain.Field
 import PicksTheorem2025.Definitions.polygon
+
 
 variable {K : Type*} [Field K] {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
 

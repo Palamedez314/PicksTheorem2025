@@ -1,6 +1,9 @@
-import PicksTheorem2025.Definitions.polygon
+import Mathlib.Algebra.Field.IsField
+import Mathlib.Algebra.Ring.Regular
+import Mathlib.Analysis.Normed.Ring.Lemmas
 import PicksTheorem2025.Definitions.area
 import PicksTheorem2025.Definitions.winding
+
 
 variable {K : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
 variable {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
