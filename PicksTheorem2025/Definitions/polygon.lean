@@ -1,4 +1,9 @@
-import PicksTheorem2025.Definitions.imports
+import Mathlib.Algebra.Order.Group.Unbundled.Abs
+import Mathlib.Algebra.Order.Ring.Defs
+import Mathlib.Algebra.Ring.Defs
+import Mathlib.Data.Finset.Max
+import Mathlib.Data.Fintype.Basic
+
 
 variable {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
 

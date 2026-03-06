@@ -1,6 +1,9 @@
-import PicksTheorem2025.Definitions.polygon
+import Mathlib.Algebra.Field.IsField
+import Mathlib.Algebra.Ring.Regular
+import Mathlib.Analysis.Normed.Ring.Lemmas
 import PicksTheorem2025.Definitions.area
 import PicksTheorem2025.Definitions.winding
+
 
 variable {K : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
 variable {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
@@ -218,7 +221,6 @@ theorem termwise_pick {K : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing
   rw [sum_rightBox_dang_sub_sub huv]
   simp [trapezoidArea]
 
--- langfristig überarbeiten: Finsupp-Summe in welp, damit explizites r redundant wird
 theorem pick_lemma (P : Polygon ℤ) (r : ℕ) (hr : getBound P ≤ r) :
     polygonArea (Int.cast : ℤ → K) P = ∑ i, welp (P.vertex i) (P.vertex (i+1)) r
     := by

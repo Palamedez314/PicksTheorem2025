@@ -1,13 +1,7 @@
 # PicksTheorem2025
 
-## GitHub configuration
+This is our take at formalizing Pick's theorem in Lean 4.
 
-To set up your new GitHub repository, follow these steps:
+As outlined in **PicksTheorem2025/Article**, we prove an intermediate result, which we call Pick's lemma, using a discrete angle measure.
 
-* Under your repository name, click **Settings**.
-* In the **Actions** section of the sidebar, click "General".
-* Check the box **Allow GitHub Actions to create and approve pull requests**.
-* Click the **Pages** section of the settings sidebar.
-* In the **Source** dropdown menu, select "GitHub Actions".
-
-After following the steps above, you can remove this section from the README file.
+The branch **lemma_to_theorem** contains some definitions and unproven theorems to bridge the gap between Pick's lemma and Pick's theorem. It is still heavily work-in-progress.

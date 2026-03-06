@@ -1,4 +1,3 @@
-import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import PicksTheorem2025.Theorems.pickLemma
 
 variable {K : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
@@ -104,5 +103,3 @@ theorem pick_theorem (hs : isSimple P) :
     volume (polygonInterior (P : Polygon ℝ)) =
     (innerPointsFinite P).toFinset.card + ((borderPointsFinite P).toFinset.card / 2) - 1
   := sorry
-
-#min_imports
