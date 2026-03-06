@@ -1,10 +1,12 @@
 import PicksTheorem2025.Definitions.polygon
 import PicksTheorem2025.Definitions.winding
+import Mathlib.Algebra.Field.Rat
 
 --macro polygon:term "[" index:term "]" : term => `(($polygon).vertex ($index))
 
 instance toPolygon {R : Type} (l : List (Point R)) (h : l.length > 0 := by decide)
-    : Polygon R (l.length-1) where
+    : Polygon R where
+  len := l.length-1
   vertex (i) := l[Fin.val i]'(by
     have h1 : l.length - 1 + 1 = l.length := by
       calc
