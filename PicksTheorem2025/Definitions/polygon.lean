@@ -5,10 +5,12 @@ variable {R : Type*} [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
 -- abelian group of points later used with ℤ² and K²
 abbrev Point (R : Type*) := R × R
 
+-- in Zukunft: Definitionen von mathlib benutzen?
+
 -- definition of a polygon with len sides as a tuple of its corner points
 structure Polygon (R : Type*) where
-  len : Nat
-  vertex : Fin (len+1) → Point R
+ len : Nat
+ vertex : Fin (len+1) → Point R
 
 -- additional properties of polygons
 def isClosed (P : Polygon R) :=
