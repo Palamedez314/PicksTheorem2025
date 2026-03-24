@@ -11,8 +11,9 @@ As our core result we formalize Pick's lemma, as explained in the article
 
 So far we have focused on Pick's lemma as our central contribution.
 Two more classical theorems complete the picture:
-First, we need Jordan's decomposition to formulate Pick's theorem precisely.
-Second, we add Hopf's umlaufsatz to interpret the result more geometrically user-friendly.
-The branch **lemma_to_theorem** contains work in progress concerning these extensions.
+First, we need Jordan's decomposition to formulate Pick's theorem precisely,
+translating it from geometric to algebraic terms.
+Second, we add Hopf's umlaufsatz to interpret the counting result
+in a more geometric and user-friendly fashion.
 
 ![lemma to theorem](https://github.com/Palamedez314/PicksTheorem2025/blob/main/PicksTheorem2025/Article/Pick-lemma-to-theorem.jpg)
