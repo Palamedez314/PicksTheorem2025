@@ -23,4 +23,4 @@ in a more geometric and user-friendly fashion.
 This project grew out of two informal seminars,
 the [Semi-LEAN-ear 2024](https://pnp.mathematik.uni-stuttgart.de/igt/eiserm/lehre/2024/Semi-LEAN-ear/) and
 the [Sesqui-LEAN-ear](https://pnp.mathematik.uni-stuttgart.de/igt/eiserm/lehre/2025/Sesqui-LEAN-ear/), both hosted at Burg Liebenzell.
-The implementation is an ongoing collaborative effort and work in progress.
+The implementation is an ongoing collaborative effort.
