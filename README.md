@@ -1,7 +1,12 @@
 # PicksTheorem2025
 
-This is our take at formalizing Pick's theorem in Lean 4.  It is driven by a student working group at the University of Stuttgart.
+This is our take at formalizing Pick's theorem in Lean 4, developed by a student working group at the University of Stuttgart.
+As our core result we formalize Pick's lemma, as explained in the [article](https://github.com/Palamedez314/PicksTheorem2025/blob/main/PicksTheorem2025/Article/Pick-in-Lean.pdf), 
 
-As outlined in [the article](https://github.com/Palamedez314/PicksTheorem2025/blob/main/PicksTheorem2025/Article/Pick-in-Lean.pdf), we formalize the core result, which we call Pick's lemma, using a discrete angle measure.
+## From Pick's lemma to Pick's theorem
 
-The branch **lemma_to_theorem** contains work in progress concerning Jordan's curve theorem and Hopf's umlaufsatz in order to complete Pick's lemma to Pick's theorem.
+So far we have focused on Pick's lemma as our central contribution.  
+Two more classical theorems complete the picture:  
+First, we need Jordan's decomposition to formulate Pick's theorem precisely.
+Second, we add Hopf's umlaufsatz to interpret the result more geometrically user-friendly.
+The branch **lemma_to_theorem** contains work in progress concerning these extensions.
