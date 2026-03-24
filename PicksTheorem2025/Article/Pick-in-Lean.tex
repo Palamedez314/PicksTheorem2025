@@ -12,6 +12,7 @@
 \usepackage[
   libertinus,
   noto,
+  % varbb,
   vvarbb,
   amsthm,
   nott, 
@@ -19,6 +20,9 @@
 
 \usepackage[scale=0.95,varqu,varl]{inconsolata}
   
+% tex.stackexchange.com/questions/26637/how-do-you-get-mathbb1
+% \usepackage[bb=dsserif]{mathalpha}
+
 \usepackage{xfrac}
 \usepackage{xcolor}
 
@@ -28,7 +32,7 @@
 
 \usepackage[pdftex,
             pdfauthor={Michael Eisermann},
-            pdftitle={Formalizing Pick's Theorem}, % in Lean},
+            pdftitle={Formalizing Pick's Theorem, efficiently}, % in Lean},
             pdfstartview=FitH,
             colorlinks=true,
             anchorcolor=black, 
@@ -133,8 +137,6 @@
 \begin{abstract}
   Pick's astonishing theorem explains how to obtain % says that we obtain % can calculate
   the area of any integer polygon by counting lattice points. % suitably
-  % Traditional proofs intend to convince humans % are intended for human understanding
-  % and are thus optimized for visual intuition. % therefore typically 
   It is a notoriously difficult challenge % tricky
   to translate the geometric statement and intuitive reasoning
   into a formal statement and rigorous proof. %, suitable for a proof assistant. % like Lean. 
@@ -326,11 +328,6 @@ Here the magic of Pick's theorem happens:
   We conclude that $\vol_2(F_6) = 1 + 96/2 - 1 = 48$.
 \end{example}
 
-% This is very remarkable indeed.
-% To emphasize the special character,
-% we remark that no such simple formula
-% can hold in three-dimensional space:
-
 \begin{remark}
   It is essential that the polygon $P$ be given by integer vertices.
   The rectangle $R = [0,a] \times [1/4,3/4]$, for example,
@@ -345,8 +342,6 @@ Here the magic of Pick's theorem happens:
   and $(1,1,r)$ with $r \in \N$.
   It has arbitrarily large volume $\vol_3(T_r) = r/6$,
   yet contains no further lattice points.
-  % only four integer points, namely its vertices.
-  % https://en.wikipedia.org/wiki/Reeve_tetrahedra
 \end{remark}
 
 \begin{remark}
@@ -365,7 +360,6 @@ Here the magic of Pick's theorem happens:
 
 
 \section{How to formalize Pick's theorem?}
-% \section{Formalizing Pick's theorem}
 
 We work over an ordered field $(\K,+,\cdot,\le)$.
 The traditional choice is the field $\R$
@@ -475,7 +469,7 @@ to ordered fields we cover all cases simultaneously.
   For a simply closed polygon in $\R^2$, this yields $\abs{\Area(P)} = \vol_2(B) > 0$.
   
   If $\Area(P) > 0$, we call our polygon $P$ \emph{positively oriented}.
-  Otherwiese, if $\Area(P) < 0$, we reverse $P = (p_0,p_1,\ldots,p_n)$
+  Otherwise, if $\Area(P) < 0$, we reverse $P = (p_0,p_1,\ldots,p_n)$
   to $P' = (p_n,\ldots,p_1,p_0)$.  This does not change the curve $C$,
   but ensures that $P'$ is positively oriented.
   This will be our standard convention.
@@ -525,8 +519,8 @@ such that rotation by $\theta$ aligns $u$ with $v$:
 
 In the controversial case $v \in u \, \R_{<0}$,
 both solutions $\theta = \pm\pi$ are equally possible.
-Usually this case is ignored, forbidden, or abitrated.
-We democratically set $\sphericalangle(u,v) = 0$. % in this controversial case.
+Usually this case is ignored, forbidden, or arbitrated.
+We democratically set $\sphericalangle(u,v) = 0$.
 This choice may seem strange at first, but turns out to be advantageous.
 It allows us to cover all cases uniformly,
 and miraculously leads to the correct point count on the boundary.
@@ -574,7 +568,7 @@ and miraculously leads to the correct point count on the boundary.
   By adding the turning angle $\alpha_i = \ang(p_i-p_{i-1}, p_{i+1}-p_i)$
   each vertex point is counted by $\sfrac{1}{2}$ as well.
   (This is illustrated in \autoref{fig:AreaAngle}.)
-  The sum of all turning angles is $1$ by Hopf's umlaufsatz. % theorem.
+  The sum of all turning angles is $1$ by Hopf's umlaufsatz.
 
   If $P$ is a simply closed lattice polygon,
   with integer vertices $v_0,\ldots,v_n \in \Z^2$, then
@@ -705,9 +699,9 @@ by the \emph{weighted sum of enclosed lattice points}
 
   At first glance Pick's lemma may no longer look like Pick's classical theorem.
   Admittedly, the quantity $I + J/2 - 1$ is geometrically more intuitive,
-  alas notoriously vague. (``Just look!'') %  Our admirably concise
+  alas notoriously vague. (“Just look!”)
   Our formula for $\Welp(P)$ provides a precise definition,
-  alas less intuitive. (``Just calculate!'')
+  alas less intuitive. (“Just calculate!”)
   
   We cautiously call the above statement \emph{Pick's lemma}.
   In order to arrive at Pick's theorem,
@@ -719,13 +713,11 @@ by the \emph{weighted sum of enclosed lattice points}
   Since Jordan's and Hopf's are classical theorems in their own right,
   we do not consider them as part of the \emph{proof} of Pick's lemma,
   but rather as the foundation to \emph{motivate} or \emph{interpret} the statement.
-  This groundwork being provided, % achieved,
-  we can now focus on proving Pick's lemma.
+  This groundwork being provided, we can now focus on proving Pick's lemma.
 \end{remark}
 
 
 \section{Proof of Pick's lemma}
-% \section{Proving Pick's lemma}
 
 % \begin{proof}[Proof of Pick's lemma]
 The sum \eqref{eq:Welp} over $q \in \Z^2$ has finite support:
@@ -871,8 +863,9 @@ we conclude $\Area(P) = \Welp(P)$, as claimed. % desired.
 % \end{proof}
 
 \begin{remark}
-  In this algebraic form, the proof is readily implemented in Lean,
-  or any other proof assistant.  This completes the promised formalization.
+  In this algebraic form, the proof is readily implemented in a proof assistant.
+  For a proof in Lean see \url{https://github.com/Palamedez314/PicksTheorem2025}.
+  This completes the promised formalization.
 \end{remark}
 
 
@@ -881,17 +874,19 @@ we conclude $\Area(P) = \Welp(P)$, as claimed. % desired.
 \setcounter{section}{0}
 \section{Axiomatic angle measure}
 
-Nicely summarized, we need Jordan's decomposition
+So far we have focused on Pick's lemma as our central contribution.
+Two more classical theorems complete the picture:
+First, we need Jordan's decomposition
 to formulate Pick's theorem precisely.
-We use Hopf's umlaufsatz to interpret
-the result more geometrically user-friendly.
+Second, we add Hopf's umlaufsatz to interpret
+the counting result in a more geometric and user-friendly fashion.
 
 \begin{figure}[ht]
   \begin{tikzpicture}[x=10mm, y=10mm]
-    \draw (-3,+1) node[draw=black, inner sep=3pt, font=\strut]{Polygons};
-    \draw (+3,+1) node[draw=black, inner sep=3pt, font=\strut]{Counting};
-    \draw (-3,-1) node[draw=black, inner sep=3pt, font=\strut]{Winding};
-    \draw (+3,-1) node[draw=black, inner sep=3pt, font=\strut]{Summing};
+    \draw (-3,+1) node[draw=black, inner sep=3pt, font=\strut]{polygons};
+    \draw (+3,+1) node[draw=black, inner sep=3pt, font=\strut]{counting};
+    \draw (-3,-1) node[draw=black, inner sep=3pt, font=\strut]{winding};
+    \draw (+3,-1) node[draw=black, inner sep=3pt, font=\strut]{summing};
     \draw[-latex'] (-2.1,+1.0) -- (+2.1,+1.0) node[midway, above]{Pick's Theorem};
     \draw[-latex'] (-2.1,-1.0) -- (+2.1,-1.0) node[midway, above]{Pick's Lemma};
     \draw[-latex'] (-3.0,+0.6) -- (-3.0,-0.6) node[midway, left]{Jordan};
@@ -925,7 +920,7 @@ we extract the essential properties used in the proofs:
   \item
     Addition: $\mu(u,v) = \mu(u,s) + \mu(s,v)$ for $s \in [u,v]$.
   \item
-    Normalisation: $\mu(e_1,e_2) = \sfrac{1}{4}$.
+    Normalization: $\mu(e_1,e_2) = \sfrac{1}{4}$.
   \end{enumerate}
 \end{definition}
 
@@ -978,7 +973,7 @@ Using the angle measure $\mu$, we define the winding number
   the interior region $B$ will be on the left of our curve $C$.
   
   (1) The usual topological notions over $\R$
-  now aquire an algebraic flavour over $\K$:
+  now acquire an algebraic flavour over $\K$:
   Two points $a,b \in X$ are \emph{connected} in $X$,
   if they can be connected by a polygonal path within $X$.
   
@@ -988,7 +983,7 @@ Using the angle measure $\mu$, we define the winding number
   % For $q \in \ee{p_{i-1}}{p_i}$ these can be reached by a small path
   % perpendicular to the edge; for $q \in p_i$ we can bisect the angle.
 
-  (3) The extension to boundary points $q \in C$ % is usually neglected. % omitted.
+  (3) The extension to boundary points $q \in C$ % is usually omitted.
   follows from (1) by cutting the corner at $q$. % with an extra edge. 
   It is not only oddly satisfying but also practically useful.
   In particular it leads us to Pick's theorem. % opens a way
@@ -999,7 +994,7 @@ can be established as in the classical setting,
 % With sufficient patience this can be formalized algebraically
 and then implemented in a proof assistant. % for example Lean,
 This foundational work usually requires
-``augmenting the existing geometry libraries'' \cite{Binder:Kosaian:2024}.
+“augmenting the existing geometry libraries” \cite{Binder:Kosaian:2024}.
 % The same holds for deriving the area formula \ref{eq:Area} from the Lebesgue measure.
 It merits further exploration beyond the scope of the modest article.
 
@@ -1031,9 +1026,9 @@ and proven using any angle measure $\mu$.
   whence $\sum_{i=1}^n \beta_i = n/2 - 1$.
 
   The simplest case $n=3$ is the familiar statement that,
-  in any triangle, the interiour angles add up
+  in any triangle, the interior angles add up
   to $\beta_1 + \beta_2 + \beta_3 = 1/2$,
-  correspoding to $\pi/2$ or $180^\circ$.
+  corresponding to $\pi/2$ or $180^\circ$.
   % Likewise for any $n$--gon.
 \end{remark}
 
@@ -1075,7 +1070,7 @@ It becomes false for non-simply closed polygons.
         evaluate= \i as \ii using {int(\i+2)}
       ] in {0,...,3}{
         \foreach \j in {\ii,...,5}{
-          \draw[draw=black, fill=teal!15] (\i,\j) rectangle (\i+1,\j+1);
+          \draw[draw=black, fill=teal!10] (\i,\j) rectangle (\i+1,\j+1);
         }
       }
       \foreach \i in {0,...,4}{
@@ -1097,10 +1092,10 @@ Hopf first formulated his umlaufsatz \cite{Hopf:1935} for simply closed paths
 $\gamma \colon [0,1] \to \R^2$ that are continuously differentiable,
 and proved it by an ingenious homotopy argument.
 %
-% ``Von seinen bisherigen, mir bekannten, Beweisen erscheint mir keiner
+% “Von seinen bisherigen, mir bekannten, Beweisen erscheint mir keiner
 % so kurz und einfach, daß es sich nicht mehr lohnte, noch kürzere
 % und einfachere Beweise zu suchen; in Nr.\ 2 teile ich einen
-% Beweis mit, den ich für einfacher halte als die früheren.''
+% Beweis mit, den ich für einfacher halte als die früheren.”
 %
 He then showed that it suffices to require
 a \emph{piecewise} continuously differentiable curve.
@@ -1166,9 +1161,7 @@ and illustrated in \autoref{fig:HopfTheorem}.
 
 
 \setcounter{section}{22}
-\section{A ``water proof'' plausiblity argument}
-% \section{Physical plausibility: ``water proof'' }
-% \subsection{How to prove Pick's theorem?}
+\section{A “water proof” plausibility argument}
 
 In every-day mathematical communication we often only sketch
 the idea and appeal to some degree of informal intuition.
@@ -1177,6 +1170,7 @@ like Pick's theorem, where we often heavily rely on our visual perception.
 This is usually a good thing for human learning and understanding,
 but may also inhibit the desire for a sound formalization.
 % Why prove a statement that is intuitively plausible?
+% See Harrison on the tension between intuition and rigour.
 
 We sketch such a visual proof, appealing to geometric intuition
 as a counterpart to our algebraic formalization.
@@ -1227,7 +1221,7 @@ closing this circle of ideas.
         }
       \end{scope}
       \begin{scope}
-L’algébre n’est qu’une géométrie écrite, la géométrie n’est qu’une algèbre figure [Germain 1879, p. 264].         \clip (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
+        \clip (0,2) -- (2,0) -- (5,0) -- (5,2) -- (4,3) -- (5,5) --
         (2,6) -- (0,3) -- (2,5) -- (4,1) -- (3,1) -- (2,3) -- cycle;
         \foreach \x in {-1,0,...,6}{
           \foreach \y in {-1,0,...,7}{
@@ -1263,7 +1257,6 @@ L’algébre n’est qu’une géométrie écrite, la géométrie n’est qu’u
     \end{scope}
   \end{tikzpicture}
   \caption{\textgreek{Πάντα ῥεῖ}, everything flows.  We let the water do the work.}
-  % \caption{\textgreek{Πάντα ῥεῖ}, everything flows.  Let gravity do the work!}
   \label{fig:WaterFlow}
 \end{figure}
 
@@ -1301,8 +1294,7 @@ L’algébre n’est qu’une géométrie écrite, la géométrie n’est qu’u
 \end{proof}
 
 % Pick's theorem can be split in two parts:
-% First, the point count.
-% Second, the umlaufsatz.
+% First, the point count.  Second, the umlaufsatz.
 
 % The traditional way is to count each boundary point with $\sfrac{1}{2}$
 % and finally add $-1$ as a correction term
@@ -1396,13 +1388,6 @@ In this fashion our physical intuition can lead us to both flavours of Pick's le
 %   with volume $\vol_2(S) = 2 \vol_2(B)$ and Euler characteristic $\chi(S) = 2$.
 %   The vertices provide the curvature, as in the Gauß--Bonnet theorem.
 % \end{remark}
-
-% superposition, will be used later
-
-% Read Harrison on the tension between intuition and rigour!!!
-
-% more rigorous proof?  Proofs from the book!
-% We will not pursue this line of thought, but only give references.
 
 
 \setcounter{section}{16}
