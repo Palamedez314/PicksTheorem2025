@@ -1,0 +1,35 @@
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
+\begin{thebibliography}{1}
+
+\bibitem{Binder:Kosaian:2024}
+S.~Binder and K.~Kosaian, \emph{{P}ick's {T}heorem}, Archive of Formal Proofs
+  (2024), \newline\url{https://isa-afp.org/entries/Picks_Theorem.html}.
+
+\bibitem{Gruenbaum:Shepard:1993}
+B.~Grünbaum and G.~C. Shephard, \emph{{P}ick's {T}heorem}, The American
+  Mathematical Monthly \textbf{100} (1993), 150--161,
+  \newline\url{https://doi.org/10.2307/2323771}.
+
+\bibitem{Harrison:2011}
+J.~Harrison, \emph{{A} formal proof of {P}ick’s {T}heorem}, Mathematical
+  Structures in Computer Science \textbf{21} (2011), 715--729,
+  \newline\url{https://doi.org/10.1017/S0960129511000089}.
+
+\bibitem{Hopf:1935}
+H.~Hopf, \emph{{Ü}ber die {D}rehung der {T}angenten und {S}ehnen ebener
+  {K}urven}, Compositio Mathematica \textbf{2} (1935), 50--62,
+  \newline\url{https://www.numdam.org/article/CM_1935__2__50_0.pdf}.
+
+\bibitem{Pick:1899}
+G.~Pick, \emph{{G}eometrisches zur {Z}ahlenlehre}, Sitzungsberichte des
+  deutschen naturwissenschaftlich-medicinischen Vereines für Böhmen
+  „Lotos“ in Prag \textbf{19} (1899), 311--319,
+  \url{https://www.biodiversitylibrary.org/item/50207#page/327}.
+
+\end{thebibliography}
