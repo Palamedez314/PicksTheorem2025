@@ -3,7 +3,8 @@
 This is our take at formalizing Pick's theorem in Lean 4, 
 developed by a student working group at the University of Stuttgart.
 As our core result we formalize Pick's lemma, as explained in the article 
-[Formalizing Pick's Theorem, efficiently](https://github.com/Palamedez314/PicksTheorem2025/blob/main/PicksTheorem2025/Article/Pick-in-Lean.pdf). 
+[Formalizing Pick's Theorem, efficiently](https://github.com/Palamedez314/PicksTheorem2025/blob/main/PicksTheorem2025/Article/Pick-in-Lean.pdf)
+[(arxiv.org/abs/2603.23095)](https://arxiv.org/abs/2603.23095). 
 
 ![polygons](https://github.com/Palamedez314/PicksTheorem2025/blob/main/PicksTheorem2025/Article/Polygons-and-Pick.jpg)
 
